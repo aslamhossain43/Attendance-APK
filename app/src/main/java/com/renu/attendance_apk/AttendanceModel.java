@@ -7,11 +7,13 @@ public class AttendanceModel implements Serializable {
 
     private List<String> rollList;
     private List<String> attendanceList;
+    private List<String> dateTimeList;
 
 
-    public AttendanceModel(List<String> rollList, List<String> attendanceList) {
+    public AttendanceModel(List<String> rollList, List<String> attendanceList,List<String> dateTimeList) {
         this.rollList = rollList;
         this.attendanceList = attendanceList;
+        this.dateTimeList=dateTimeList;
     }
 
 
@@ -29,6 +31,14 @@ public class AttendanceModel implements Serializable {
 
     public void setAttendanceList(List<String> attendanceList) {
         this.attendanceList = attendanceList;
+    }
+
+    public List<String> getDateTimeList() {
+        return dateTimeList;
+    }
+
+    public void setDateTimeList(List<String> dateTimeList) {
+        this.dateTimeList = dateTimeList;
     }
 }
 

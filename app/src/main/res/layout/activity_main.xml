@@ -13,33 +13,36 @@
         android:orientation="vertical"
 
         >
-
-
-        <Button
-            android:id="@+id/add_field_button"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="50dp"
-            android:layout_marginBottom="100dp"
-            android:background="#8BC34A"
-            android:padding="5dp"
-            android:text="+"
-            android:textColor="#FFF"
-            android:textSize="30dp" />
+            android:weightSum="2"
+            android:orientation="horizontal"
+            android:layout_marginBottom="30dp"
+            >
+            <TextView
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:text="Attendances For :"
 
-        <Button
-            android:id="@+id/add_to_firebase_btnId"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="100dp"
-            android:background="#3E7202"
-            android:padding="5dp"
-            android:text="Save"
-            android:textColor="#FFF"
-            android:textSize="20dp" />
+                />
+            <EditText
+                android:id="@+id/editTextAttendancesForId"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:textStyle="bold"
+
+                />
+
+
+
+        </LinearLayout>
+
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
@@ -68,6 +71,34 @@
                 android:gravity="right" />
 
         </LinearLayout>
+
+        <Button
+            android:id="@+id/add_field_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="50dp"
+            android:layout_marginBottom="100dp"
+            android:background="#8BC34A"
+            android:padding="5dp"
+            android:text="+"
+            android:textColor="#FFF"
+            android:textSize="30dp" />
+
+        <Button
+            android:id="@+id/add_to_firebase_btnId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="100dp"
+            android:background="#3E7202"
+            android:padding="5dp"
+            android:text="Save"
+            android:textColor="#FFF"
+            android:textSize="20dp" />
+
+
 
 
     </LinearLayout>

@@ -15,44 +15,49 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     private LinearLayout parentLinearLayout;
-    private EditText editTextForMain, editTextForField;
-    private Button add_FieldButton,add_To_Firebase;
+    private EditText editTextForMain, editTextForField,editTextAttendanceFor;
+    private Button add_FieldButton, add_To_Firebase;
     private Spinner spinnerForMain, spinnerForField;
     int c = 1;
     DatabaseReference databaseReference;
-List<String>roolList;
-List<String>attendanceList;
+    List<String> roolList;
+    List<String> attendanceList;
+    List<String>dataTimeList;
+    DataBaseHelper dataBaseHelper;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initView();
+        setVariousValues();
         initOthers();
 
 
         add_FieldButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                boolean key=false;
+                boolean key = false;
 
-                if (parentLinearLayout.getChildCount() == 3) {
+                if (parentLinearLayout.getChildCount() == 4) {
                     View ltoV = parentLinearLayout.getChildAt(parentLinearLayout.getChildCount() - 2);
 
 
                     Log.d("vv", "onClick: " + editTextForMain.getText());
                     Log.d("vv", "onClick: " + spinnerForMain.getSelectedItem().toString());
-                addValuesToList(editTextForMain.getText().toString().trim(),spinnerForMain.getSelectedItem().toString().trim(),key);
-
+                    addValuesToList(editTextForMain.getText().toString().trim(), spinnerForMain.getSelectedItem().toString().trim(),null, null);
 
 
                 }
-                if (parentLinearLayout.getChildCount() >= 4) {
+                if (parentLinearLayout.getChildCount() >= 5) {
                     View ltV = parentLinearLayout.getChildAt(parentLinearLayout.getChildCount() - 3);
 
 
@@ -62,8 +67,7 @@ List<String>attendanceList;
 
                     Log.d("vv", "onClick: " + editTextForField.getText());
                     Log.d("vv", "onClick: " + spinnerForField.getSelectedItem().toString());
-                    addValuesToList(editTextForField.getText().toString().trim(),spinnerForField.getSelectedItem().toString().trim(),key);
-
+                    addValuesToList(editTextForField.getText().toString().trim(), spinnerForField.getSelectedItem().toString().trim(),null, null);
 
 
                 }
@@ -85,8 +89,14 @@ List<String>attendanceList;
         add_To_Firebase.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                boolean key=true;
-                if (parentLinearLayout.getChildCount() >= 4) {
+                String attendancesFor=editTextAttendanceFor.getText().toString();
+                SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd hh:mm a");
+                Log.d("dt", "onClick: "+sim.format(new Date()));
+                String dateTime=sim.format(new Date());
+                sendToAttendanceIndex(attendancesFor,dateTime);
+
+
+                if (parentLinearLayout.getChildCount() >= 5) {
                     View ltV = parentLinearLayout.getChildAt(parentLinearLayout.getChildCount() - 3);
 
 
@@ -96,8 +106,7 @@ List<String>attendanceList;
 
                     Log.d("vv", "onClick: " + editTextForField.getText());
                     Log.d("vv", "onClick: " + spinnerForField.getSelectedItem().toString());
-                    addValuesToList(editTextForField.getText().toString().trim(),spinnerForField.getSelectedItem().toString().trim(),key);
-
+                    addValuesToList(editTextForField.getText().toString().trim(), spinnerForField.getSelectedItem().toString().trim(),attendancesFor,dateTime);
 
 
                 }
@@ -105,28 +114,54 @@ List<String>attendanceList;
         });
 
 
+    }
+
+    private void sendToAttendanceIndex(String attendancesFor, String dateTime) {
+
+
+
+
 
     }
 
-    private void addValuesToList(String roll, String attendance,boolean key) {
+    private void setVariousValues() {
+
+        editTextForMain.setText("" + c);
+    }
+
+    private void addValuesToList(String roll, String attendance,String attendancesFor,String dateTime) {
 
 
         roolList.add(roll);
         attendanceList.add(attendance);
-
-        Log.d("rr", "addValuesToList: "+roolList);
-        Log.d("aa", "addValuesToList: "+attendanceList);
-        if (key==true){
-
-            if (Network.isNetworkAvailable(this)){
-
-                String pushKey=databaseReference.push().getKey();
-                AttendanceModel attendanceModel=new AttendanceModel(roolList,attendanceList);
-                databaseReference.child(pushKey).setValue(attendanceModel);
-            }else {
+        if (dateTime!=null && attendancesFor!=null) {
 
 
+            for (int i = 0; i < roolList.size(); i++) {
+                dataTimeList.add(dateTime);
             }
+
+        Log.d("rr", "addValuesToList: " + roolList);
+        Log.d("aa", "addValuesToList: " + attendanceList);
+
+
+            if (Network.isNetworkAvailable(this)) {
+
+                String pushKeyForAttendancesIndex = databaseReference.push().getKey();
+                AttendanceIndexModel attendanceIndexModel=new AttendanceIndexModel(dateTime,attendancesFor);
+                databaseReference.child(pushKeyForAttendancesIndex).setValue(attendanceIndexModel);
+
+
+
+                String pushKey = databaseReference.push().getKey();
+                AttendanceModel attendanceModel = new AttendanceModel(roolList, attendanceList,dataTimeList);
+                databaseReference.child(pushKey).setValue(attendanceModel);
+            } else {
+                dataBaseHelper.insertDataInToAttendancesTable(roolList, attendanceList,dataTimeList);
+                dataBaseHelper.insertDataInToAttendancesIndexTable(dateTime,attendancesFor);
+            }
+
+
         }
 
 
@@ -135,8 +170,9 @@ List<String>attendanceList;
     private void initOthers() {
 
         databaseReference = FirebaseDatabase.getInstance().getReference("attendance");
-        roolList=new ArrayList<>();
-        attendanceList=new ArrayList<>();
+        roolList = new ArrayList<>();
+        attendanceList = new ArrayList<>();
+        dataBaseHelper = new DataBaseHelper(this);
 
     }
 
@@ -147,11 +183,19 @@ List<String>attendanceList;
         spinnerForMain = findViewById(R.id.spinnerForMainId);
         add_FieldButton = findViewById(R.id.add_field_button);
         add_To_Firebase = findViewById(R.id.add_to_firebase_btnId);
-        editTextForMain.setText("" + c);
+        editTextAttendanceFor=findViewById(R.id.editTextAttendancesForId);
+
     }
+
 
 
     public void onDelete(View v) {
         parentLinearLayout.removeView((View) v.getParent());
     }
+
+
+
+
+
+
 }
