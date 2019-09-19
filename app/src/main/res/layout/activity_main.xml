@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/SCROLLER_ID"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/parent_linear_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="5dp"
+        android:orientation="vertical"
+
+        >
+
+
+        <Button
+            android:id="@+id/add_field_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="50dp"
+            android:layout_marginBottom="100dp"
+            android:background="#8BC34A"
+            android:padding="5dp"
+            android:text="+"
+            android:textColor="#FFF"
+            android:textSize="30dp" />
+
+        <Button
+            android:id="@+id/add_to_firebase_btnId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="100dp"
+            android:background="#3E7202"
+            android:padding="5dp"
+            android:text="Save"
+            android:textColor="#FFF"
+            android:textSize="20dp" />
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2"
+
+            >
+
+            <EditText
+                android:id="@+id/rollForMainId"
+                android:layout_width="wrap_content"
+
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="70dp"
+                android:layout_weight="1"
+                android:text="1" />
+
+            <Spinner
+                android:id="@+id/spinnerForMainId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="70dp"
+                android:layout_weight="1"
+                android:entries="@array/types"
+                android:gravity="right" />
+            <!-- <Button
+                 android:id="@+id/delete_button"
+                 android:layout_weight="0.25"
+                 android:layout_width="0dp"
+                 android:layout_height="25dp"
+                 android:layout_gravity="center_horizontal"
+                 android:background="@drawable/cross"
+                 android:onClick="onDelete"/>-->
+        </LinearLayout>
+
+
+    </LinearLayout>
+</ScrollView>

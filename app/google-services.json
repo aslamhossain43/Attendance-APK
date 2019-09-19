@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "479054232042",
+    "firebase_url": "https://attendance-apk.firebaseio.com",
+    "project_id": "attendance-apk",
+    "storage_bucket": "attendance-apk.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:479054232042:android:8e15413e2612872ce8da93",
+        "android_client_info": {
+          "package_name": "com.renu.attendance_apk"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "479054232042-abeok2s54ff3lo99vuhbj9e2h3eg2ies.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.renu.attendance_apk",
+            "certificate_hash": "a421e538279da7022f274b99df0e3465d2a3bc90"
+          }
+        },
+        {
+          "client_id": "479054232042-gsnk2guqbtti8to1h6dan0cmhk5d585p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAql14OBLwIHsDrOwz4tuXZPbfVRS6g2Uc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "479054232042-gsnk2guqbtti8to1h6dan0cmhk5d585p.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

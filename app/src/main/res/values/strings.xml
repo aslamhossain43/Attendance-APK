@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Attendance-APK</string>
+    <string-array name="types">
+        <item>P</item>
+        <item>A</item>
+    </string-array>
+</resources>
