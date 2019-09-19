@@ -66,14 +66,7 @@
                 android:layout_weight="1"
                 android:entries="@array/types"
                 android:gravity="right" />
-            <!-- <Button
-                 android:id="@+id/delete_button"
-                 android:layout_weight="0.25"
-                 android:layout_width="0dp"
-                 android:layout_height="25dp"
-                 android:layout_gravity="center_horizontal"
-                 android:background="@drawable/cross"
-                 android:onClick="onDelete"/>-->
+
         </LinearLayout>
 
 
