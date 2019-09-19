@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
     DatabaseReference databaseReference;
     List<String> roolList;
     List<String> attendanceList;
-    List<String>dataTimeList;
+    List<String>dateTimeList;
     DataBaseHelper dataBaseHelper;
 
     @Override
@@ -134,15 +134,16 @@ public class MainActivity extends AppCompatActivity {
 
         roolList.add(roll);
         attendanceList.add(attendance);
-        if (dateTime!=null && attendancesFor!=null) {
+        if (dateTime!=null) {
 
 
             for (int i = 0; i < roolList.size(); i++) {
-                dataTimeList.add(dateTime);
+                dateTimeList.add(dateTime);
             }
 
         Log.d("rr", "addValuesToList: " + roolList);
         Log.d("aa", "addValuesToList: " + attendanceList);
+        Log.d("dt", "addValuesToList: " + dateTimeList);
 
 
             if (Network.isNetworkAvailable(this)) {
@@ -154,10 +155,10 @@ public class MainActivity extends AppCompatActivity {
 
 
                 String pushKey = databaseReference.push().getKey();
-                AttendanceModel attendanceModel = new AttendanceModel(roolList, attendanceList,dataTimeList);
+                AttendanceModel attendanceModel = new AttendanceModel(roolList, attendanceList,dateTimeList);
                 databaseReference.child(pushKey).setValue(attendanceModel);
             } else {
-                dataBaseHelper.insertDataInToAttendancesTable(roolList, attendanceList,dataTimeList);
+                dataBaseHelper.insertDataInToAttendancesTable(roolList, attendanceList,dateTimeList);
                 dataBaseHelper.insertDataInToAttendancesIndexTable(dateTime,attendancesFor);
             }
 
@@ -172,6 +173,8 @@ public class MainActivity extends AppCompatActivity {
         databaseReference = FirebaseDatabase.getInstance().getReference("attendance");
         roolList = new ArrayList<>();
         attendanceList = new ArrayList<>();
+        dateTimeList = new ArrayList<>();
+
         dataBaseHelper = new DataBaseHelper(this);
 
     }

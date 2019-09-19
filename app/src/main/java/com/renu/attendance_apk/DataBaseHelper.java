@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 public class DataBaseHelper extends SQLiteOpenHelper {
-    private static final String DATABASE_NAME = "Attendances.db";
+    private static final String DATABASE_NAME = "Attendance.db";
     private static final String ATTENDANCES_TABLE = "attendance";
     private static final String ATTENDANCES_INDEX_TABLE = "attendanceindex";
     private static final int VERSION_NUMBER = 1;
@@ -26,7 +26,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     private static final String ATTENDANCES_FOR = "attendancesfor";
 
 
-    private static final String CREATE_ATTENDANCES_TABLE = "CREATE TABLE " + ATTENDANCES_TABLE + "( " + ROLL + " INTEGER PRIMARY KEY AUTOINCREMENT," + ATTENDANCES + " VARCHAR(25));";
+    private static final String CREATE_ATTENDANCES_TABLE = "CREATE TABLE " + ATTENDANCES_TABLE + "( " + ROLL + " INTEGER PRIMARY KEY AUTOINCREMENT," + ATTENDANCES + " VARCHAR(25),"+ ATTENDANCES_TIME + " VARCHAR(100));";
     private static final String CREATE_ATTENDANCES_INDEX_TABLE = "CREATE TABLE " + ATTENDANCES_INDEX_TABLE + "( " + ATTENDANCES_TIME + " VARCHAR(25)," + ATTENDANCES_FOR + " VARCHAR(25));";
     private static final String DROP_ATTENDANCES_TABLE = "DROP TABLE IF EXISTS " + ATTENDANCES_TABLE;
     private static final String DROP_ATTENDANCES_INDEX_TABLE = "DROP TABLE IF EXISTS " + ATTENDANCES_INDEX_TABLE;
