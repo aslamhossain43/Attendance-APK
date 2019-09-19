@@ -17,7 +17,8 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         if (Network.isNetworkAvailable(context)) {
             DataBaseHelper dataBaseHelper = new DataBaseHelper(context);
-            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("attendance");
+            DatabaseReference databaseReferenceForAttendances = FirebaseDatabase.getInstance().getReference("attendance");
+            DatabaseReference databaseReferenceForAttendancesIndex = FirebaseDatabase.getInstance().getReference("attendanceindex");
             List<String> rollList = new ArrayList<>();
             List<String> attendancesList = new ArrayList<>();
             List<String> dateTimeList = new ArrayList<>();
@@ -27,9 +28,9 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
                 String dateTime = cursor.getString(0);
                 String attendanceFor = cursor.getString(1);
 
-                String pushKeyForAttendancesIndex = databaseReference.push().getKey();
+                String pushKeyForAttendancesIndex = databaseReferenceForAttendancesIndex.push().getKey();
                 AttendanceIndexModel attendanceIndexModel = new AttendanceIndexModel(dateTime, attendanceFor);
-                databaseReference.child(pushKeyForAttendancesIndex).setValue(attendanceIndexModel);
+                databaseReferenceForAttendancesIndex.child(pushKeyForAttendancesIndex).setValue(attendanceIndexModel);
 
 
             }
@@ -40,9 +41,9 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
             attendancesList = map.get("attendanceList");
             dateTimeList = map.get("dateTimeList");
 
-            String pushKey = databaseReference.push().getKey();
+            String pushKey = databaseReferenceForAttendances.push().getKey();
             AttendanceModel attendanceModel = new AttendanceModel(rollList, attendancesList, dateTimeList);
-            databaseReference.child(pushKey).setValue(attendanceModel);
+            databaseReferenceForAttendances.child(pushKey).setValue(attendanceModel);
 
 
         }

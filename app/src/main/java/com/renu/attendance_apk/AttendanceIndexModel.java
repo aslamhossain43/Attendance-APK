@@ -4,6 +4,10 @@ public class AttendanceIndexModel {
     private String dateTime;
     private String attendanceFor;
 
+
+    public AttendanceIndexModel() {
+    }
+
     public AttendanceIndexModel(String dateTime, String attendanceFor) {
         this.dateTime = dateTime;
         this.attendanceFor = attendanceFor;

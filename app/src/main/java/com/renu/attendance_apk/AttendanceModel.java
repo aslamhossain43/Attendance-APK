@@ -9,8 +9,10 @@ public class AttendanceModel implements Serializable {
     private List<String> attendanceList;
     private List<String> dateTimeList;
 
+    public AttendanceModel() {
+    }
 
-    public AttendanceModel(List<String> rollList, List<String> attendanceList,List<String> dateTimeList) {
+    public AttendanceModel(List<String> rollList, List<String> attendanceList, List<String> dateTimeList) {
         this.rollList = rollList;
         this.attendanceList = attendanceList;
         this.dateTimeList=dateTimeList;

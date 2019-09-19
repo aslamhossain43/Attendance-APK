@@ -1,9 +1,13 @@
 package com.renu.attendance_apk;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -27,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
     private Button add_FieldButton, add_To_Firebase;
     private Spinner spinnerForMain, spinnerForField;
     int c = 1;
-    DatabaseReference databaseReference;
+    DatabaseReference databaseReferenceForattendances,databaseReferenceForattendancesIndex;
     List<String> roolList;
     List<String> attendanceList;
     List<String>dateTimeList;
@@ -40,6 +44,22 @@ public class MainActivity extends AppCompatActivity {
         initView();
         setVariousValues();
         initOthers();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         add_FieldButton.setOnClickListener(new View.OnClickListener() {
@@ -116,6 +136,38 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+
+        MenuInflater menuInflater=getMenuInflater();
+        menuInflater.inflate(R.menu.menu_layout,menu);
+
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        if (item.getItemId()==R.id.listId){
+            Intent intent=new Intent(this,AttendancesIndex.class);
+            startActivity(intent);
+
+        }
+
+
+
+
+
+
+
+
+
+        return super.onOptionsItemSelected(item);
+    }
+
     private void sendToAttendanceIndex(String attendancesFor, String dateTime) {
 
 
@@ -148,15 +200,15 @@ public class MainActivity extends AppCompatActivity {
 
             if (Network.isNetworkAvailable(this)) {
 
-                String pushKeyForAttendancesIndex = databaseReference.push().getKey();
+                String pushKeyForAttendancesIndex = databaseReferenceForattendancesIndex.push().getKey();
                 AttendanceIndexModel attendanceIndexModel=new AttendanceIndexModel(dateTime,attendancesFor);
-                databaseReference.child(pushKeyForAttendancesIndex).setValue(attendanceIndexModel);
+                databaseReferenceForattendancesIndex.child(pushKeyForAttendancesIndex).setValue(attendanceIndexModel);
 
 
 
-                String pushKey = databaseReference.push().getKey();
+                String pushKey = databaseReferenceForattendances.push().getKey();
                 AttendanceModel attendanceModel = new AttendanceModel(roolList, attendanceList,dateTimeList);
-                databaseReference.child(pushKey).setValue(attendanceModel);
+                databaseReferenceForattendances.child(pushKey).setValue(attendanceModel);
             } else {
                 dataBaseHelper.insertDataInToAttendancesTable(roolList, attendanceList,dateTimeList);
                 dataBaseHelper.insertDataInToAttendancesIndexTable(dateTime,attendancesFor);
@@ -170,7 +222,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void initOthers() {
 
-        databaseReference = FirebaseDatabase.getInstance().getReference("attendance");
+        databaseReferenceForattendances = FirebaseDatabase.getInstance().getReference("attendance");
+        databaseReferenceForattendancesIndex = FirebaseDatabase.getInstance().getReference("attendanceindex");
         roolList = new ArrayList<>();
         attendanceList = new ArrayList<>();
         dateTimeList = new ArrayList<>();
