@@ -27,14 +27,14 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private LinearLayout parentLinearLayout;
-    private EditText editTextForMain, editTextForField,editTextAttendanceFor;
+    private EditText editTextForMain, editTextForField, editTextAttendanceFor;
     private Button add_FieldButton, add_To_Firebase;
     private Spinner spinnerForMain, spinnerForField;
     int c = 1;
-    DatabaseReference databaseReferenceForattendances,databaseReferenceForattendancesIndex;
+    DatabaseReference databaseReferenceForattendances, databaseReferenceForattendancesIndex;
     List<String> roolList;
     List<String> attendanceList;
-    List<String>dateTimeList;
+    List<String> dateTimeList;
     DataBaseHelper dataBaseHelper;
 
     @Override
@@ -46,51 +46,9 @@ public class MainActivity extends AppCompatActivity {
         initOthers();
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         add_FieldButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                boolean key = false;
-
-                if (parentLinearLayout.getChildCount() == 4) {
-                    View ltoV = parentLinearLayout.getChildAt(parentLinearLayout.getChildCount() - 2);
-
-
-                    Log.d("vv", "onClick: " + editTextForMain.getText());
-                    Log.d("vv", "onClick: " + spinnerForMain.getSelectedItem().toString());
-                    addValuesToList(editTextForMain.getText().toString().trim(), spinnerForMain.getSelectedItem().toString().trim(),null, null);
-
-
-                }
-                if (parentLinearLayout.getChildCount() >= 5) {
-                    View ltV = parentLinearLayout.getChildAt(parentLinearLayout.getChildCount() - 3);
-
-
-                    editTextForField = ltV.findViewById(R.id.rollForFieldId);
-                    spinnerForField = ltV.findViewById(R.id.spinnerForFieldId);
-
-
-                    Log.d("vv", "onClick: " + editTextForField.getText());
-                    Log.d("vv", "onClick: " + spinnerForField.getSelectedItem().toString());
-                    addValuesToList(editTextForField.getText().toString().trim(), spinnerForField.getSelectedItem().toString().trim(),null, null);
-
-
-                }
 
 
                 LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -100,8 +58,8 @@ public class MainActivity extends AppCompatActivity {
                 parentLinearLayout.addView(rowView, parentLinearLayout.getChildCount() - 2);
                 editTextForField = rowView.findViewById(R.id.rollForFieldId);
                 spinnerForField = rowView.findViewById(R.id.spinnerForFieldId);
-                c++;
                 editTextForField.setText("" + c);
+                c++;
 
 
             }
@@ -109,27 +67,28 @@ public class MainActivity extends AppCompatActivity {
         add_To_Firebase.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String attendancesFor=editTextAttendanceFor.getText().toString();
-                SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd hh:mm a");
-                Log.d("dt", "onClick: "+sim.format(new Date()));
-                String dateTime=sim.format(new Date());
-                sendToAttendanceIndex(attendancesFor,dateTime);
-
-
-                if (parentLinearLayout.getChildCount() >= 5) {
-                    View ltV = parentLinearLayout.getChildAt(parentLinearLayout.getChildCount() - 3);
+                roolList.clear();
+                attendanceList.clear();
+                //--------------------------------
+                String attendancesFor = editTextAttendanceFor.getText().toString();
+                SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd ',' hh:mm a");
+                Log.d("dt", "onClick: " + sim.format(new Date()));
+                String dateTime = sim.format(new Date());
+                sendToAttendanceIndex(attendancesFor, dateTime);
+                //------------------------------------
+                for (int i = 1; i < parentLinearLayout.getChildCount() - 2; i++) {
+                    View ltV = parentLinearLayout.getChildAt(i);
 
 
                     editTextForField = ltV.findViewById(R.id.rollForFieldId);
                     spinnerForField = ltV.findViewById(R.id.spinnerForFieldId);
-
-
-                    Log.d("vv", "onClick: " + editTextForField.getText());
-                    Log.d("vv", "onClick: " + spinnerForField.getSelectedItem().toString());
-                    addValuesToList(editTextForField.getText().toString().trim(), spinnerForField.getSelectedItem().toString().trim(),attendancesFor,dateTime);
+                    roolList.add(editTextForField.getText().toString().trim());
+                    attendanceList.add(spinnerForField.getSelectedItem().toString().trim());
 
 
                 }
+                addValuesToList(attendancesFor, dateTime);
+
             }
         });
 
@@ -141,8 +100,8 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
 
 
-        MenuInflater menuInflater=getMenuInflater();
-        menuInflater.inflate(R.menu.menu_layout,menu);
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.menu_layout, menu);
 
 
         return super.onCreateOptionsMenu(menu);
@@ -151,18 +110,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        if (item.getItemId()==R.id.listId){
-            Intent intent=new Intent(this,AttendancesIndex.class);
+        if (item.getItemId() == R.id.listId) {
+            Intent intent = new Intent(this, AttendancesIndex.class);
             startActivity(intent);
 
         }
-
-
-
-
-
-
-
 
 
         return super.onOptionsItemSelected(item);
@@ -171,47 +123,42 @@ public class MainActivity extends AppCompatActivity {
     private void sendToAttendanceIndex(String attendancesFor, String dateTime) {
 
 
-
-
-
     }
 
     private void setVariousValues() {
 
-        editTextForMain.setText("" + c);
+
     }
 
-    private void addValuesToList(String roll, String attendance,String attendancesFor,String dateTime) {
+    private void addValuesToList(String attendancesFor, String dateTime) {
 
+        dateTimeList.clear();
 
-        roolList.add(roll);
-        attendanceList.add(attendance);
-        if (dateTime!=null) {
-
+        if (dateTime != null) {
 
             for (int i = 0; i < roolList.size(); i++) {
                 dateTimeList.add(dateTime);
             }
 
-        Log.d("rr", "addValuesToList: " + roolList);
-        Log.d("aa", "addValuesToList: " + attendanceList);
-        Log.d("dt", "addValuesToList: " + dateTimeList);
+            Log.d("rr", "addValuesToList: " + roolList);
+            Log.d("aa", "addValuesToList: " + attendanceList);
+            Log.d("dt", "addValuesToList: " + dateTimeList);
 
 
             if (Network.isNetworkAvailable(this)) {
 
-                String pushKeyForAttendancesIndex = databaseReferenceForattendancesIndex.push().getKey();
-                AttendanceIndexModel attendanceIndexModel=new AttendanceIndexModel(dateTime,attendancesFor);
-                databaseReferenceForattendancesIndex.child(pushKeyForAttendancesIndex).setValue(attendanceIndexModel);
+                String pushKeyForAttendancesIndex = dateTime;
+                AttendanceIndexModel attendanceIndexModel = new AttendanceIndexModel(dateTime, attendancesFor);
+                databaseReferenceForattendancesIndex.child(dateTime).setValue(attendanceIndexModel);
 
-
-
-                String pushKey = databaseReferenceForattendances.push().getKey();
-                AttendanceModel attendanceModel = new AttendanceModel(roolList, attendanceList,dateTimeList);
+                String pushKey = dateTime;
+                AttendanceModel attendanceModel = new AttendanceModel(roolList, attendanceList, dateTimeList);
                 databaseReferenceForattendances.child(pushKey).setValue(attendanceModel);
+
+
             } else {
-                dataBaseHelper.insertDataInToAttendancesTable(roolList, attendanceList,dateTimeList);
-                dataBaseHelper.insertDataInToAttendancesIndexTable(dateTime,attendancesFor);
+                dataBaseHelper.insertDataInToAttendancesTable(roolList, attendanceList, dateTimeList);
+                dataBaseHelper.insertDataInToAttendancesIndexTable(dateTime, attendancesFor);
             }
 
 
@@ -235,23 +182,16 @@ public class MainActivity extends AppCompatActivity {
     private void initView() {
 
         parentLinearLayout = (LinearLayout) findViewById(R.id.parent_linear_layout);
-        editTextForMain = findViewById(R.id.rollForMainId);
-        spinnerForMain = findViewById(R.id.spinnerForMainId);
         add_FieldButton = findViewById(R.id.add_field_button);
         add_To_Firebase = findViewById(R.id.add_to_firebase_btnId);
-        editTextAttendanceFor=findViewById(R.id.editTextAttendancesForId);
+        editTextAttendanceFor = findViewById(R.id.editTextAttendancesForId);
 
     }
-
 
 
     public void onDelete(View v) {
         parentLinearLayout.removeView((View) v.getParent());
     }
-
-
-
-
 
 
 }

@@ -44,33 +44,6 @@
         </LinearLayout>
 
 
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="2"
-
-            >
-
-            <EditText
-                android:id="@+id/rollForMainId"
-                android:layout_width="wrap_content"
-
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="70dp"
-                android:layout_weight="1"
-                android:text="1" />
-
-            <Spinner
-                android:id="@+id/spinnerForMainId"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="70dp"
-                android:layout_weight="1"
-                android:entries="@array/types"
-                android:gravity="right" />
-
-        </LinearLayout>
 
         <Button
             android:id="@+id/add_field_button"

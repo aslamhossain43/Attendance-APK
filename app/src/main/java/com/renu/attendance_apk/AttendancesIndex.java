@@ -9,7 +9,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -26,7 +29,7 @@ public class AttendancesIndex extends AppCompatActivity {
     List<String> rollList;
     List<String> attendancesList;
     List<String> dateTimeList;
-private ListView attendancesIndexListView;
+    private ListView attendancesIndexListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,47 +43,33 @@ private ListView attendancesIndexListView;
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Log.d("hmmm", "onDataChange: hmmmmm");
-                for (DataSnapshot dnapshot:dataSnapshot.getChildren()){
-                AttendanceIndexModel attendanceIndexModel=dnapshot.getValue(AttendanceIndexModel.class);
-                attendanceIndexModelList.add(attendanceIndexModel);
+                for (DataSnapshot dnapshot : dataSnapshot.getChildren()) {
+                    AttendanceIndexModel attendanceIndexModel = dnapshot.getValue(AttendanceIndexModel.class);
+                    attendanceIndexModelList.add(attendanceIndexModel);
 
 
                 }
-                Log.d("ati", "onDataChange:"+attendanceIndexModelList.get(0).getAttendanceFor());
+                Log.d("ati", "onDataChange:" + attendanceIndexModelList.get(0).getAttendanceFor());
 
 
-
-
-
-                List<String>dtForIndex=new ArrayList<>();
-                List<String>attForIndex=new ArrayList<>();
-                for (AttendanceIndexModel attendanceIndexModel:attendanceIndexModelList){
+                List<String> dtForIndex = new ArrayList<>();
+                List<String> attForIndex = new ArrayList<>();
+                for (AttendanceIndexModel attendanceIndexModel : attendanceIndexModelList) {
                     dtForIndex.add(attendanceIndexModel.getDateTime());
                     attForIndex.add(attendanceIndexModel.getAttendanceFor());
 
 
-
                 }
 
-                String[]dateTimeForAttendanceIndexArray;
-                String[]attendanceForArray;
-                dateTimeForAttendanceIndexArray=dtForIndex.toArray(new String[dtForIndex.size()]);
-                attendanceForArray=attForIndex.toArray(new String[attForIndex.size()]);
-                Log.d("dt", "onCreate: "+dtForIndex);
-                Log.d("at", "onCreate: "+attForIndex);
+                String[] dateTimeForAttendanceIndexArray;
+                String[] attendanceForArray;
+                dateTimeForAttendanceIndexArray = dtForIndex.toArray(new String[dtForIndex.size()]);
+                attendanceForArray = attForIndex.toArray(new String[attForIndex.size()]);
+                Log.d("dt", "onCreate: " + dtForIndex);
+                Log.d("at", "onCreate: " + attForIndex);
 
 
-
-                listViewHandleForAttendancesIndex(dateTimeForAttendanceIndexArray,attendanceForArray);
-
-
-
-
-
-
-
-
-
+                listViewHandleForAttendancesIndex(dateTimeForAttendanceIndexArray, attendanceForArray);
 
 
             }
@@ -92,16 +81,29 @@ private ListView attendancesIndexListView;
         });
 
 
-
-
-
     }
 
-    private void listViewHandleForAttendancesIndex(String[] dateTimeForAttendanceIndexArray, String[] attendanceForArray) {
+    private void listViewHandleForAttendancesIndex(final String[] dateTimeForAttendanceIndexArray, final String[] attendanceForArray) {
 
-    CustomAdupterForAttendancesIndex customAdupterForAttendancesIndex=new CustomAdupterForAttendancesIndex(this,dateTimeForAttendanceIndexArray,attendanceForArray);
-attendancesIndexListView.setAdapter(customAdupterForAttendancesIndex);
+        CustomAdupterForAttendancesIndex customAdupterForAttendancesIndex = new CustomAdupterForAttendancesIndex(this, dateTimeForAttendanceIndexArray, attendanceForArray);
+        attendancesIndexListView.setAdapter(customAdupterForAttendancesIndex);
 
+        attendancesIndexListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                Intent intent = new Intent(AttendancesIndex.this, SpecificAttendancesFromFirebase.class);
+                String attFor = attendanceForArray[position];
+                String dt = dateTimeForAttendanceIndexArray[position];
+                Bundle bundle = new Bundle();
+                bundle.putString("attFor", attFor);
+                bundle.putString("dt", dt);
+                intent.putExtras(bundle);
+                startActivity(intent);
+
+
+            }
+        });
 
     }
 
@@ -119,7 +121,7 @@ attendancesIndexListView.setAdapter(customAdupterForAttendancesIndex);
     }
 
     private void initView() {
-attendancesIndexListView=findViewById(R.id.attendancesIndexListViewId);
+        attendancesIndexListView = findViewById(R.id.attendancesIndexListViewId);
 
     }
 

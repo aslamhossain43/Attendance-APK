@@ -9,11 +9,21 @@
 
     >
 
-
+<TextView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:textStyle="bold"
+    android:gravity="center"
+    android:background="#A7DB6A"
+    android:text="All Attendances From Server"
+    android:padding="5sp"
+    android:textSize="20sp"
+    android:layout_marginBottom="1sp"
+    />
 
     <ListView
-        android:listSelector="#B9C2BA"
-        android:divider="#F5F4ED"
+        android:listSelector="#A7DB6A"
+        android:divider="#339FA7A7"
         android:dividerHeight="2dp"
         android:id="@+id/attendancesIndexListViewId"
         android:layout_width="match_parent"
