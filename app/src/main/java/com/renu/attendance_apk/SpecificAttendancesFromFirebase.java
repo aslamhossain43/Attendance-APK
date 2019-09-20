@@ -41,23 +41,19 @@ public class SpecificAttendancesFromFirebase extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 List<String> rollList = new ArrayList<>();
                 List<String> attList = new ArrayList<>();
-                List<String> dtList = new ArrayList<>();
                 AttendanceModel attendanceModel=new AttendanceModel();
                 attendanceModel=dataSnapshot.getValue(AttendanceModel.class);
 
                     rollList.addAll(attendanceModel.getRollList());
                     attList.addAll(attendanceModel.getAttendanceList());
-                    dtList.addAll(attendanceModel.getDateTimeList());
 
 
                 Log.d("rr", "onDataChange: " + rollList);
                 Log.d("att", "onDataChange: " + attList);
-                Log.d("dt", "onDataChange: " + dtList);
 
                 String[] specificFinalRoll = rollList.toArray(new String[rollList.size()]);
                 String[] specificFinalAttendances = attList.toArray(new String[attList.size()]);
-                String[] specificFinalDate = dtList.toArray(new String[dtList.size()]);
-                CustomAdupterForIndexFromFirebase customAdupterForIndexFromFirebase = new CustomAdupterForIndexFromFirebase(SpecificAttendancesFromFirebase.this, specificFinalRoll, specificFinalAttendances, specificFinalDate);
+                CustomAdupterForIndexFromFirebase customAdupterForIndexFromFirebase = new CustomAdupterForIndexFromFirebase(SpecificAttendancesFromFirebase.this, specificFinalRoll, specificFinalAttendances);
                 listViewSpecificAttFromFirebase.setAdapter(customAdupterForIndexFromFirebase);
 
 

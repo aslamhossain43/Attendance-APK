@@ -147,16 +147,18 @@ public class MainActivity extends AppCompatActivity {
 
             if (Network.isNetworkAvailable(this)) {
 
-                String pushKeyForAttendancesIndex = dateTime;
                 AttendanceIndexModel attendanceIndexModel = new AttendanceIndexModel(dateTime, attendancesFor);
                 databaseReferenceForattendancesIndex.child(dateTime).setValue(attendanceIndexModel);
 
-                String pushKey = dateTime;
                 AttendanceModel attendanceModel = new AttendanceModel(roolList, attendanceList, dateTimeList);
-                databaseReferenceForattendances.child(pushKey).setValue(attendanceModel);
+                databaseReferenceForattendances.child(dateTime).setValue(attendanceModel);
+                Log.d("nn", "addValuesToList:  neeeeeeeeeeeeeeeeet");
 
 
             } else {
+
+
+                Log.d("nn", "addValuesToList: noooooooooooooooooo net");
                 dataBaseHelper.insertDataInToAttendancesTable(roolList, attendanceList, dateTimeList);
                 dataBaseHelper.insertDataInToAttendancesIndexTable(dateTime, attendancesFor);
             }
