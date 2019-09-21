@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">Attendance-APK</string>
     <string-array name="types">
-        <item>Present</item>
-        <item>Absent</item>
+        <item>P</item>
+        <item>A</item>
         <item>Off</item>
     </string-array>
 </resources>

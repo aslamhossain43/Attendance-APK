@@ -13,8 +13,7 @@
        android:weightSum="2"
        android:orientation="vertical"
        android:background="#4CAF50"
-       android:layout_marginTop="1dp"
-       >
+       android:layout_marginTop="1dp">
        <TextView
            android:id="@+id/textViewHeadingForClassId"
            android:layout_width="match_parent"
@@ -52,7 +51,6 @@
         android:orientation="horizontal"
         android:weightSum="2"
         android:background="#4CAF50"
-        android:layout_marginTop="1dp"
         >
 
         <TextView
@@ -95,9 +93,8 @@
         android:id="@+id/listViewSpecificAttFromFirebaseId"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="1dp"
-        android:divider="#339FA7A7"
-        android:dividerHeight="2dp"
-        android:listSelector="#A7DB6A" />
+        android:divider="#336B6F6F"
+        android:dividerHeight="1dp"
+        android:listSelector="#B6DD89" />
 
 </LinearLayout>

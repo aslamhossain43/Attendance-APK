@@ -4,40 +4,35 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:weightSum="3"
+    android:weightSum="2"
 
     >
 
-    <EditText
-        android:id="@+id/rollForFieldId"
-        android:layout_width="wrap_content"
 
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:gravity="center" />
+
 
     <EditText
-        android:id="@+id/nameForFieldId"
+        android:id="@+id/rollFieldId"
         android:layout_width="wrap_content"
 
         android:layout_height="wrap_content"
-        android:layout_weight="1.50"
+        android:layout_weight="0.90"
+        android:gravity="center" />
+    <EditText
+        android:id="@+id/nameFieldId"
+        android:layout_width="wrap_content"
+
+        android:layout_height="wrap_content"
+        android:layout_weight="0.90"
         android:gravity="center" />
 
-    <Spinner
-        android:id="@+id/spinnerForFieldId"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.25"
-        android:entries="@array/types"
 
-        />
     <Button
-        android:id="@+id/delete_button"
+        android:id="@+id/d_button"
         android:layout_width="0dp"
         android:layout_height="40dp"
-        android:layout_weight="0.25"
+        android:layout_weight="0.20"
         android:background="@android:drawable/ic_delete"
-        android:onClick="onDelete"/>
+        android:onClick="onDelete" />
 
 </LinearLayout>

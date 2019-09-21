@@ -4,29 +4,33 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AttendancesIndex"
     android:orientation="vertical"
+    tools:context=".ExistRollNames">
 
-    >
 
-<TextView
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:textStyle="bold"
-    android:gravity="center"
-    android:background="#4CAF50"
-    android:text="All Attendances From Server"
-    android:padding="10sp"
-    android:textSize="20sp"
-    />
+
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:background="#4CAF50"
+        android:text=" Your Existance Attendance Types"
+        android:padding="10sp"
+        android:textSize="20sp"
+        />
 
     <ListView
         android:listSelector="#B6DD89"
         android:divider="#336B6F6F"
         android:dividerHeight="1dp"
-        android:id="@+id/attendancesIndexListViewId"
+        android:id="@+id/existanceAttendanceListViewId"
         android:layout_width="match_parent"
         android:layout_height="match_parent"></ListView>
+
+
 
 
 </LinearLayout>

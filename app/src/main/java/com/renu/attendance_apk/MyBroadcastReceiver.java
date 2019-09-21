@@ -25,8 +25,14 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
 
             final String ATTENDANCES_TABLE = "attendance";
             final String ROLL = "roll";
+            final String NAME = "name";
             final String ATTENDANCES = "attendances";
             final String ATTENDANCES_TIMES = "datetime";
+
+            final String ROLL_NAME_TABLE = "rollname";
+            final String ROLL_FOR_ROLLNAME = "roll";
+            final String NAME_FOR_ROLLNAME = "name";
+            final String DATETIME_FOR_ROLLNAME = "time";
 
             final String DELETE_ALL_VALUES_FROM_ATTENDANCES_INDEX = "delete from " + ATTENDANCES_INDEX_TABLE;
             final String DELETE_ALL_VALUES_FROM_ATTENDANCE = "delete from " + ATTENDANCES_TABLE;
@@ -34,8 +40,15 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
 
             DataBaseHelper dataBaseHelper = new DataBaseHelper(context);
             DatabaseReference databaseReferenceForAttendances = FirebaseDatabase.getInstance().getReference("attendance");
+            DatabaseReference databaseReferenceForRollName = FirebaseDatabase.getInstance().getReference("rollnames");
             DatabaseReference databaseReferenceForAttendancesIndex = FirebaseDatabase.getInstance().getReference("attendanceindex");
+
+            List<String> roll = new ArrayList<>();
+            List<String> name = new ArrayList<>();
+            List<String> dtRollNameList = new ArrayList<>();
+
             List<String> rollList = new ArrayList<>();
+            List<String> nameList = new ArrayList<>();
             List<String> attendancesList = new ArrayList<>();
             List<String> dateTimeList = new ArrayList<>();
             Cursor cursor = dataBaseHelper.getAllDataFromAttendancesIndex();
@@ -47,25 +60,47 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
 
                 AttendanceIndexModel attendanceIndexModel = new AttendanceIndexModel(dateTime, attendanceFor);
                 databaseReferenceForAttendancesIndex.child(dateTime).setValue(attendanceIndexModel);
-                String query = "SELECT * FROM " + ATTENDANCES_TABLE + " WHERE " + ATTENDANCES_TIMES + " = '" + dateTime + "'";
+                //-----------------------------------------------------------------------------------
+
+
+                String query = "SELECT * FROM " + ROLL_NAME_TABLE + " WHERE " + DATETIME_FOR_ROLLNAME + " = '" + dateTime + "'";
 
                 Cursor c = sqLiteDatabase.rawQuery(query, null);
                 while (c.moveToNext()) {
-                    rollList.add(c.getString(0));
-                    attendancesList.add(c.getString(1));
-                    dateTimeList.add(c.getString(2));
+                    roll.add(c.getString(0));
+                    name.add(c.getString(1));
+                    dtRollNameList.add(c.getString(2));
 
                 }
-                AttendanceModel attendanceModel = new AttendanceModel(rollList, attendancesList, dateTimeList);
+
+                RollNameModel rollNameModel = new RollNameModel(roll, name, dtRollNameList);
+                databaseReferenceForRollName.child(attendanceFor).setValue(rollNameModel);
+
+                roll.clear();
+                name.clear();
+                dtRollNameList.clear();
+
+
+                //------------------------------------------------------------------------------------
+                String q = "SELECT * FROM " + ATTENDANCES_TABLE + " WHERE " + ATTENDANCES_TIMES + " = '" + dateTime + "'";
+
+                Cursor cursor1 = sqLiteDatabase.rawQuery(q, null);
+                while (cursor1.moveToNext()) {
+                    rollList.add(cursor1.getString(0));
+                    nameList.add(cursor1.getString(1));
+                    attendancesList.add(cursor1.getString(2));
+                    dateTimeList.add(cursor1.getString(3));
+
+                }
+                AttendanceModel attendanceModel = new AttendanceModel(rollList, nameList, attendancesList, dateTimeList);
                 databaseReferenceForAttendances.child(dateTime).setValue(attendanceModel);
                 rollList.clear();
+                nameList.clear();
                 attendancesList.clear();
                 dateTimeList.clear();
 
 
             }
-            sqLiteDatabase.execSQL(DELETE_ALL_VALUES_FROM_ATTENDANCES_INDEX);
-            sqLiteDatabase.execSQL(DELETE_ALL_VALUES_FROM_ATTENDANCE);
 
 
         }
