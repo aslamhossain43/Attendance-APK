@@ -257,7 +257,11 @@ public class MainActivity extends AppCompatActivity {
 
         }
         if (item.getItemId() == R.id.localAttendances) {
-            Intent intent = new Intent(this, AfterLogin.class);
+            Intent intent = new Intent(this, ExistRollNames.class);
+            startActivity(intent);
+
+        }if (item.getItemId()==R.id.logoutId){
+            Intent intent = new Intent(this, Authentication.class);
             startActivity(intent);
 
         }
@@ -265,6 +269,7 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
 
     private void sendToAttendanceIndex(String attendancesFor, String dateTime) {
 

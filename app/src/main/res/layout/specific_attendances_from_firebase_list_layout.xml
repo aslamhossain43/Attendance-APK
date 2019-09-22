@@ -4,18 +4,29 @@
     android:layout_height="match_parent">
 
     <LinearLayout
-        android:padding="3dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:weightSum="2"
+        android:weightSum="100"
         android:orientation="horizontal">
 
         <TextView
             android:id="@+id/rollTextViewId"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="1"
+            android:layout_height="wrap_content"
+            android:layout_weight="20"
+            android:text="Roll No :"
+            android:textStyle="bold"
+            android:textSize="14dp"
+            android:gravity="center"
+            />
+        <TextView
+            android:id="@+id/nameTextViewId"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="50"
+            android:text="Names :"
+            android:textSize="14dp"
+            android:textStyle="bold"
             android:gravity="center"
             />
 
@@ -23,12 +34,30 @@
             android:id="@+id/attTextViewId"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_weight="15"
             android:text="Present"
+            android:textSize="14dp"
+            android:textStyle="bold"
             android:gravity="center"
+            />
+        <Button
+            android:id="@+id/specificAttEditBtnId"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_weight="7.5"
+            android:background="@drawable/ic_edit_black_24dp"
             />
 
 
+
+
+        <Button
+            android:id="@+id/specificAttDeleteBtnId"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_weight="7.5"
+            android:background="@drawable/ic_delete_black_24dp"
+            />
 
 
     </LinearLayout>

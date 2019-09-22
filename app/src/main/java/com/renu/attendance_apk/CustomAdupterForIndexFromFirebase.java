@@ -10,11 +10,13 @@ import android.widget.TextView;
 
 class CustomAdupterForIndexFromFirebase extends BaseAdapter {
     String[]rollString;
+    String[]nameString;
     String[]attString;
     Context context;
 
-    public CustomAdupterForIndexFromFirebase(Context context,String[] rollString, String[] attString) {
+    public CustomAdupterForIndexFromFirebase(Context context,String[] rollString,String[] nameString, String[] attString) {
         this.rollString = rollString;
+        this.nameString = nameString;
         this.attString = attString;
         this.context=context;
     }
@@ -45,8 +47,10 @@ class CustomAdupterForIndexFromFirebase extends BaseAdapter {
 
 
         TextView rollTextView=convertView.findViewById(R.id.rollTextViewId);
+        TextView nameTextView=convertView.findViewById(R.id.nameTextViewId);
         TextView attTextView=convertView.findViewById(R.id.attTextViewId);
         rollTextView.setText(rollString[position]);
+        nameTextView.setText(nameString[position]);
         attTextView.setText(attString[position]);
 
 

@@ -140,14 +140,24 @@ public class AttendancesIndex extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        if (item.getItemId() == R.id.logoutId) {
-            Intent intent = new Intent(this, MainActivity.class);
+
+        if (item.getItemId() == R.id.openId) {
+            Intent intent = new Intent(this, CreateNew1.class);
+            startActivity(intent);
+
+        }
+        if (item.getItemId() == R.id.localAttendances) {
+            Intent intent = new Intent(this, ExistRollNames.class);
+            startActivity(intent);
+
+        }if (item.getItemId()==R.id.logoutId){
+            Intent intent = new Intent(this, Authentication.class);
             startActivity(intent);
 
         }
 
+
         return super.onOptionsItemSelected(item);
-
-
     }
+
 }

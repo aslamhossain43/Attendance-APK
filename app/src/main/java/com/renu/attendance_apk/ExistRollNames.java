@@ -8,6 +8,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -141,4 +144,39 @@ dataBaseHelper=new DataBaseHelper(this);
 
         listViewExistAttTypes = findViewById(R.id.existanceAttendanceListViewId);
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.menu_layout, menu);
+
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        if (item.getItemId() == R.id.listId) {
+            Intent intent = new Intent(this, AttendancesIndex.class);
+            startActivity(intent);
+
+        }
+        if (item.getItemId() == R.id.openId) {
+            Intent intent = new Intent(this, CreateNew1.class);
+            startActivity(intent);
+
+        }
+        if (item.getItemId()==R.id.logoutId){
+            Intent intent = new Intent(this, Authentication.class);
+            startActivity(intent);
+
+        }
+
+
+        return super.onOptionsItemSelected(item);
+    }
+
 }
