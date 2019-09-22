@@ -1,5 +1,12 @@
 <resources>
     <string name="app_name">Attendance-APK</string>
+    <string name="Username"> Username</string>
+    <string name="Password"> Password</string>
+    <string name="NotRegistered">Not Registered ?</string>
+    <string name="login">Login</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="register">Register</string>
+    <string name="alreadyregistered">Already Registered ?</string>
     <string-array name="types">
         <item>P</item>
         <item>A</item>

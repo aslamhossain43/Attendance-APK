@@ -9,16 +9,19 @@ import android.widget.TextView;
 
 class CustomAdupterForAttendanceTypes extends BaseAdapter {
     Context context;
-    String[]keys;
+    String[]sAtt;
+    String[]sDateTime;
 
-    public CustomAdupterForAttendanceTypes(Context context, String[] keys) {
+    public CustomAdupterForAttendanceTypes(Context context, String[] sAtt, String[] sDateTime) {
         this.context = context;
-        this.keys = keys;
+    this.sAtt=sAtt;
+    this.sDateTime=sDateTime;
+
     }
 
     @Override
     public int getCount() {
-        return keys.length;
+        return sAtt.length;
     }
 
     @Override
@@ -41,8 +44,10 @@ class CustomAdupterForAttendanceTypes extends BaseAdapter {
 
         }
         TextView textView=convertView.findViewById(R.id.rollNameTextViewId);
-        textView.setText(keys[position]);
+        textView.setText(sAtt[position]);
 
+        TextView textViewDate=convertView.findViewById(R.id.rollNameDateTextViewId);
+        textViewDate.setText(sDateTime[position]);
 
 
 

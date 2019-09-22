@@ -9,13 +9,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ExistRollNames"></activity>
+        <activity android:name=".RegisterActivity"></activity>
+        <activity android:name=".AfterLogin" />
+        <activity android:name=".ExistRollNames" />
         <activity android:name=".MainActivity" />
         <activity android:name=".CreateNew2" />
         <activity android:name=".CreateNew1" />
         <activity android:name=".SpecificAttendancesFromFirebase" />
         <activity android:name=".AttendancesIndex" />
-        <activity android:name=".AfterLogin">
+        <activity android:name=".Authentication">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

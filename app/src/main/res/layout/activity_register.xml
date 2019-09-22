@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="#3F51B5"
+    tools:context=".RegisterActivity">
+
+    <ImageView
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_marginBottom="40dp"
+        android:src="@drawable/log_for_imageview"/>
+
+    <EditText
+        android:id="@+id/editTextUserNameId"
+        android:layout_width="180dp"
+        android:layout_height="40dp"
+        android:background="#ffff"
+        android:drawableLeft="@drawable/ic_account_circle_black_24dp"
+        android:hint="@string/Username"
+
+        />
+
+
+
+    <EditText
+        android:id="@+id/editTextPasswordId"
+        android:layout_width="180dp"
+        android:layout_height="40dp"
+        android:background="#ffff"
+        android:drawableLeft="@drawable/ic_vpn_key_black_24dp"
+        android:layout_marginTop="20dp"
+        android:hint="@string/Password"/>
+
+
+    <EditText
+        android:id="@+id/editTextConfirmPasswordId"
+        android:layout_width="180dp"
+        android:layout_height="40dp"
+        android:background="#ffff"
+        android:drawableLeft="@drawable/ic_vpn_key_black_24dp"
+        android:layout_marginTop="20dp"
+        android:hint="@string/confirm_password"/>
+
+    <Button
+        android:id="@+id/registerBtnid"
+        android:layout_width="180dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="20dp"
+        android:textColor="#ffff"
+        android:background="#2C48E6"
+        android:text="@string/register"/>
+
+
+    <LinearLayout
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:textColor="#ffff"
+            android:text="@string/alreadyregistered"
+            />
+
+        <TextView
+            android:id="@+id/textViewForLoginId"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:paddingLeft="10dp"
+            android:textStyle="bold"
+            android:textColor="#00BCD4"
+            android:text="@string/login"
+            android:onClick="onClick"
+            android:clickable="true"
+
+            />
+
+
+
+    </LinearLayout>
+
+
+
+
+
+
+</LinearLayout>

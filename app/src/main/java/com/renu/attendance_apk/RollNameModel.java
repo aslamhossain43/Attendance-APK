@@ -5,15 +5,17 @@ import java.util.List;
 public class RollNameModel {
     private List<String>rollNo;
     private List<String>name;
+    private List<String>attFor;
     private List<String>dateTime;
 
     public RollNameModel() {
     }
 
-    public RollNameModel(List<String> rollNo, List<String> name,List<String> dateTime) {
+    public RollNameModel(List<String> rollNo, List<String> name, List<String> attFor,List<String> dateTime) {
 
         this.rollNo = rollNo;
         this.name = name;
+        this.attFor=attFor;
         this.dateTime=dateTime;
     }
 
@@ -35,9 +37,9 @@ public class RollNameModel {
         this.name = name;
     }
 
-    public List<String> getDateTime() {
-        return dateTime;
-    }
+    public RollNameModel(List<String> rollNo) { this.rollNo = rollNo; }
+
+    public List<String> getDateTime() { return dateTime; }
 
     public void setDateTime(List<String> dateTime) {
         this.dateTime = dateTime;

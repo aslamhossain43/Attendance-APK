@@ -39,7 +39,15 @@ public class MainActivity extends AppCompatActivity {
     private EditText editTextForMain, editTextForField, editTextAttendanceFor, editTextNameForField;
     private Button add_FieldButton, add_To_Firebase;
     private Spinner spinnerForMain, spinnerForField;
-    int c = 1;
+
+
+    private static final String ROLL_NAME_TABLE = "rollname";
+    private static final String ROLL_FOR_ROLLNAME = "roll";
+    private static final String NAME_FOR_ROLLNAME = "name";
+    private static final String ATT_FOR_ROLLNAME = "attfor";
+    private static final String DATETIME_FOR_ROLLNAME = "time";
+
+
     DatabaseReference databaseReferenceForattendances, databaseReferenceForattendancesIndex,
             databaseReferenceForRollNames;
     List<String> roolList;
@@ -47,15 +55,16 @@ public class MainActivity extends AppCompatActivity {
     List<String> attendanceList;
     List<String> dateTimeList;
     DataBaseHelper dataBaseHelper;
-    String keyForRollName;
+    SQLiteDatabase sqLiteDatabase;
+    String rollNameAttFor;
+    String rollNameDateTime;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Bundle bundle = getIntent().getExtras();
-        keyForRollName = bundle.getString("key");
+        getINtentValues();
 
 
         initView();
@@ -71,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
 
 */
 
-        if (Network.isNetworkAvailable(this)) {
+       /* if (Network.isNetworkAvailable(this)) {
 
 
 //---------------------------
@@ -114,35 +123,54 @@ public class MainActivity extends AppCompatActivity {
             });
         } else {
 
-
-            List<String> roll = new ArrayList<>();
-            List<String> name = new ArrayList<>();
-            Map<String, List<String>> map = dataBaseHelper.getAllDataFromRollNameTable();
+*/
+        List<String> roll = new ArrayList<>();
+        List<String> name = new ArrayList<>();
+        List<String> attFor = new ArrayList<>();
+        List<String> date = new ArrayList<>();
+        Log.d("tt", "onCreate: ROLL NAME TIME :" + rollNameDateTime);
+        Log.d("tt", "onCreate: ROLL NAME TIME :" + rollNameAttFor);
+            /*Map<String, List<String>> map = dataBaseHelper.getAllDataFromRollNameTable();
 
             roll.addAll(map.get("rollList"));
             name.addAll(map.get("nameList"));
+*/
 
+//--------------------------
+        String q = "SELECT * FROM " + ROLL_NAME_TABLE + " WHERE " + DATETIME_FOR_ROLLNAME + " = '" + rollNameDateTime + "'";
 
-            String[] stringsForRoll = roll.toArray(new String[roll.size()]);
-            String[] stringsForNames = name.toArray(new String[name.size()]);
-            for (int i = 0; i < roll.size(); i++) {
-
-
-                LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                View rowView = inflater.inflate(R.layout.field, null);
-                // Add the new row before the add field button.
-
-                parentLinearLayout.addView(rowView, parentLinearLayout.getChildCount() - 1);
-                editTextForField = rowView.findViewById(R.id.rollForFieldId);
-                editTextNameForField = rowView.findViewById(R.id.nameForFieldId);
-                spinnerForField = rowView.findViewById(R.id.spinnerForFieldId);
-                editTextForField.setText(stringsForRoll[i]);
-                editTextNameForField.setText(stringsForNames[i]);
-
-            }
-
+        Cursor cursor1 = sqLiteDatabase.rawQuery(q, null);
+        while (cursor1.moveToNext()) {
+            roll.add(cursor1.getString(0));
+            name.add(cursor1.getString(1));
+            attFor.add(cursor1.getString(2));
+            date.add(cursor1.getString(3));
 
         }
+
+
+        String[] stringsForRoll = roll.toArray(new String[roll.size()]);
+        String[] stringsForNames = name.toArray(new String[name.size()]);
+        Log.d("rr", "onCreate: " + roll);
+        Log.d("rr", "onCreate: " + name);
+        for (int i = 0; i < roll.size(); i++) {
+
+
+            LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View rowView = inflater.inflate(R.layout.field, null);
+            // Add the new row before the add field button.
+
+            parentLinearLayout.addView(rowView, parentLinearLayout.getChildCount() - 1);
+            editTextForField = rowView.findViewById(R.id.rollForFieldId);
+            editTextNameForField = rowView.findViewById(R.id.nameForFieldId);
+            spinnerForField = rowView.findViewById(R.id.spinnerForFieldId);
+            editTextForField.setText(stringsForRoll[i]);
+            editTextNameForField.setText(stringsForNames[i]);
+
+        }
+
+
+        //}
 //-----------------------------------------------------
 
        /*
@@ -172,7 +200,7 @@ public class MainActivity extends AppCompatActivity {
                 SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd ',' hh:mm:ss a");
                 Log.d("dt", "onClick: " + sim.format(new Date()));
                 String dateTime = sim.format(new Date());
-                sendToAttendanceIndex(keyForRollName, dateTime);
+                sendToAttendanceIndex(rollNameAttFor, dateTime);
                 //------------------------------------
                 for (int i = 1; i < parentLinearLayout.getChildCount() - 1; i++) {
                     View ltV = parentLinearLayout.getChildAt(i);
@@ -187,11 +215,19 @@ public class MainActivity extends AppCompatActivity {
 
 
                 }
-                addValuesToList(keyForRollName, dateTime);
+                addValuesToList(rollNameAttFor, dateTime);
 
             }
         });
 
+
+    }
+
+    private void getINtentValues() {
+
+        Bundle bundle = getIntent().getExtras();
+        rollNameAttFor = bundle.getString("sAtt");
+        rollNameDateTime = bundle.getString("sDateTime");
 
     }
 
@@ -270,12 +306,9 @@ public class MainActivity extends AppCompatActivity {
 
                 Log.d("nn", "addValuesToList: noooooooooooooooooo net");
                 dataBaseHelper.insertDataInToAttendancesTable(roolList, nameList, attendanceList, dateTimeList);
-//Delete this row to set att and index time
-
-    dataBaseHelper.deleteAnyRow(attendancesFor);
 
 
-    dataBaseHelper.insertDataInToAttendancesIndexTable(dateTime, attendancesFor);
+                dataBaseHelper.insertDataInToAttendancesIndexTable(dateTime, attendancesFor);
             }
 
 
@@ -288,14 +321,14 @@ public class MainActivity extends AppCompatActivity {
 
         databaseReferenceForattendances = FirebaseDatabase.getInstance().getReference("attendance");
         databaseReferenceForattendancesIndex = FirebaseDatabase.getInstance().getReference("attendanceindex");
-        databaseReferenceForRollNames = FirebaseDatabase.getInstance().getReference("rollnames").child(keyForRollName);
+        databaseReferenceForRollNames = FirebaseDatabase.getInstance().getReference("rollnames").child(rollNameDateTime);
         roolList = new ArrayList<>();
         nameList = new ArrayList<>();
         attendanceList = new ArrayList<>();
         dateTimeList = new ArrayList<>();
 
         dataBaseHelper = new DataBaseHelper(this);
-
+        sqLiteDatabase = dataBaseHelper.getWritableDatabase();
     }
 
     private void initView() {
