@@ -133,7 +133,7 @@ public class SpecificAttendancesFromFirebase extends AppCompatActivity {
                                 Bundle bundle = new Bundle();
                                 bundle.putString("roll", specificFinalRoll[position]);
                                 bundle.putString("name", specificFinalName[position]);
-                                bundle.putString("p/a/off", specificFinalAttendances[position]);
+                                bundle.putString("paoff", specificFinalAttendances[position]);
                                 intent.putExtras(bundle);
                                 startActivity(intent);
 
