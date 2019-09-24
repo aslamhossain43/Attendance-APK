@@ -56,7 +56,7 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="20"
+            android:layout_weight="15"
             android:text="Roll No :"
             android:textStyle="bold"
             android:textSize="12dp"
@@ -65,7 +65,7 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="52"
+            android:layout_weight="72"
             android:text="Person's Names :"
             android:textStyle="bold"
             android:textSize="12dp"
@@ -75,18 +75,8 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="16"
-            android:text="P/A/Off :"
-            android:textStyle="bold"
-
-            android:textSize="12dp"
-            android:gravity="center"
-            />
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
             android:layout_weight="13"
-            android:text="Settings"
+            android:text="P/A/Off :"
             android:textStyle="bold"
 
             android:textSize="12dp"
