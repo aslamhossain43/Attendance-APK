@@ -7,7 +7,16 @@
     android:gravity="center"
     android:orientation="vertical"
     tools:context=".Update">
-
+<TextView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:textStyle="italic"
+    android:textSize="18dp"
+    android:layout_marginTop="20dp"
+    android:layout_marginBottom="10dp"
+    android:text="Please update values carefully !"
+    android:gravity="center"
+    android:textColor="#3F51B5"/>
 
 
     <LinearLayout

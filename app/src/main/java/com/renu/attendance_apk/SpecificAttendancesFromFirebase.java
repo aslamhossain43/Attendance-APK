@@ -26,6 +26,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class SpecificAttendancesFromFirebase extends AppCompatActivity {
@@ -35,6 +36,7 @@ public class SpecificAttendancesFromFirebase extends AppCompatActivity {
     private ListView listViewSpecificAttFromFirebase;
     private TextView textViewForClass, textViewForDate;
     private AlertDialog.Builder alertDialogBuilder;
+    CustomAdupterForIndexFromFirebase customAdupterForIndexFromFirebase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,36 +53,50 @@ public class SpecificAttendancesFromFirebase extends AppCompatActivity {
         databaseReferenceForattendances.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+
                 final List<String> rollList = new ArrayList<>();
                 List<String> nameList = new ArrayList<>();
                 List<String> attList = new ArrayList<>();
                 List<String> dtList = new ArrayList<>();
-                AttendanceModel attendanceModel = new AttendanceModel();
-                attendanceModel = dataSnapshot.getValue(AttendanceModel.class);
 
 
                 try {
+                    AttendanceModel attendanceModel = new AttendanceModel();
+                    attendanceModel = dataSnapshot.getValue(AttendanceModel.class);
+
+
                     rollList.addAll(attendanceModel.getRollList());
                     nameList.addAll(attendanceModel.getNameList());
                     attList.addAll(attendanceModel.getAttendanceList());
                     dtList.addAll(attendanceModel.getDateTimeList());
 
+
                     Log.d("rr", "onDataChange: " + rollList);
                     Log.d("att", "onDataChange: " + attList);
+                    Log.d("nn", "onDataChange: " + nameList);
+                    Log.d("dt", "onDataChange: " + dtList);
                 } catch (Exception e) {
-                    Query qForAttIndex = databaseReferenceForattendancesIndex;
-                    qForAttIndex.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            dataSnapshot.child("attendanceFor").getRef().removeValue();
-                            dataSnapshot.child("dateTime").getRef().removeValue();
-                        }
 
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                        }
-                    });
+
+
+                    if (rollList.size()==0) {
+
+
+                        Query qForAttIndex = databaseReferenceForattendancesIndex;
+                        qForAttIndex.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                dataSnapshot.getRef().removeValue();
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+                    }
 
                 }
 
@@ -89,7 +105,7 @@ public class SpecificAttendancesFromFirebase extends AppCompatActivity {
                 final String[] specificFinalName = nameList.toArray(new String[nameList.size()]);
                 final String[] specificFinalAttendances = attList.toArray(new String[attList.size()]);
                 final String[] specificFinalDateTime = dtList.toArray(new String[dtList.size()]);
-                CustomAdupterForIndexFromFirebase customAdupterForIndexFromFirebase = new CustomAdupterForIndexFromFirebase(SpecificAttendancesFromFirebase.this, specificFinalRoll, specificFinalName, specificFinalAttendances);
+                customAdupterForIndexFromFirebase = new CustomAdupterForIndexFromFirebase(SpecificAttendancesFromFirebase.this, specificFinalRoll, specificFinalName, specificFinalAttendances);
                 listViewSpecificAttFromFirebase.setAdapter(customAdupterForIndexFromFirebase);
 
 
@@ -102,7 +118,6 @@ public class SpecificAttendancesFromFirebase extends AppCompatActivity {
                         alertDialogBuilder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                String dateTime = specificFinalDateTime[position];
 
                                 Query qForAtt = databaseReferenceForattendances;
                                 qForAtt.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -114,7 +129,6 @@ public class SpecificAttendancesFromFirebase extends AppCompatActivity {
                                         dataSnapshot.child("nameList").child(String.valueOf(position)).getRef().removeValue();
                                         dataSnapshot.child("dateTimeList").child(String.valueOf(position)).getRef().removeValue();
                                         dataSnapshot.child("attendanceList").child(String.valueOf(position)).getRef().removeValue();
-
 
                                     }
 
@@ -134,6 +148,8 @@ public class SpecificAttendancesFromFirebase extends AppCompatActivity {
                                 bundle.putString("roll", specificFinalRoll[position]);
                                 bundle.putString("name", specificFinalName[position]);
                                 bundle.putString("paoff", specificFinalAttendances[position]);
+                                bundle.putString("dateTime", specificFinalDateTime[position]);
+                                bundle.putString("position", String.valueOf(position));
                                 intent.putExtras(bundle);
                                 startActivity(intent);
 
@@ -143,7 +159,7 @@ public class SpecificAttendancesFromFirebase extends AppCompatActivity {
                         alertDialogBuilder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-
+                                return;
                             }
                         });
                         AlertDialog alertDialog = alertDialogBuilder.create();
