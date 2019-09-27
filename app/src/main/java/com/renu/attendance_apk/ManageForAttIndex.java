@@ -1,8 +1,10 @@
 package com.renu.attendance_apk;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,6 +12,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.google.android.gms.common.util.ArrayUtils;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -20,11 +23,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ManageForAttIndex extends AppCompatActivity {
-    DatabaseReference databaseReferenceForattendancesIndex;
+    DatabaseReference databaseReferenceForattendancesIndex, databaseReferenceForattendances;
+    ValueEventListener myValueEventListner;
     List<AttendanceIndexModel> attendanceIndexModelList;
     private ListView attendancesIndexListView;
     List<String> attendancesList;
     List<String> dateTimeList;
+    private AlertDialog.Builder alertDialogBuilder;
+    String[] dateTimeForAttendanceIndexArray, attendanceForArray;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +46,9 @@ public class ManageForAttIndex extends AppCompatActivity {
 
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Log.d("hmmm", "onDataChange: hmmmmm");
+
+                List<String> dtForIndex = new ArrayList<>();
+                List<String> attForIndex = new ArrayList<>();
                 for (DataSnapshot dnapshot : dataSnapshot.getChildren()) {
                     AttendanceIndexModel attendanceIndexModel = dnapshot.getValue(AttendanceIndexModel.class);
                     attendanceIndexModelList.add(attendanceIndexModel);
@@ -48,9 +56,6 @@ public class ManageForAttIndex extends AppCompatActivity {
 
                 }
 
-
-                List<String> dtForIndex = new ArrayList<>();
-                List<String> attForIndex = new ArrayList<>();
                 for (AttendanceIndexModel attendanceIndexModel : attendanceIndexModelList) {
                     dtForIndex.add(attendanceIndexModel.getDateTime());
                     attForIndex.add(attendanceIndexModel.getAttendanceFor());
@@ -58,12 +63,9 @@ public class ManageForAttIndex extends AppCompatActivity {
 
                 }
 
-                String[] dateTimeForAttendanceIndexArray;
-                String[] attendanceForArray;
+
                 dateTimeForAttendanceIndexArray = dtForIndex.toArray(new String[dtForIndex.size()]);
                 attendanceForArray = attForIndex.toArray(new String[attForIndex.size()]);
-                Log.d("dt", "onCreate: " + dtForIndex);
-                Log.d("at", "onCreate: " + attForIndex);
 
 
                 listViewHandleForAttendancesIndex(dateTimeForAttendanceIndexArray, attendanceForArray);
@@ -80,23 +82,51 @@ public class ManageForAttIndex extends AppCompatActivity {
 
     }
 
-    private void listViewHandleForAttendancesIndex(String[] dateTimeForAttendanceIndexArray, String[] attendanceForArray) {
+
+    private void listViewHandleForAttendancesIndex(final String[] dateTimeForAttendanceIndexArray, final String[] attendanceForArray) {
 
 
-        CustomAdupterForManagingAttIndex customAdupterForAttendancesIndex = new CustomAdupterForManagingAttIndex(this, dateTimeForAttendanceIndexArray, attendanceForArray);
+        final CustomAdupterForManagingAttIndex customAdupterForAttendancesIndex = new CustomAdupterForManagingAttIndex(this, dateTimeForAttendanceIndexArray, attendanceForArray);
         attendancesIndexListView.setAdapter(customAdupterForAttendancesIndex);
 
         attendancesIndexListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                alertDialogBuilder.setMessage("Index Name : " + attendanceForArray[position] + "\nDate : " + dateTimeForAttendanceIndexArray[position]);
 
+                alertDialogBuilder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
 
+                        databaseReferenceForattendancesIndex.child(dateTimeForAttendanceIndexArray[position]).getRef().removeValue();
+                        databaseReferenceForattendances.child(dateTimeForAttendanceIndexArray[position]).getRef().removeValue();
+                        //Load activity
+                        finish();
+                        startActivity(getIntent());
+                    }
+                });
 
+                alertDialogBuilder.setNegativeButton("Edit", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent = new Intent(ManageForAttIndex.this, UpdateForManageAttIndex.class);
 
+                        Bundle bundle = new Bundle();
+                        bundle.putString("index", attendanceForArray[position]);
+                        bundle.putString("dateTime", dateTimeForAttendanceIndexArray[position]);
+                        intent.putExtras(bundle);
+                        startActivity(intent);
 
+                    }
+                });
+                alertDialogBuilder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
 
-
-
+                    }
+                });
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                alertDialog.show();
 
             }
         });
@@ -106,9 +136,11 @@ public class ManageForAttIndex extends AppCompatActivity {
 
     private void initOthers() {
         databaseReferenceForattendancesIndex = FirebaseDatabase.getInstance().getReference("attendanceindex");
+        databaseReferenceForattendances = FirebaseDatabase.getInstance().getReference("attendance");
         attendanceIndexModelList = new ArrayList<>();
         attendancesList = new ArrayList<>();
         dateTimeList = new ArrayList<>();
+        alertDialogBuilder = new AlertDialog.Builder(ManageForAttIndex.this);
     }
 
     private void initView() {
