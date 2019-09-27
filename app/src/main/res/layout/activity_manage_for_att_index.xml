@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ManageForAttIndex">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:background="#4CAF50"
+        android:text="All Attendance Indexes"
+        android:padding="10sp"
+        android:textSize="20sp"
+        />
+
+    <ListView
+        android:listSelector="#B6DD89"
+        android:divider="#336B6F6F"
+        android:dividerHeight="1dp"
+        android:id="@+id/manageAttendancesIndexListViewId"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"></ListView>
+</LinearLayout>

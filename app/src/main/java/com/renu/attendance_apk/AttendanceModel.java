@@ -3,7 +3,7 @@ package com.renu.attendance_apk;
 import java.io.Serializable;
 import java.util.List;
 
-public class AttendanceModel implements Serializable {
+public class AttendanceModel implements Serializable{
 
     private List<String> rollList;
     private List<String> nameList;
@@ -41,9 +41,7 @@ public class AttendanceModel implements Serializable {
         return attendanceList;
     }
 
-    public void setAttendanceList(List<String> attendanceList) {
-        this.attendanceList = attendanceList;
-    }
+    public void setAttendanceList(List<String> attendanceList) { this.attendanceList = attendanceList; }
 
     public List<String> getDateTimeList() {
         return dateTimeList;

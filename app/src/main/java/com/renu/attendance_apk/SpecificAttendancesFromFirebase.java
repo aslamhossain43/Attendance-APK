@@ -37,6 +37,7 @@ public class SpecificAttendancesFromFirebase extends AppCompatActivity {
     private TextView textViewForClass, textViewForDate;
     private AlertDialog.Builder alertDialogBuilder;
     CustomAdupterForIndexFromFirebase customAdupterForIndexFromFirebase;
+    String[] specificFinalRoll, specificFinalName, specificFinalAttendances, specificFinalDateTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,57 +55,39 @@ public class SpecificAttendancesFromFirebase extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-
                 final List<String> rollList = new ArrayList<>();
-                List<String> nameList = new ArrayList<>();
-                List<String> attList = new ArrayList<>();
-                List<String> dtList = new ArrayList<>();
+                final List<String> nameList = new ArrayList<>();
+                final List<String> attList = new ArrayList<>();
+                final List<String> dtList = new ArrayList<>();
 
 
-                try {
-                    AttendanceModel attendanceModel = new AttendanceModel();
-                    attendanceModel = dataSnapshot.getValue(AttendanceModel.class);
+                 try {
 
 
-                    rollList.addAll(attendanceModel.getRollList());
-                    nameList.addAll(attendanceModel.getNameList());
-                    attList.addAll(attendanceModel.getAttendanceList());
-                    dtList.addAll(attendanceModel.getDateTimeList());
+                AttendanceModel attendanceModel = new AttendanceModel();
+                attendanceModel = dataSnapshot.getValue(AttendanceModel.class);
+                Log.d("rr", "onDataChange: " + attendanceModel.getRollList());
+                rollList.addAll(attendanceModel.getRollList());
+                nameList.addAll(attendanceModel.getNameList());
+                attList.addAll(attendanceModel.getAttendanceList());
+                dtList.addAll(attendanceModel.getDateTimeList());
 
 
-                    Log.d("rr", "onDataChange: " + rollList);
-                    Log.d("att", "onDataChange: " + attList);
-                    Log.d("nn", "onDataChange: " + nameList);
-                    Log.d("dt", "onDataChange: " + dtList);
+                Log.d("rr", "onDataChange: " + rollList);
+                Log.d("att", "onDataChange: " + attList);
+                Log.d("nn", "onDataChange: " + nameList);
+                Log.d("dt", "onDataChange: " + dtList);
                 } catch (Exception e) {
 
 
 
-
-                    if (rollList.size()==0) {
-
-
-                        Query qForAttIndex = databaseReferenceForattendancesIndex;
-                        qForAttIndex.addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                dataSnapshot.getRef().removeValue();
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                            }
-                        });
-                    }
-
                 }
 
 
-                final String[] specificFinalRoll = rollList.toArray(new String[rollList.size()]);
-                final String[] specificFinalName = nameList.toArray(new String[nameList.size()]);
-                final String[] specificFinalAttendances = attList.toArray(new String[attList.size()]);
-                final String[] specificFinalDateTime = dtList.toArray(new String[dtList.size()]);
+                specificFinalRoll = rollList.toArray(new String[rollList.size()]);
+                specificFinalName = nameList.toArray(new String[nameList.size()]);
+                specificFinalAttendances = attList.toArray(new String[attList.size()]);
+                specificFinalDateTime = dtList.toArray(new String[dtList.size()]);
                 customAdupterForIndexFromFirebase = new CustomAdupterForIndexFromFirebase(SpecificAttendancesFromFirebase.this, specificFinalRoll, specificFinalName, specificFinalAttendances);
                 listViewSpecificAttFromFirebase.setAdapter(customAdupterForIndexFromFirebase);
 
@@ -125,16 +108,52 @@ public class SpecificAttendancesFromFirebase extends AppCompatActivity {
                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
 
-                                        dataSnapshot.child("rollList").child(String.valueOf(position)).getRef().removeValue();
-                                        dataSnapshot.child("nameList").child(String.valueOf(position)).getRef().removeValue();
-                                        dataSnapshot.child("dateTimeList").child(String.valueOf(position)).getRef().removeValue();
-                                        dataSnapshot.child("attendanceList").child(String.valueOf(position)).getRef().removeValue();
+                                        rollList.remove(position);
+                                        nameList.remove(position);
+                                        attList.remove(position);
+                                        dtList.remove(position);
+                                        if (rollList.size()<1) {
+                                            Query qForAttIndex = databaseReferenceForattendancesIndex;
+                                            qForAttIndex.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                    dataSnapshot.getRef().removeValue();
+                                                }
+
+                                                @Override
+                                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                                }
+                                            });
+
+                                        }
+                                        if (rollList.size() > 0) {
+
+                                            dataSnapshot.child("rollList").getRef().removeValue();
+                                            dataSnapshot.child("nameList").getRef().removeValue();
+                                            dataSnapshot.child("dateTimeList").getRef().removeValue();
+                                            dataSnapshot.child("attendanceList").getRef().removeValue();
+
+                                            AttendanceModel attendanceModel = new AttendanceModel(rollList, nameList, attList, dtList);
+
+                                            databaseReferenceForattendances.setValue(attendanceModel);
+                                        } else {
+
+                                            dataSnapshot.getRef().removeValue();
+
+                                            Intent intent=new Intent(SpecificAttendancesFromFirebase.this,ExistRollNames.class);
+                                            startActivity(intent);
+
+
+
+                                        }
+
 
                                     }
 
                                     @Override
                                     public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                                        databaseError.toException();
                                     }
                                 });
 

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ManageForAttPerson">
+
+
+
+
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="100"
+        android:orientation="vertical"
+        android:background="#4CAF50"
+        android:layout_marginTop="1dp">
+        <TextView
+            android:id="@+id/manageTextViewHeadingForClassId"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="60"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:text="Class 12"
+            android:layout_marginTop="5sp"
+            android:gravity="center"
+            />
+
+
+        <TextView
+            android:id="@+id/manageTextViewHeadingForDtaeId"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="40"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:text="2019/10/10 10/10 AM"
+            android:layout_marginBottom="5sp"
+            android:gravity="center"
+            />
+
+
+    </LinearLayout>
+
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="100"
+        android:background="#4CAF50"
+        >
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="40"
+            android:text="Roll No :"
+            android:textStyle="bold"
+            android:textSize="12dp"
+            android:gravity="center"
+            />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="60"
+            android:text="Person's Names :"
+            android:textStyle="bold"
+            android:textSize="12dp"
+            android:gravity="center"
+            />
+
+
+
+
+    </LinearLayout>
+
+
+    <ListView
+        android:id="@+id/manageListViewSpecificAttFromFirebaseId"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:divider="#336B6F6F"
+        android:dividerHeight="1dp"
+        android:listSelector="#B6DD89" />
+
+
+
+</LinearLayout>

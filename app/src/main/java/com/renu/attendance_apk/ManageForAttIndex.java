@@ -6,13 +6,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -23,20 +19,22 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AttendancesIndex extends AppCompatActivity {
-    DatabaseReference databaseReferenceForattendances, databaseReferenceForattendancesIndex;
+public class ManageForAttIndex extends AppCompatActivity {
+    DatabaseReference databaseReferenceForattendancesIndex;
     List<AttendanceIndexModel> attendanceIndexModelList;
-    List<String> rollList;
+    private ListView attendancesIndexListView;
     List<String> attendancesList;
     List<String> dateTimeList;
-    private ListView attendancesIndexListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_attendances_index);
+        setContentView(R.layout.activity_manage_for_att_index);
+
+
         initView();
-        intitOthers();
+        initOthers();
+
 
         databaseReferenceForattendancesIndex.addValueEventListener(new ValueEventListener() {
 
@@ -82,81 +80,39 @@ public class AttendancesIndex extends AppCompatActivity {
 
     }
 
-    private void listViewHandleForAttendancesIndex(final String[] dateTimeForAttendanceIndexArray, final String[] attendanceForArray) {
+    private void listViewHandleForAttendancesIndex(String[] dateTimeForAttendanceIndexArray, String[] attendanceForArray) {
 
-        CustomAdupterForAttendancesIndex customAdupterForAttendancesIndex = new CustomAdupterForAttendancesIndex(this, dateTimeForAttendanceIndexArray, attendanceForArray);
+
+        CustomAdupterForManagingAttIndex customAdupterForAttendancesIndex = new CustomAdupterForManagingAttIndex(this, dateTimeForAttendanceIndexArray, attendanceForArray);
         attendancesIndexListView.setAdapter(customAdupterForAttendancesIndex);
 
         attendancesIndexListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                Intent intent = new Intent(AttendancesIndex.this, SpecificAttendancesFromFirebase.class);
-                String attFor = attendanceForArray[position];
-                String dt = dateTimeForAttendanceIndexArray[position];
-                Bundle bundle = new Bundle();
-                bundle.putString("attFor", attFor);
-                bundle.putString("dt", dt);
-                intent.putExtras(bundle);
-                startActivity(intent);
+
+
+
+
+
+
 
 
             }
         });
 
+
     }
 
-
-    private void intitOthers() {
-
-        //databaseReferenceForattendances = FirebaseDatabase.getInstance().getReference("attendance");
+    private void initOthers() {
         databaseReferenceForattendancesIndex = FirebaseDatabase.getInstance().getReference("attendanceindex");
         attendanceIndexModelList = new ArrayList<>();
-        rollList = new ArrayList<>();
         attendancesList = new ArrayList<>();
         dateTimeList = new ArrayList<>();
-
-
     }
 
     private void initView() {
-        attendancesIndexListView = findViewById(R.id.attendancesIndexListViewId);
+        attendancesIndexListView = findViewById(R.id.manageAttendancesIndexListViewId);
 
     }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-
-
-        MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.menu_layout, menu);
-
-
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-
-        if (item.getItemId() == R.id.openId) {
-            Intent intent = new Intent(this, CreateNew1.class);
-            startActivity(intent);
-
-        }
-        if (item.getItemId() == R.id.localAttendances) {
-            Intent intent = new Intent(this, ExistRollNames.class);
-            startActivity(intent);
-
-        }if (item.getItemId()==R.id.logoutId){
-            Intent intent = new Intent(this, Authentication.class);
-            startActivity(intent);
-
-        }
-
-
-        return super.onOptionsItemSelected(item);
-    }
-
 }

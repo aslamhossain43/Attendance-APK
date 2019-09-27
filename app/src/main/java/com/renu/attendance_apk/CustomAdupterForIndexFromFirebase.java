@@ -50,16 +50,10 @@ class CustomAdupterForIndexFromFirebase extends BaseAdapter {
         TextView rollTextView = convertView.findViewById(R.id.rollTextViewId);
         TextView nameTextView = convertView.findViewById(R.id.nameTextViewId);
         TextView attTextView = convertView.findViewById(R.id.attTextViewId);
-        if (!(rollString[position] == null && nameString[position] == null && attString[position] == null)) {
 
-
-            rollTextView.setText(rollString[position]);
-            nameTextView.setText(nameString[position]);
-            attTextView.setText(attString[position]);
-        }else {
-            convertView.setLayoutParams(new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,position));
-            convertView.setVisibility(View.GONE);
-        }
+        rollTextView.setText(rollString[position]);
+        nameTextView.setText(nameString[position]);
+        attTextView.setText(attString[position]);
 
 
         return convertView;

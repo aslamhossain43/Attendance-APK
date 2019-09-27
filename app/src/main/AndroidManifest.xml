@@ -9,7 +9,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Update"></activity>
+        <activity android:name=".ManageForAttIndex"></activity>
+        <activity android:name=".ManageForAttPerson" />
+        <activity android:name=".ManageForLocalAttTypeIndex" />
+        <activity android:name=".Settings" />
+        <activity android:name=".Update" />
         <activity android:name=".RegisterActivity" />
         <activity android:name=".AfterLogin" />
         <activity android:name=".ExistRollNames" />

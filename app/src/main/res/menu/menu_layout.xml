@@ -31,6 +31,13 @@
         android:icon="@drawable/ic_local_attendance_black_24dp"
 
         />
+    <item
+
+        android:id="@+id/settings"
+        app:showAsAction="always"
+        android:icon="@drawable/ic_settings_black_24dp"
+
+        />
 
 
     <item
