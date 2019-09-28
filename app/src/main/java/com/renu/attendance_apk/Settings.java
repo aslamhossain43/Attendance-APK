@@ -1,7 +1,5 @@
 package com.renu.attendance_apk;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -10,8 +8,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 public class Settings extends AppCompatActivity {
-    private Button btnForLocalAttTypeIndex, btnForLocalAttPerson, btnForAttIndex;
+    private Button btnForLocalAttTypeIndex, btnForLocalAttPerson, btnForAttIndex,
+            btnAllPersonInfoIndex, btndeleteAttIndex;
+    private DatabaseReference databaseReferenceForattendances, databaseReferenceForattendancesIndex;
+
+    DataBaseHelper dataBaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,6 +26,7 @@ public class Settings extends AppCompatActivity {
         setContentView(R.layout.activity_settings);
 
         initView();
+        initOthers();
 
 
         btnForLocalAttTypeIndex.setOnClickListener(new View.OnClickListener() {
@@ -42,7 +50,30 @@ public class Settings extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        btnAllPersonInfoIndex.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+                dataBaseHelper.deleteAllValuesFromAllTables();
+
+
+            }
+        });
+        btndeleteAttIndex.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                databaseReferenceForattendancesIndex.getRef().removeValue();
+                databaseReferenceForattendances.getRef().removeValue();
+            }
+        });
+
+
+    }
+
+    private void initOthers() {
+        databaseReferenceForattendances = FirebaseDatabase.getInstance().getReference("attendance");
+        databaseReferenceForattendancesIndex = FirebaseDatabase.getInstance().getReference("attendanceindex");
+        dataBaseHelper = new DataBaseHelper(this);
 
     }
 
@@ -51,6 +82,8 @@ public class Settings extends AppCompatActivity {
         btnForLocalAttTypeIndex = findViewById(R.id.btnLocalAttTypeIndexId);
         btnForLocalAttPerson = findViewById(R.id.btnLocalAttPersonId);
         btnForAttIndex = findViewById(R.id.btnAttIndexId);
+        btnAllPersonInfoIndex = findViewById(R.id.btnAllPersonInfoIndexId);
+        btndeleteAttIndex = findViewById(R.id.btndeleteAttIndexId);
 
 
     }
@@ -105,8 +138,6 @@ public class Settings extends AppCompatActivity {
             startActivity(intent);
 
         }
-
-
 
 
         return super.onOptionsItemSelected(item);

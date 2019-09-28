@@ -61,24 +61,18 @@ public class SpecificAttendancesFromFirebase extends AppCompatActivity {
                 final List<String> dtList = new ArrayList<>();
 
 
-                 try {
+                try {
 
 
-                AttendanceModel attendanceModel = new AttendanceModel();
-                attendanceModel = dataSnapshot.getValue(AttendanceModel.class);
-                Log.d("rr", "onDataChange: " + attendanceModel.getRollList());
-                rollList.addAll(attendanceModel.getRollList());
-                nameList.addAll(attendanceModel.getNameList());
-                attList.addAll(attendanceModel.getAttendanceList());
-                dtList.addAll(attendanceModel.getDateTimeList());
+                    AttendanceModel attendanceModel = new AttendanceModel();
+                    attendanceModel = dataSnapshot.getValue(AttendanceModel.class);
+                    Log.d("rr", "onDataChange: " + attendanceModel.getRollList());
+                    rollList.addAll(attendanceModel.getRollList());
+                    nameList.addAll(attendanceModel.getNameList());
+                    attList.addAll(attendanceModel.getAttendanceList());
+                    dtList.addAll(attendanceModel.getDateTimeList());
 
-
-                Log.d("rr", "onDataChange: " + rollList);
-                Log.d("att", "onDataChange: " + attList);
-                Log.d("nn", "onDataChange: " + nameList);
-                Log.d("dt", "onDataChange: " + dtList);
                 } catch (Exception e) {
-
 
 
                 }
@@ -112,7 +106,7 @@ public class SpecificAttendancesFromFirebase extends AppCompatActivity {
                                         nameList.remove(position);
                                         attList.remove(position);
                                         dtList.remove(position);
-                                        if (rollList.size()<1) {
+                                        if (rollList.size() < 1) {
                                             Query qForAttIndex = databaseReferenceForattendancesIndex;
                                             qForAttIndex.addListenerForSingleValueEvent(new ValueEventListener() {
                                                 @Override
@@ -141,9 +135,8 @@ public class SpecificAttendancesFromFirebase extends AppCompatActivity {
 
                                             dataSnapshot.getRef().removeValue();
 
-                                            Intent intent=new Intent(SpecificAttendancesFromFirebase.this,ExistRollNames.class);
+                                            Intent intent = new Intent(SpecificAttendancesFromFirebase.this, ExistRollNames.class);
                                             startActivity(intent);
-
 
 
                                         }
@@ -228,7 +221,6 @@ public class SpecificAttendancesFromFirebase extends AppCompatActivity {
     }
 
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
@@ -279,8 +271,6 @@ public class SpecificAttendancesFromFirebase extends AppCompatActivity {
             startActivity(intent);
 
         }
-
-
 
 
         return super.onOptionsItemSelected(item);

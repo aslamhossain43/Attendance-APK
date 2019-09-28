@@ -25,7 +25,7 @@ import java.util.Date;
 import java.util.List;
 
 public class CreateNew2 extends AppCompatActivity {
-    DatabaseReference databaseReferenceForRollName,databaseReferenceForRollNameIndex;
+    DatabaseReference databaseReferenceForRollName, databaseReferenceForRollNameIndex;
     private DataBaseHelper dataBaseHelper;
     private TextView textViewAttFor, textViewPersonNo;
     private Button saveBtn, backBtn;
@@ -33,7 +33,7 @@ public class CreateNew2 extends AppCompatActivity {
     private EditText editTextRoll, editTextName;
     private String attFor;
     private int pNo;
-    private List<String> rollList, nameList,attForList,dateTimeList;
+    private List<String> rollList, nameList, attForList, dateTimeList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,31 +73,14 @@ public class CreateNew2 extends AppCompatActivity {
 
                 }
 
-                for (int i=0;i<rollList.size();i++){
+                for (int i = 0; i < rollList.size(); i++) {
                     dateTimeList.add(dateTime);
                     attForList.add(attFor);
                 }
 
-               // if (Network.isNetworkAvailable(CreateNew2.this)) {
-                  /*  RollNameIndexModel rollNameIndexModel=new RollNameIndexModel(dateTime,attFor);
-                    databaseReferenceForRollNameIndex.child(dateTime).setValue(rollNameIndexModel);
 
-                    RollNameModel rollNameModel = new RollNameModel(rollList, nameList,attForList,dateTimeList);
-                    databaseReferenceForRollName.child(dateTime).setValue(rollNameModel);
-
-                    Log.d("nn", "addValuesToList:  Neeeeeeeeeeeeeeeeet");
-*/
-
-              // }else {
-                    Log.d("rr", "onClick: "+rollList);
-                    Log.d("rr", "onClick: "+nameList);
-                    Log.d("rr", "onClick: "+attForList);
-                    Log.d("rr", "onClick: "+dateTimeList);
-                    dataBaseHelper.insertRollNameIntoLocalStorage(rollList,nameList,attForList,dateTimeList);
-                    dataBaseHelper.insertDataInToRollNameIndexTable(dateTime,attFor);
-                    Log.d("nn", "addValuesToList:  Nooooooo Neeeeeeet");
-
-               // }
+                dataBaseHelper.insertRollNameIntoLocalStorage(rollList, nameList, attForList, dateTimeList);
+                dataBaseHelper.insertDataInToRollNameIndexTable(dateTime, attFor);
 
 
             }
@@ -138,13 +121,13 @@ public class CreateNew2 extends AppCompatActivity {
     }
 
     private void initOthers() {
-        dataBaseHelper=new DataBaseHelper(this);
+        dataBaseHelper = new DataBaseHelper(this);
         databaseReferenceForRollName = FirebaseDatabase.getInstance().getReference("rollnames");
         databaseReferenceForRollNameIndex = FirebaseDatabase.getInstance().getReference("rollnamesindex");
         rollList = new ArrayList<>();
         nameList = new ArrayList<>();
         attForList = new ArrayList<>();
-        dateTimeList=new ArrayList<>();
+        dateTimeList = new ArrayList<>();
 
     }
 
@@ -212,7 +195,6 @@ public class CreateNew2 extends AppCompatActivity {
             startActivity(intent);
 
         }
-
 
 
         return super.onOptionsItemSelected(item);

@@ -78,7 +78,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         try {
-            Log.d("h", "onCreate: Database helper");
             sqLiteDatabase.execSQL(CREATE_ATTENDANCES_TABLE);
             sqLiteDatabase.execSQL(CREATE_ATTENDANCES_INDEX_TABLE);
             sqLiteDatabase.execSQL(CREATE_ROLLNAME_TABLE);
@@ -86,7 +85,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             sqLiteDatabase.execSQL(CREATE_REGISTER_TABLE);
 
         } catch (Exception e) {
-            Log.d("ee", "onCreate: " + e);
 
         }
 
@@ -96,7 +94,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
 
         try {
-            Log.d("u", "onUpgrade: upgrade");
             sqLiteDatabase.execSQL(DROP_ATTENDANCES_TABLE);
             sqLiteDatabase.execSQL(DROP_ATTENDANCES_INDEX_TABLE);
             sqLiteDatabase.execSQL(DROP_ROLLNAME_TABLE);
@@ -104,7 +101,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             sqLiteDatabase.execSQL(DROP_REGISTER_TABLE);
             onCreate(sqLiteDatabase);
         } catch (Exception e) {
-            Log.d("e", "onUpgrade: " + e);
         }
 
     }
@@ -142,7 +138,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public void insertDataInToAttendancesTable(List<String> rollList, List<String> nameList, List<String> attendanceList, List<String> dateTimes) {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
 
-        Log.d("kk", "insertDataInToAttendancesIndexTable: ");
         for (int i = 0; i < rollList.size(); i++) {
 
 
@@ -154,7 +149,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     public void insertDataInToAttendancesIndexTable(String dateTime, String attendancesFor) {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
-        Log.d("kk", "insertDataInToAttendancesIndexTable: ");
         ContentValues contentValues = new ContentValues();
         contentValues.put(ATTENDANCES_INDEX_TIME, dateTime);
         contentValues.put(ATTENDANCES_FOR_INDEX, attendancesFor);
@@ -165,7 +159,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     public void insertDataInToRollNameIndexTable(String dateTime, String attendancesFor) {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
-        Log.d("kk", "insertDataInToAttendancesIndexTable: ");
         ContentValues contentValues = new ContentValues();
         contentValues.put(DATETIME_FOR_ROLLNAME_INDEX, dateTime);
         contentValues.put(ATT_FOR_ROLLNAME_INDEX, attendancesFor);
@@ -236,17 +229,16 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     }
 
 
-    public boolean updateForRollName(String oldRoll,String newRoll, String name,String attFor,String date) {
+    public boolean updateForRollName(String oldRoll, String newRoll, String name, String attFor, String date) {
 
 
-        Log.d("rr", "updateForRollName: "+oldRoll+name+attFor+date);
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(ROLL_FOR_ROLLNAME, newRoll);
         contentValues.put(NAME_FOR_ROLLNAME, name);
         contentValues.put(ATT_FOR_ROLLNAME, attFor);
         contentValues.put(DATETIME_FOR_ROLLNAME, date);
-        sqLiteDatabase.update(ROLL_NAME_TABLE, contentValues, ROLL_FOR_ROLLNAME + "="+oldRoll,null);
+        sqLiteDatabase.update(ROLL_NAME_TABLE, contentValues, ROLL_FOR_ROLLNAME + "=" + oldRoll, null);
 
         return true;
 
@@ -304,6 +296,23 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             sqLiteDatabase.execSQL("INSERT INTO " + ROLL_NAME_TABLE + " Values('" + rollList.get(i) + "','" + nameList.get(i) + "','" + attForList.get(i) + "','" + dateTimeList.get(i) + "');");
 
         }
+
+
+    }
+    public void deleteAllValuesFromAllTables(){
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+
+
+        try {
+            sqLiteDatabase.execSQL(DELETE_ALL_VALUES_FROM_ATTENDANCE);
+            sqLiteDatabase.execSQL(DELETE_ALL_VALUES_FROM_ATTENDANCES_INDEX);
+            sqLiteDatabase.execSQL(DELETE_ALL_VALUES_FROM_ROLLNAME);
+            sqLiteDatabase.execSQL(DELETE_ALL_VALUES_FROM_ROLLNAME_INDEX);
+            onCreate(sqLiteDatabase);
+        } catch (Exception e) {
+        }
+
+
 
 
     }

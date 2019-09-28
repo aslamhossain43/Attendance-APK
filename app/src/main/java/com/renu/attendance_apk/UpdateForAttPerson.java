@@ -96,16 +96,14 @@ public class UpdateForAttPerson extends AppCompatActivity {
                 //--------------------------------------------
 
 
+                if (!rollList.contains(rol)) {
+                    dataBaseHelper.updateForRollName(UpdateForAttPerson.this.roll, rol, name, index, dateTime);
+                    Toast.makeText(UpdateForAttPerson.this, "Roll No :" + rol + " has updated successfully !", Toast.LENGTH_LONG).show();
+                } else {
 
-                    if (!rollList.contains(rol)) {
-                        dataBaseHelper.updateForRollName(UpdateForAttPerson.this.roll, rol, name, index, dateTime);
-                        Toast.makeText(UpdateForAttPerson.this, "Roll No :" + rol + " has updated successfully !", Toast.LENGTH_LONG).show();
-                    }else {
-
-                    Toast.makeText(UpdateForAttPerson.this, "Roll No : "+rol+" exists already !", Toast.LENGTH_LONG).show();
+                    Toast.makeText(UpdateForAttPerson.this, "Roll No : " + rol + " exists already !", Toast.LENGTH_LONG).show();
 
                 }
-
 
 
                 Intent intent = new Intent(UpdateForAttPerson.this, ManageForAttPerson.class);
@@ -200,8 +198,6 @@ public class UpdateForAttPerson extends AppCompatActivity {
             startActivity(intent);
 
         }
-
-
 
 
         return super.onOptionsItemSelected(item);

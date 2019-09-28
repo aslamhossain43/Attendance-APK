@@ -53,22 +53,14 @@ public class ManageForAttPersonPre extends AppCompatActivity {
         listViewForPersonPre.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                 Intent intent=new Intent(ManageForAttPersonPre.this,ManageForAttPerson.class);
-                Bundle bundle=new Bundle();
-                Log.d("dd", "onItemClick: DATE : "+sDateTime[position]);
+                Intent intent = new Intent(ManageForAttPersonPre.this, ManageForAttPerson.class);
+                Bundle bundle = new Bundle();
+                Log.d("dd", "onItemClick: DATE : " + sDateTime[position]);
 
-                bundle.putString("dateTime",sDateTime[position]);
-                bundle.putString("attFor",sAtt[position]);
+                bundle.putString("dateTime", sDateTime[position]);
+                bundle.putString("attFor", sAtt[position]);
                 intent.putExtras(bundle);
                 startActivity(intent);
-
-
-
-
-
-
-
-
 
 
             }
@@ -137,8 +129,6 @@ public class ManageForAttPersonPre extends AppCompatActivity {
             startActivity(intent);
 
         }
-
-
 
 
         return super.onOptionsItemSelected(item);

@@ -1,8 +1,8 @@
 package com.renu.attendance_apk;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -10,7 +10,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 public class RegisterActivity extends AppCompatActivity {
+    private int currentApiVersion;
+    //-----------------
+
     DataBaseHelper dataBaseHelper;
     private EditText editTextUaserName, editTextPassword, editTextConfirmPassword;
     private Button registerBtn;
@@ -21,16 +26,39 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
+//-------------------------------------------
+        //for full screen
+        currentApiVersion = Build.VERSION.SDK_INT;
+        final int flags = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+        if (currentApiVersion >= Build.VERSION_CODES.KITKAT) {
+            getWindow().getDecorView().setSystemUiVisibility(flags);
+            final View decorView = getWindow().getDecorView();
+            decorView.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
+                @Override
+                public void onSystemUiVisibilityChange(int visibility) {
+                    if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
+                        decorView.setSystemUiVisibility(flags);
+                    }
+                }
+            });
+        }
 
+
+        //--------------------------------
         initView();
         initOthers();
-textViewLogin.setOnClickListener(new View.OnClickListener() {
-    @Override
-    public void onClick(View v) {
-        Intent intent=new Intent(RegisterActivity.this,Authentication.class);
-        startActivity(intent);
-    }
-});
+        textViewLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(RegisterActivity.this, Authentication.class);
+                startActivity(intent);
+            }
+        });
         registerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -39,14 +67,14 @@ textViewLogin.setOnClickListener(new View.OnClickListener() {
                 String confirmPass = editTextConfirmPassword.getText().toString().trim();
 
                 if (pass.equals(confirmPass)) {
-                    long l=dataBaseHelper.addUser(user, pass);
-                    if (l>0){
+                    long l = dataBaseHelper.addUser(user, pass);
+                    if (l > 0) {
 
                         Toast.makeText(RegisterActivity.this, "You have registered !", Toast.LENGTH_LONG).show();
                         Intent intent = new Intent(RegisterActivity.this, Authentication.class);
                         startActivity(intent);
 
-                    }else {
+                    } else {
                         Toast.makeText(RegisterActivity.this, "Registration Error !", Toast.LENGTH_LONG).show();
                     }
 
@@ -75,5 +103,21 @@ textViewLogin.setOnClickListener(new View.OnClickListener() {
         registerBtn = findViewById(R.id.registerBtnid);
         textViewLogin = findViewById(R.id.textViewForLoginId);
 
+    }
+    //----------------------------------------------------
+    // for full screen
+    @SuppressLint("NewApi")
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if (currentApiVersion >= Build.VERSION_CODES.KITKAT && hasFocus) {
+            getWindow().getDecorView().setSystemUiVisibility(
+                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                            | View.SYSTEM_UI_FLAG_FULLSCREEN
+                            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                            | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+        }
     }
 }

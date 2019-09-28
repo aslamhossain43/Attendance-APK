@@ -11,51 +11,21 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class MyBroadcastReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         if (Network.isNetworkAvailable(context)) {
 
-            final String ATTENDANCES_INDEX_TABLE = "attendanceindex";
-
-            final String ATTENDANCES_TIME = "time";
-            final String ATTENDANCES_FOR = "attendancesfor";
 
             final String ATTENDANCES_TABLE = "attendance";
-            final String ROLL = "roll";
-            final String NAME = "name";
-            final String ATTENDANCES = "attendances";
             final String ATTENDANCES_TIMES = "datetime";
-
-            final String ROLL_NAME_TABLE = "rollname";
-            final String ROLL_FOR_ROLLNAME = "roll";
-            final String NAME_FOR_ROLLNAME = "name";
-            final String ATT_FOR_ROLLNAME = "attfor";
-            final String DATETIME_FOR_ROLLNAME = "time";
-
-
-            final String ROLL_NAME_INDEX_TABLE = "rollnameindex";
-
-
-            final String ATT_FOR_ROLLNAME_INDEX = "attfor";
-            final String DATETIME_FOR_ROLLNAME_INDEX = "time";
-
-            final String DELETE_ALL_VALUES_FROM_ATTENDANCES_INDEX = "delete from " + ATTENDANCES_INDEX_TABLE;
-            final String DELETE_ALL_VALUES_FROM_ATTENDANCE = "delete from " + ATTENDANCES_TABLE;
 
 
             DataBaseHelper dataBaseHelper = new DataBaseHelper(context);
             DatabaseReference databaseReferenceForAttendances = FirebaseDatabase.getInstance().getReference("attendance");
-            DatabaseReference databaseReferenceForRollName = FirebaseDatabase.getInstance().getReference("rollnames");
-            DatabaseReference databaseReferenceForRollNameIndex = FirebaseDatabase.getInstance().getReference("rollnamesindex");
             DatabaseReference databaseReferenceForAttendancesIndex = FirebaseDatabase.getInstance().getReference("attendanceindex");
 
-            List<String> roll = new ArrayList<>();
-            List<String> name = new ArrayList<>();
-            List<String> attFor = new ArrayList<>();
-            List<String> dtRollNameList = new ArrayList<>();
 
             List<String> rollList = new ArrayList<>();
             List<String> nameList = new ArrayList<>();
@@ -91,22 +61,8 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
 
             }
 
-//---------------------------------------------------------------------------------
-/*
 
-
-                databaseReferenceForRollName.child(dateTime).setValue(rollNameModel);
-                rollList.clear();
-                nameList.clear();
-                attendancesList.clear();
-                dateTimeList.clear();
-
-
-            }
-
-*/
-
-        }else {
+        } else {
             return;
         }
     }

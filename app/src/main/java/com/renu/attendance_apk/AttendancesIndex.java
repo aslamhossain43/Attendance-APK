@@ -109,8 +109,7 @@ public class AttendancesIndex extends AppCompatActivity {
 
     private void intitOthers() {
 
-        //databaseReferenceForattendances = FirebaseDatabase.getInstance().getReference("attendance");
-        databaseReferenceForattendancesIndex = FirebaseDatabase.getInstance().getReference("attendanceindex");
+         databaseReferenceForattendancesIndex = FirebaseDatabase.getInstance().getReference("attendanceindex");
         attendanceIndexModelList = new ArrayList<>();
         rollList = new ArrayList<>();
         attendancesList = new ArrayList<>();

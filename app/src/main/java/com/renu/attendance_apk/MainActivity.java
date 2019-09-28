@@ -1,6 +1,5 @@
 package com.renu.attendance_apk;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -17,39 +16,30 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
 
     private LinearLayout parentLinearLayout;
-    private EditText editTextForMain, editTextForField, editTextAttendanceFor, editTextNameForField;
-    private Button add_FieldButton, add_To_Firebase;
-    private Spinner spinnerForMain, spinnerForField;
+    private EditText editTextForField,editTextNameForField;
+    private Button add_To_Firebase;
+    private Spinner spinnerForField;
 
 
     private static final String ROLL_NAME_TABLE = "rollname";
-    private static final String ROLL_FOR_ROLLNAME = "roll";
-    private static final String NAME_FOR_ROLLNAME = "name";
-    private static final String ATT_FOR_ROLLNAME = "attfor";
     private static final String DATETIME_FOR_ROLLNAME = "time";
 
 
-    DatabaseReference databaseReferenceForattendances, databaseReferenceForattendancesIndex,
-            databaseReferenceForRollNames;
+    DatabaseReference databaseReferenceForattendances, databaseReferenceForattendancesIndex;
     List<String> roolList;
     List<String> nameList;
     List<String> attendanceList;
@@ -72,69 +62,11 @@ public class MainActivity extends AppCompatActivity {
         initOthers();
 
 
-       /* add_FieldButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-
-
-*/
-
-       /* if (Network.isNetworkAvailable(this)) {
-
-
-//---------------------------
-
-            databaseReferenceForRollNames.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    List<String> roll = new ArrayList<>();
-                    List<String> name = new ArrayList<>();
-                    RollNameModel rollNameModel = new RollNameModel();
-                    rollNameModel = dataSnapshot.getValue(RollNameModel.class);
-                    roll.addAll(rollNameModel.getRollNo());
-                    name.addAll(rollNameModel.getName());
-                    String[] stringsForRoll = roll.toArray(new String[roll.size()]);
-                    String[] stringsForNames = name.toArray(new String[name.size()]);
-                    for (int i = 0; i < roll.size(); i++) {
-
-
-                        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                        View rowView = inflater.inflate(R.layout.field, null);
-                        // Add the new row before the add field button.
-
-                        parentLinearLayout.addView(rowView, parentLinearLayout.getChildCount() - 1);
-                        editTextForField = rowView.findViewById(R.id.rollForFieldId);
-                        editTextNameForField = rowView.findViewById(R.id.nameForFieldId);
-                        spinnerForField = rowView.findViewById(R.id.spinnerForFieldId);
-                        editTextForField.setText(stringsForRoll[i]);
-                        editTextNameForField.setText(stringsForNames[i]);
-
-
-                    }
-
-
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                }
-            });
-        } else {
-
-*/
         List<String> roll = new ArrayList<>();
         List<String> name = new ArrayList<>();
         List<String> attFor = new ArrayList<>();
         List<String> date = new ArrayList<>();
-        Log.d("tt", "onCreate: ROLL NAME TIME :" + rollNameDateTime);
-        Log.d("tt", "onCreate: ROLL NAME TIME :" + rollNameAttFor);
-            /*Map<String, List<String>> map = dataBaseHelper.getAllDataFromRollNameTable();
 
-            roll.addAll(map.get("rollList"));
-            name.addAll(map.get("nameList"));
-*/
 
 //--------------------------
         String q = "SELECT * FROM " + ROLL_NAME_TABLE + " WHERE " + DATETIME_FOR_ROLLNAME + " = '" + rollNameDateTime + "'";
@@ -151,8 +83,6 @@ public class MainActivity extends AppCompatActivity {
 
         String[] stringsForRoll = roll.toArray(new String[roll.size()]);
         String[] stringsForNames = name.toArray(new String[name.size()]);
-        Log.d("rr", "onCreate: " + roll);
-        Log.d("rr", "onCreate: " + name);
         for (int i = 0; i < roll.size(); i++) {
 
 
@@ -170,24 +100,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-        //}
-//-----------------------------------------------------
-
-       /*
-
-                LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                View rowView = inflater.inflate(R.layout.field, null);
-                // Add the new row before the add field button.
-
-                parentLinearLayout.addView(rowView, parentLinearLayout.getChildCount() - 2);
-                editTextForField = rowView.findViewById(R.id.rollForFieldId);
-                spinnerForField = rowView.findViewById(R.id.spinnerForFieldId);
-                editTextForField.setText("" + c);
-                c++;*/
-
-
-            /*}
-        });*/
         add_To_Firebase.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -196,9 +108,7 @@ public class MainActivity extends AppCompatActivity {
                 attendanceList.clear();
                 dateTimeList.clear();
                 //--------------------------------
-                //String attendancesFor = editTextAttendanceFor.getText().toString();
                 SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd ',' hh:mm:ss a");
-                Log.d("dt", "onClick: " + sim.format(new Date()));
                 String dateTime = sim.format(new Date());
                 sendToAttendanceIndex(rollNameAttFor, dateTime);
                 //------------------------------------
@@ -284,8 +194,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -302,17 +210,12 @@ public class MainActivity extends AppCompatActivity {
 
     private void addValuesToList(String attendancesFor, String dateTime) {
 
-        //dateTimeList.clear();
 
         if (dateTime != null) {
 
             for (int i = 0; i < roolList.size(); i++) {
                 dateTimeList.add(dateTime);
             }
-
-            Log.d("rr", "addValuesToList: " + roolList);
-            Log.d("aa", "addValuesToList: " + attendanceList);
-            Log.d("dt", "addValuesToList: " + dateTimeList);
 
 
             if (Network.isNetworkAvailable(this)) {
@@ -322,13 +225,11 @@ public class MainActivity extends AppCompatActivity {
 
                 AttendanceModel attendanceModel = new AttendanceModel(roolList, nameList, attendanceList, dateTimeList);
                 databaseReferenceForattendances.child(dateTime).setValue(attendanceModel);
-                Log.d("nn", "addValuesToList:  neeeeeeeeeeeeeeeeet");
 
 
             } else {
 
 
-                Log.d("nn", "addValuesToList: noooooooooooooooooo net");
                 dataBaseHelper.insertDataInToAttendancesTable(roolList, nameList, attendanceList, dateTimeList);
 
 
@@ -345,7 +246,6 @@ public class MainActivity extends AppCompatActivity {
 
         databaseReferenceForattendances = FirebaseDatabase.getInstance().getReference("attendance");
         databaseReferenceForattendancesIndex = FirebaseDatabase.getInstance().getReference("attendanceindex");
-        databaseReferenceForRollNames = FirebaseDatabase.getInstance().getReference("rollnames").child(rollNameDateTime);
         roolList = new ArrayList<>();
         nameList = new ArrayList<>();
         attendanceList = new ArrayList<>();
@@ -358,9 +258,7 @@ public class MainActivity extends AppCompatActivity {
     private void initView() {
 
         parentLinearLayout = (LinearLayout) findViewById(R.id.parent_linear_layout);
-        //editTextAttendanceFor = findViewById(R.id.editTextAttendancesForId);
         add_To_Firebase = findViewById(R.id.add_to_firebase_btnId);
-        /*add_FieldButton = findViewById(R.id.add_field_button);*/
 
     }
 

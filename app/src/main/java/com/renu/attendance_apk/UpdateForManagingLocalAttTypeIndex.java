@@ -1,11 +1,8 @@
 package com.renu.attendance_apk;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -14,6 +11,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class UpdateForManagingLocalAttTypeIndex extends AppCompatActivity {
     DataBaseHelper dataBaseHelper;
@@ -32,7 +31,6 @@ public class UpdateForManagingLocalAttTypeIndex extends AppCompatActivity {
         initView();
         initOthers();
 
-        Log.d("ii", "onCreate: infate for local att index");
         LayoutInflater layoutInflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View liv = layoutInflater.inflate(R.layout.upadte_for_manage_local_att_index_layout, null);
         updateParentLinearLayout.addView(liv, updateParentLinearLayout.getChildCount());
@@ -126,8 +124,6 @@ public class UpdateForManagingLocalAttTypeIndex extends AppCompatActivity {
             startActivity(intent);
 
         }
-
-
 
 
         return super.onOptionsItemSelected(item);
