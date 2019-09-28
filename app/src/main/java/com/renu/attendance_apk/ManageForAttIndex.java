@@ -3,6 +3,9 @@ package com.renu.attendance_apk;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -145,4 +148,63 @@ public class ManageForAttIndex extends AppCompatActivity {
         attendancesIndexListView = findViewById(R.id.manageAttendancesIndexListViewId);
 
     }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.menu_layout, menu);
+
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        if (item.getItemId() == R.id.homeId) {
+            Intent intent = new Intent(this, AfterLogin.class);
+            startActivity(intent);
+
+        }
+        if (item.getItemId() == R.id.infoId) {
+            Intent intent = new Intent(this, Informations.class);
+            startActivity(intent);
+
+        }
+
+        if (item.getItemId() == R.id.listId) {
+            Intent intent = new Intent(this, AttendancesIndex.class);
+            startActivity(intent);
+
+        }
+        if (item.getItemId() == R.id.openId) {
+            Intent intent = new Intent(this, CreateNew1.class);
+            startActivity(intent);
+
+        }
+        if (item.getItemId() == R.id.localAttendances) {
+            Intent intent = new Intent(this, ExistRollNames.class);
+            startActivity(intent);
+
+        }
+        if (item.getItemId() == R.id.logoutId) {
+            Intent intent = new Intent(this, Authentication.class);
+            startActivity(intent);
+
+        }
+        if (item.getItemId() == R.id.settings) {
+            Intent intent = new Intent(this, Settings.class);
+            startActivity(intent);
+
+        }
+
+
+
+
+        return super.onOptionsItemSelected(item);
+    }
+
 }

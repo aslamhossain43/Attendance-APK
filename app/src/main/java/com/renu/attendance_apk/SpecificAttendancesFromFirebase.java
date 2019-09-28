@@ -228,6 +228,7 @@ public class SpecificAttendancesFromFirebase extends AppCompatActivity {
     }
 
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
@@ -241,6 +242,17 @@ public class SpecificAttendancesFromFirebase extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
+        if (item.getItemId() == R.id.homeId) {
+            Intent intent = new Intent(this, AfterLogin.class);
+            startActivity(intent);
+
+        }
+        if (item.getItemId() == R.id.infoId) {
+            Intent intent = new Intent(this, Informations.class);
+            startActivity(intent);
+
+        }
 
         if (item.getItemId() == R.id.listId) {
             Intent intent = new Intent(this, AttendancesIndex.class);
@@ -262,6 +274,13 @@ public class SpecificAttendancesFromFirebase extends AppCompatActivity {
             startActivity(intent);
 
         }
+        if (item.getItemId() == R.id.settings) {
+            Intent intent = new Intent(this, Settings.class);
+            startActivity(intent);
+
+        }
+
+
 
 
         return super.onOptionsItemSelected(item);

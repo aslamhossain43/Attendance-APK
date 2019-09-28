@@ -176,6 +176,17 @@ public class CreateNew2 extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
+        if (item.getItemId() == R.id.homeId) {
+            Intent intent = new Intent(this, AfterLogin.class);
+            startActivity(intent);
+
+        }
+        if (item.getItemId() == R.id.infoId) {
+            Intent intent = new Intent(this, Informations.class);
+            startActivity(intent);
+
+        }
+
         if (item.getItemId() == R.id.listId) {
             Intent intent = new Intent(this, AttendancesIndex.class);
             startActivity(intent);
@@ -190,11 +201,18 @@ public class CreateNew2 extends AppCompatActivity {
             Intent intent = new Intent(this, ExistRollNames.class);
             startActivity(intent);
 
-        }if (item.getItemId()==R.id.logoutId){
+        }
+        if (item.getItemId() == R.id.logoutId) {
             Intent intent = new Intent(this, Authentication.class);
             startActivity(intent);
 
         }
+        if (item.getItemId() == R.id.settings) {
+            Intent intent = new Intent(this, Settings.class);
+            startActivity(intent);
+
+        }
+
 
 
         return super.onOptionsItemSelected(item);

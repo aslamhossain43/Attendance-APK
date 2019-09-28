@@ -9,7 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".UpdateForAttPerson"></activity>
+        <activity android:name=".Informations"></activity>
+        <activity android:name=".UpdateForAttPerson" />
         <activity android:name=".ManageForAttPersonPre" />
         <activity android:name=".UpdateForManagingLocalAttTypeIndex" />
         <activity android:name=".UpdateForManageAttIndex" />
