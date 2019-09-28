@@ -10,6 +10,26 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="20dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#E62416"
+            android:textStyle="italic"
+            android:textSize="20sp"
+            android:text="Please Manage All Values Carefully !!!"
+            android:gravity="center"/>
+
+
+    </LinearLayout>
+
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_marginTop="20dp"
         android:gravity="center">
@@ -18,8 +38,9 @@
         android:layout_height="wrap_content"
         android:textStyle="italic"
         android:layout_marginBottom="5dp"
-        android:text="Manage Local Attendance Index"
+        android:text="Manage Person's Information Index"
         android:textSize="20dp"
+        android:textColor="#0B2BDD"
         android:gravity="center"
         />
         <Button
@@ -29,6 +50,8 @@
             android:textStyle="italic"
             android:layout_marginTop="5dp"
             android:text="Manage"
+            android:textColor="#F4F7F1"
+            android:background="#009688"
             android:gravity="center"/>
 
     </LinearLayout>
@@ -44,8 +67,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textStyle="italic"
+
+            android:textColor="#0B2BDD"
             android:layout_marginBottom="5dp"
-            android:text="Manage Local Attendance Person"
+            android:text="Manage Person's Information"
             android:textSize="20dp"
             android:gravity="center"
             />
@@ -56,6 +81,8 @@
             android:textStyle="italic"
             android:layout_marginTop="5dp"
             android:text="Manage"
+            android:textColor="#F4F7F1"
+            android:background="#009688"
             android:gravity="center"/>
 
     </LinearLayout>
@@ -70,6 +97,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textStyle="italic"
+
+            android:textColor="#0B2BDD"
             android:layout_marginBottom="5dp"
             android:text="Manage Attendance Index"
             android:textSize="20dp"
@@ -81,6 +110,8 @@
             android:layout_height="wrap_content"
             android:textStyle="italic"
             android:layout_marginTop="5dp"
+            android:textColor="#F4F7F1"
+            android:background="#009688"
             android:text="Manage"
             android:gravity="center"/>
 

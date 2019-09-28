@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
+    android:background="#673AB7"
     tools:context=".AfterLogin">
 
 
@@ -13,14 +14,13 @@
         android:id="@+id/createNewBtnId"
         android:textStyle="bold"
         android:textSize="20dp"
-        android:text="Create New"
+        android:text="@string/create_new"
         android:textColor="#DDEBF1F1"
-        android:background="#8BC34A"
+        android:background="#3F51B5"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:paddingTop="5dp"
-        android:paddingBottom="5dp"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
 
@@ -28,15 +28,15 @@
         android:id="@+id/existBtnId"
         android:textStyle="bold"
         android:textSize="20dp"
-        android:text="Exist"
+        android:text="@string/exist"
         android:layout_marginTop="20dp"
         android:textColor="#DDEBF1F1"
-        android:background="#8BC34A"
+        android:background="#3F51B5"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:paddingTop="5dp"
         android:paddingBottom="5dp"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
 

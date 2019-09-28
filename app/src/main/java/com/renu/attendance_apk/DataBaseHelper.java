@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 public class DataBaseHelper extends SQLiteOpenHelper {
-    private static final String DATABASE_NAME = "MassContentStore.db";
+    private static final String DATABASE_NAME = "AllStore.db";
     private static final String ATTENDANCES_TABLE = "attendance";
     private static final String ATTENDANCES_INDEX_TABLE = "attendanceindex";
     private static final String ROLL_NAME_TABLE = "rollname";
@@ -236,24 +236,58 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     }
 
 
-    public boolean updateData(String id, String name, String age, String gender) {
-        /*SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+    public boolean updateForRollName(String oldRoll,String newRoll, String name,String attFor,String date) {
+
+
+        Log.d("rr", "updateForRollName: "+oldRoll+name+attFor+date);
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(ID, id);
-        contentValues.put(NAME, name);
-        contentValues.put(AGE, age);
-        contentValues.put(GENDER, gender);
-        sqLiteDatabase.update(TABLE_NAME, contentValues, ID + " =?", new String[]{id});
-       */
+        contentValues.put(ROLL_FOR_ROLLNAME, newRoll);
+        contentValues.put(NAME_FOR_ROLLNAME, name);
+        contentValues.put(ATT_FOR_ROLLNAME, attFor);
+        contentValues.put(DATETIME_FOR_ROLLNAME, date);
+        sqLiteDatabase.update(ROLL_NAME_TABLE, contentValues, ROLL_FOR_ROLLNAME + "="+oldRoll,null);
+
         return true;
 
 
     }
 
-    public void delete(String id) {
-        /*SQLiteDatabase sqLiteDatabase=this.getWritableDatabase();
-        return sqLiteDatabase.delete(TABLE_NAME,ID+" =?",new String[]{id});*/
+
+    public boolean updateForAttIndex(String date, String index) {
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(DATETIME_FOR_ROLLNAME_INDEX, date);
+        contentValues.put(ATT_FOR_ROLLNAME_INDEX, index);
+        sqLiteDatabase.update(ROLL_NAME_INDEX_TABLE, contentValues, DATETIME_FOR_ROLLNAME_INDEX + " =?", new String[]{date});
+
+        return true;
+
+
     }
+
+    public boolean deleteRollNameIndex(String date) {
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+
+        return sqLiteDatabase.delete(ROLL_NAME_INDEX_TABLE, DATETIME_FOR_ROLLNAME_INDEX + "=?", new String[]{date}) > 0;
+
+
+    }
+
+    public boolean deleteRollNameByDate(String date) {
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+
+        return sqLiteDatabase.delete(ROLL_NAME_TABLE, DATETIME_FOR_ROLLNAME + "=?", new String[]{date}) > 0;
+
+
+    }
+
+
+    public boolean deleteSpecificPersonByRoll(String roll) {
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        return sqLiteDatabase.delete(ROLL_NAME_TABLE, ROLL_FOR_ROLLNAME + "=?", new String[]{roll}) > 0;
+    }
+
 
     public boolean deleteAnyRow(String name) {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
@@ -264,10 +298,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
 
-        Log.d("tt", "insertRollNameIntoLocalStorage: " + rollList);
-        Log.d("tt", "insertRollNameIntoLocalStorage: " + nameList);
-        Log.d("tt", "insertRollNameIntoLocalStorage: " + attForList);
-        Log.d("tt", "insertRollNameIntoLocalStorage: " + dateTimeList);
         for (int i = 0; i < rollList.size(); i++) {
 
 

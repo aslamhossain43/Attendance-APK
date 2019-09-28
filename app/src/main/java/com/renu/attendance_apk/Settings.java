@@ -28,7 +28,7 @@ public class Settings extends AppCompatActivity {
         btnForLocalAttPerson.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Settings.this, ManageForAttPerson.class);
+                Intent intent = new Intent(Settings.this, ManageForAttPersonPre.class);
                 startActivity(intent);
             }
         });

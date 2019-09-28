@@ -12,7 +12,7 @@
         android:textStyle="bold"
         android:gravity="center"
         android:background="#4CAF50"
-        android:text=" Manage Existance Attendance Type Index"
+        android:text=" Manage Attendance Type Index"
         android:padding="10sp"
         android:textSize="20sp"
         />
@@ -21,7 +21,7 @@
         android:listSelector="#B6DD89"
         android:divider="#336B6F6F"
         android:dividerHeight="1dp"
-        android:id="@+id/manageExistanceAttendanceListViewId"
+        android:id="@+id/manageLocalExistanceAttendanceListViewId"
         android:layout_width="match_parent"
         android:layout_height="match_parent"></ListView>
 </LinearLayout>

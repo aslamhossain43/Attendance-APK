@@ -65,7 +65,7 @@
             android:layout_weight="40"
             android:text="Roll No :"
             android:textStyle="bold"
-            android:textSize="12dp"
+            android:textSize="18sp"
             android:gravity="center"
             />
         <TextView
@@ -74,7 +74,7 @@
             android:layout_weight="60"
             android:text="Person's Names :"
             android:textStyle="bold"
-            android:textSize="12dp"
+            android:textSize="18sp"
             android:gravity="center"
             />
 
@@ -85,7 +85,7 @@
 
 
     <ListView
-        android:id="@+id/manageListViewSpecificAttFromFirebaseId"
+        android:id="@+id/managePersonListViewId"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:divider="#336B6F6F"

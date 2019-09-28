@@ -7,6 +7,8 @@
     <string name="confirm_password">Confirm Password</string>
     <string name="register">Register</string>
     <string name="alreadyregistered">Already Registered ?</string>
+    <string name="exist">Exist</string>
+    <string name="create_new">Create New</string>
     <string-array name="types">
         <item>P</item>
         <item>A</item>

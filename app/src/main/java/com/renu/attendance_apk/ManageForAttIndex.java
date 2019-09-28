@@ -1,18 +1,16 @@
 package com.renu.attendance_apk;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.google.android.gms.common.util.ArrayUtils;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -112,8 +110,8 @@ public class ManageForAttIndex extends AppCompatActivity {
                         Intent intent = new Intent(ManageForAttIndex.this, UpdateForManageAttIndex.class);
 
                         Bundle bundle = new Bundle();
-                        bundle.putString("index", attendanceForArray[position]);
-                        bundle.putString("dateTime", dateTimeForAttendanceIndexArray[position]);
+                        bundle.putString("index", String.valueOf(attendanceForArray));
+                        bundle.putString("dateTime", String.valueOf(dateTimeForAttendanceIndexArray));
                         intent.putExtras(bundle);
                         startActivity(intent);
 

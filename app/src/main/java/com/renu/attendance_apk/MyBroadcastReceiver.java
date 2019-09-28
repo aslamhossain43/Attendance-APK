@@ -94,30 +94,6 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
 //---------------------------------------------------------------------------------
 /*
 
-            Cursor cur = dataBaseHelper.getAllDataFromRollNameIndex();
-
-
-            while (cur.moveToNext()) {
-                String attendanceFor = cur.getString(0);
-                String dateTime = cur.getString(1);
-
-                RollNameIndexModel rollNameIndexModel = new RollNameIndexModel(dateTime, attendanceFor);
-                databaseReferenceForRollNameIndex.child(dateTime).setValue(rollNameIndexModel);
-
-                //------------------------------------------------------------------------------------
-                String q = "SELECT * FROM " + ROLL_NAME_TABLE + " WHERE " + DATETIME_FOR_ROLLNAME + " = '" + dateTime + "'";
-
-                Cursor cursor1 = sqLiteDatabase.rawQuery(q, null);
-                while (cursor1.moveToNext()) {
-                    rollList.add(cursor1.getString(0));
-                    nameList.add(cursor1.getString(1));
-                    attendancesList.add(cursor1.getString(2));
-                    dateTimeList.add(cursor1.getString(3));
-
-                }
-
-
-                RollNameModel rollNameModel = new RollNameModel(rollList, nameList, attendancesList, dateTimeList);
 
                 databaseReferenceForRollName.child(dateTime).setValue(rollNameModel);
                 rollList.clear();

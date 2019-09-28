@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="match_parent">
 
 
-    >
+
 
 
     <LinearLayout
@@ -18,29 +18,29 @@
 
 
         <TextView
-            android:id="@+id/rollNameTextViewId"
+            android:id="@+id/manageAttForTextViewId"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Class 6"
             android:layout_gravity="center"
             android:textStyle="bold"
             android:textSize="20sp"
-            android:paddingTop="5sp"
-            android:paddingBottom="1sp"
+            android:layout_marginTop="5sp"
+            android:layout_marginBottom="2sp"
 
 
 
             />
+
         <TextView
-            android:id="@+id/rollNameDateTextViewId"
+            android:id="@+id/manageAttdtTextViewId"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="2019/10/10 10:10:10 AM"
+            android:text="2019/09/20 06:02 AM"
             android:layout_gravity="center"
-            android:textStyle="bold"
             android:textSize="15sp"
-            android:paddingTop="1sp"
-            android:paddingBottom="1sp"
+            android:layout_marginTop="2sp"
+            android:layout_marginBottom="5sp"
 
 
 
@@ -49,8 +49,6 @@
 
 
     </LinearLayout>
-
-
 
 
 
