@@ -2,6 +2,7 @@ package com.renu.attendance_apk;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -20,6 +21,7 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText editTextUaserName, editTextPassword, editTextConfirmPassword;
     private Button registerBtn;
     TextView textViewLogin;
+    private MyBroadcastReceiver myBroadcastReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,8 +94,25 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void initOthers() {
         dataBaseHelper = new DataBaseHelper(this);
+        myBroadcastReceiver=new MyBroadcastReceiver();
+    }
+    //-------------------------------------
+    @Override
+    protected void onResume() {
+        super.onResume();
+        IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
+
+        registerReceiver(myBroadcastReceiver, intentFilter);
+
+
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(myBroadcastReceiver);
     }
 
+    //----------------------------
     private void initView() {
 
 

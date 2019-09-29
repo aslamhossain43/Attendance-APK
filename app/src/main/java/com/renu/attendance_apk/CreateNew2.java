@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -35,6 +36,7 @@ public class CreateNew2 extends AppCompatActivity {
     private String attFor;
     private int pNo;
     private List<String> rollList, nameList, attForList, dateTimeList;
+    private MyBroadcastReceiver myBroadcastReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -132,9 +134,26 @@ public class CreateNew2 extends AppCompatActivity {
         nameList = new ArrayList<>();
         attForList = new ArrayList<>();
         dateTimeList = new ArrayList<>();
+        myBroadcastReceiver=new MyBroadcastReceiver();
 
     }
+    //-------------------------------------
+    @Override
+    protected void onResume() {
+        super.onResume();
+        IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
 
+        registerReceiver(myBroadcastReceiver, intentFilter);
+
+
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(myBroadcastReceiver);
+    }
+
+    //----------------------------
     private void initView() {
         textViewAttFor = findViewById(R.id.textAttendancesForId);
         textViewPersonNo = findViewById(R.id.textPersonNoId);

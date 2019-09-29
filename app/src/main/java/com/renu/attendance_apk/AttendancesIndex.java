@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -30,6 +31,7 @@ public class AttendancesIndex extends AppCompatActivity {
     List<String> attendancesList;
     List<String> dateTimeList;
     private ListView attendancesIndexListView;
+    private MyBroadcastReceiver myBroadcastReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +44,6 @@ public class AttendancesIndex extends AppCompatActivity {
 
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Log.d("hmmm", "onDataChange: hmmmmm");
                 for (DataSnapshot dnapshot : dataSnapshot.getChildren()) {
                     AttendanceIndexModel attendanceIndexModel = dnapshot.getValue(AttendanceIndexModel.class);
                     attendanceIndexModelList.add(attendanceIndexModel);
@@ -64,8 +65,6 @@ public class AttendancesIndex extends AppCompatActivity {
                 String[] attendanceForArray;
                 dateTimeForAttendanceIndexArray = dtForIndex.toArray(new String[dtForIndex.size()]);
                 attendanceForArray = attForIndex.toArray(new String[attForIndex.size()]);
-                Log.d("dt", "onCreate: " + dtForIndex);
-                Log.d("at", "onCreate: " + attForIndex);
 
 
                 listViewHandleForAttendancesIndex(dateTimeForAttendanceIndexArray, attendanceForArray);
@@ -106,6 +105,24 @@ public class AttendancesIndex extends AppCompatActivity {
 
     }
 
+    //-------------------------------------
+    @Override
+    protected void onResume() {
+        super.onResume();
+        IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
+
+        registerReceiver(myBroadcastReceiver, intentFilter);
+
+
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(myBroadcastReceiver);
+    }
+
+    //----------------------------
+
 
     private void intitOthers() {
 
@@ -114,7 +131,7 @@ public class AttendancesIndex extends AppCompatActivity {
         rollList = new ArrayList<>();
         attendancesList = new ArrayList<>();
         dateTimeList = new ArrayList<>();
-
+myBroadcastReceiver=new MyBroadcastReceiver();
 
     }
 

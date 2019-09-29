@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,6 +18,7 @@ public class AfterLogin extends AppCompatActivity {
     private int currentApiVersion;
     //-----------------
     private Button createNewBtn, exist;
+    private MyBroadcastReceiver myBroadcastReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +50,7 @@ public class AfterLogin extends AppCompatActivity {
         //--------------------------------
 
         initView();
+        initOthers();
 
         createNewBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,6 +67,23 @@ public class AfterLogin extends AppCompatActivity {
             }
         });
     }
+
+    private void initOthers() {
+        myBroadcastReceiver = new MyBroadcastReceiver();
+    }
+
+
+    //-------------------------------------
+    @Override
+    protected void onResume() {
+        super.onResume();
+        IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
+
+        registerReceiver(myBroadcastReceiver, intentFilter);
+
+
+    }
+
 
     private void initView() {
         createNewBtn = findViewById(R.id.createNewBtnId);
@@ -86,5 +106,12 @@ public class AfterLogin extends AppCompatActivity {
                             | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                             | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
         }
+    }
+
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(myBroadcastReceiver);
     }
 }

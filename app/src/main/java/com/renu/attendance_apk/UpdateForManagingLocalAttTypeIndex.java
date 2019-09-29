@@ -2,6 +2,7 @@ package com.renu.attendance_apk;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -21,6 +22,7 @@ public class UpdateForManagingLocalAttTypeIndex extends AppCompatActivity {
     private EditText editTextForIndex;
     private String dateTime, index;
     private Button updateButton;
+    private MyBroadcastReceiver myBroadcastReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +60,25 @@ public class UpdateForManagingLocalAttTypeIndex extends AppCompatActivity {
     private void initOthers() {
 
         dataBaseHelper = new DataBaseHelper(this);
+        myBroadcastReceiver=new MyBroadcastReceiver();
     }
+    //-------------------------------------
+    @Override
+    protected void onResume() {
+        super.onResume();
+        IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
+
+        registerReceiver(myBroadcastReceiver, intentFilter);
+
+
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(myBroadcastReceiver);
+    }
+
+    //----------------------------
 
     private void initView() {
         updateParentLinearLayout = findViewById(R.id.updateParentLinearLayoutForManageLocalAttIndexId);

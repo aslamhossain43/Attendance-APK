@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -27,6 +28,7 @@ public class UpdateForManageAttIndex extends AppCompatActivity {
     private EditText editTextForIndex;
     private String dateTime,index;
     private Button updateButton;
+    private MyBroadcastReceiver myBroadcastReceiver;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,8 +70,25 @@ public class UpdateForManageAttIndex extends AppCompatActivity {
     private void initOthers() {
         databaseReferenceForattendances = FirebaseDatabase.getInstance().getReference("attendance");
         databaseReferenceForattendancesIndex = FirebaseDatabase.getInstance().getReference("attendanceindex");
+myBroadcastReceiver=new MyBroadcastReceiver();
+    }
+    //-------------------------------------
+    @Override
+    protected void onResume() {
+        super.onResume();
+        IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
+
+        registerReceiver(myBroadcastReceiver, intentFilter);
+
 
     }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(myBroadcastReceiver);
+    }
+
+    //----------------------------
 
     private void initView() {
 

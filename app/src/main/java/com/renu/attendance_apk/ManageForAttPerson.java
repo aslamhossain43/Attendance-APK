@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -34,6 +35,7 @@ public class ManageForAttPerson extends AppCompatActivity {
     final String NAME_FOR_ROLLNAME = "name";
     final String ATT_FOR_ROLLNAME = "attfor";
     final String DATETIME_FOR_ROLLNAME = "time";
+    private MyBroadcastReceiver myBroadcastReceiver;
 
 
     @Override
@@ -138,10 +140,27 @@ public class ManageForAttPerson extends AppCompatActivity {
     private void initOthers() {
         dataBaseHelper = new DataBaseHelper(this);
         alertBuilder = new AlertDialog.Builder(this);
+        myBroadcastReceiver=new MyBroadcastReceiver();
 
 
     }
+    //-------------------------------------
+    @Override
+    protected void onResume() {
+        super.onResume();
+        IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
 
+        registerReceiver(myBroadcastReceiver, intentFilter);
+
+
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(myBroadcastReceiver);
+    }
+
+    //----------------------------
     private void initView() {
         managePersonListViewId = findViewById(R.id.managePersonListViewId);
         textViewForAttFor = findViewById(R.id.manageTextViewHeadingForClassId);

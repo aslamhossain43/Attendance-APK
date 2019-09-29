@@ -3,6 +3,7 @@ package com.renu.attendance_apk;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,7 +21,7 @@ import java.util.List;
 public class ManageForAttPersonPre extends AppCompatActivity {
     private DataBaseHelper dataBaseHelper;
     private ListView listViewForPersonPre;
-
+private MyBroadcastReceiver myBroadcastReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,9 +70,26 @@ public class ManageForAttPersonPre extends AppCompatActivity {
 
     private void initOthers() {
         dataBaseHelper = new DataBaseHelper(this);
+        myBroadcastReceiver=new MyBroadcastReceiver();
 
     }
+    //-------------------------------------
+    @Override
+    protected void onResume() {
+        super.onResume();
+        IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
 
+        registerReceiver(myBroadcastReceiver, intentFilter);
+
+
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(myBroadcastReceiver);
+    }
+
+    //----------------------------
     private void initView() {
         listViewForPersonPre = findViewById(R.id.managePersonInformarionListViewId);
 

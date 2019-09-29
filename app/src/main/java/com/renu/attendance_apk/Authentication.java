@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -21,6 +22,7 @@ public class Authentication extends AppCompatActivity {
     private Button loginBtn;
     TextView textViewForRegister;
     DataBaseHelper dataBaseHelper;
+    private MyBroadcastReceiver myBroadcastReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,8 +89,28 @@ public class Authentication extends AppCompatActivity {
 
     }
 
+
+    //-------------------------------------
+    @Override
+    protected void onResume() {
+        super.onResume();
+        IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
+
+        registerReceiver(myBroadcastReceiver, intentFilter);
+
+
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(myBroadcastReceiver);
+    }
+
+    //----------------------------
+
     private void initOther() {
         dataBaseHelper = new DataBaseHelper(this);
+        myBroadcastReceiver=new MyBroadcastReceiver();
     }
 
     private void initView() {

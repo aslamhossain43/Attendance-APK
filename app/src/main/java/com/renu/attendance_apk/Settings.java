@@ -2,6 +2,7 @@ package com.renu.attendance_apk;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -22,6 +23,7 @@ public class Settings extends AppCompatActivity {
     private DatabaseReference databaseReferenceForattendances, databaseReferenceForattendancesIndex;
     AlertDialog.Builder alertDialogBuilder;
     DataBaseHelper dataBaseHelper;
+    private MyBroadcastReceiver myBroadcastReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,7 +121,25 @@ public class Settings extends AppCompatActivity {
         databaseReferenceForattendancesIndex = FirebaseDatabase.getInstance().getReference("attendanceindex");
         dataBaseHelper = new DataBaseHelper(this);
         alertDialogBuilder = new AlertDialog.Builder(this);
+        myBroadcastReceiver=new MyBroadcastReceiver();
     }
+    //-------------------------------------
+    @Override
+    protected void onResume() {
+        super.onResume();
+        IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
+
+        registerReceiver(myBroadcastReceiver, intentFilter);
+
+
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(myBroadcastReceiver);
+    }
+
+    //----------------------------
 
     private void initView() {
 

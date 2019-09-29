@@ -2,6 +2,7 @@ package com.renu.attendance_apk;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.Menu;
@@ -23,7 +24,7 @@ public class ManageForLocalAttTypeIndex extends AppCompatActivity {
     private AlertDialog.Builder alertDialogBuilder;
     DataBaseHelper dataBaseHelper;
     private ListView listViewExistAttTypes;
-
+private MyBroadcastReceiver myBroadcastReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,9 +105,26 @@ public class ManageForLocalAttTypeIndex extends AppCompatActivity {
     private void initOthers() {
         alertDialogBuilder = new AlertDialog.Builder(this);
         dataBaseHelper = new DataBaseHelper(this);
+        myBroadcastReceiver=new MyBroadcastReceiver();
 
     }
+    //-------------------------------------
+    @Override
+    protected void onResume() {
+        super.onResume();
+        IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
 
+        registerReceiver(myBroadcastReceiver, intentFilter);
+
+
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(myBroadcastReceiver);
+    }
+
+    //----------------------------
     private void initView() {
         listViewExistAttTypes = findViewById(R.id.manageLocalExistanceAttendanceListViewId);
     }

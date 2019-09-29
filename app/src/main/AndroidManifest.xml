@@ -9,7 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Informations"></activity>
+        <activity android:name=".Informations" />
         <activity android:name=".UpdateForAttPerson" />
         <activity android:name=".ManageForAttPersonPre" />
         <activity android:name=".UpdateForManagingLocalAttTypeIndex" />
@@ -35,13 +35,14 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".MyBroadcastReceiver">
+        <!--<receiver android:name=".MyBroadcastReceiver">
             <intent-filter>
+
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
-        </receiver>
+        </receiver>-->
     </application>
-
     <uses-permission android:name="android.permission.INTERNET" />
+
 
 </manifest>

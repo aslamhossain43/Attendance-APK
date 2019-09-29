@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseReference;
@@ -16,6 +18,8 @@ import java.util.List;
 public class MyBroadcastReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
+
+
         if (Network.isNetworkAvailable(context)) {
 
 
@@ -61,13 +65,10 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
 
 
             }
-            Intent i = new Intent(context, AttendancesIndex.class);
-            context.startActivity(i);
-            Toast.makeText(context, "Your Counted Attendances Saved Successfully !", Toast.LENGTH_SHORT).show();
+
+            dataBaseHelper.delete_Att_And_Index();
 
 
-        } else {
-            return;
         }
     }
 

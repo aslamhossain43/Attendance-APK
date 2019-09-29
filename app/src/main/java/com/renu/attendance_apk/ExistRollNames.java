@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -27,6 +28,7 @@ import java.util.List;
 public class ExistRollNames extends AppCompatActivity {
     DataBaseHelper dataBaseHelper;
      private ListView listViewExistAttTypes;
+     private MyBroadcastReceiver myBroadcastReceiver;
 
 
     @Override
@@ -34,7 +36,6 @@ public class ExistRollNames extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_exist_roll_names);
 
-        Log.d("ee", "onCreate: ExistRollName");
         initView();
         initOthers();
 
@@ -50,8 +51,6 @@ public class ExistRollNames extends AppCompatActivity {
 
     final String[] sAtt = stringAttFor.toArray(new String[stringAttFor.size()]);
     final String[] sDateTime = stringDate.toArray(new String[stringDate.size()]);
-    Log.d("rr", "onCreate: attFor"+stringAttFor);
-    Log.d("rr", "onCreate: date for roll"+stringDate);
     CustomAdupterForAttendanceTypes customAdupterForAttendanceTypes = new CustomAdupterForAttendanceTypes(ExistRollNames.this, sAtt,sDateTime);
     listViewExistAttTypes.setAdapter(customAdupterForAttendanceTypes);
     listViewExistAttTypes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -72,10 +71,20 @@ public class ExistRollNames extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
+
+        registerReceiver(myBroadcastReceiver, intentFilter);
+
+    }
+
     private void initOthers() {
   dataBaseHelper=new DataBaseHelper(this);
 
-
+myBroadcastReceiver=new MyBroadcastReceiver();
     }
 
     private void initView() {
@@ -134,4 +143,9 @@ public class ExistRollNames extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(myBroadcastReceiver);
+    }
 }

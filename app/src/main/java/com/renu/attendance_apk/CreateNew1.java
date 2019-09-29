@@ -3,6 +3,7 @@ package com.renu.attendance_apk;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -15,6 +16,7 @@ import android.widget.Toast;
 public class CreateNew1 extends AppCompatActivity {
     private EditText editTextAttFor, editTextPersonNo;
     private Button nextBtn;
+    private MyBroadcastReceiver myBroadcastReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +25,7 @@ public class CreateNew1 extends AppCompatActivity {
 
 
         initView();
+        initOthers();
 
         nextBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,6 +67,26 @@ public class CreateNew1 extends AppCompatActivity {
 
     }
 
+    private void initOthers() {
+        myBroadcastReceiver=new MyBroadcastReceiver();
+    }
+    //-------------------------------------
+    @Override
+    protected void onResume() {
+        super.onResume();
+        IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
+
+        registerReceiver(myBroadcastReceiver, intentFilter);
+
+
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(myBroadcastReceiver);
+    }
+
+    //----------------------------
     private void initView() {
 
         editTextAttFor = findViewById(R.id.editTextAttForId);

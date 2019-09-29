@@ -316,4 +316,20 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
 
     }
+
+    public void delete_Att_And_Index(){
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+
+
+        try {
+            sqLiteDatabase.execSQL(DELETE_ALL_VALUES_FROM_ATTENDANCE);
+            sqLiteDatabase.execSQL(DELETE_ALL_VALUES_FROM_ATTENDANCES_INDEX);
+            onCreate(sqLiteDatabase);
+        } catch (Exception e) {
+        }
+
+
+    }
+
+
 }

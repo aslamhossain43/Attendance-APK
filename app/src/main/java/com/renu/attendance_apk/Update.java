@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -40,6 +41,7 @@ public class Update extends AppCompatActivity {
     private Spinner spinner;
     private String roll, name, paoff, dateTime, position,attFor;
     private Button updateButton;
+    private MyBroadcastReceiver myBroadcastReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,9 +110,26 @@ public class Update extends AppCompatActivity {
     private void initOthers() {
         databaseReferenceForattendances = FirebaseDatabase.getInstance().getReference("attendance");
         databaseReferenceForattendancesIndex = FirebaseDatabase.getInstance().getReference("attendanceindex");
+myBroadcastReceiver=new MyBroadcastReceiver();
+
+    }
+    //-------------------------------------
+    @Override
+    protected void onResume() {
+        super.onResume();
+        IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
+
+        registerReceiver(myBroadcastReceiver, intentFilter);
 
 
     }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(myBroadcastReceiver);
+    }
+
+    //----------------------------
 
     private void initView() {
         updateParentLinearLayout = findViewById(R.id.updateParentLinearLayoutId);

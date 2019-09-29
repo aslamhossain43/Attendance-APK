@@ -2,6 +2,7 @@ package com.renu.attendance_apk;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -39,7 +40,7 @@ public class SpecificAttendancesFromFirebase extends AppCompatActivity {
     private AlertDialog.Builder alertDialogBuilder;
     CustomAdupterForIndexFromFirebase customAdupterForIndexFromFirebase;
     String[] specificFinalRoll, specificFinalName, specificFinalAttendances, specificFinalDateTime;
-
+private MyBroadcastReceiver myBroadcastReceiver;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -214,9 +215,26 @@ public class SpecificAttendancesFromFirebase extends AppCompatActivity {
         databaseReferenceForattendances = FirebaseDatabase.getInstance().getReference("attendance").child(dtFromFirebaseIndex);
         databaseReferenceForattendancesIndex = FirebaseDatabase.getInstance().getReference("attendanceindex").child(dtFromFirebaseIndex);
         alertDialogBuilder = new AlertDialog.Builder(SpecificAttendancesFromFirebase.this);
+myBroadcastReceiver=new MyBroadcastReceiver();
+
+    }
+    //-------------------------------------
+    @Override
+    protected void onResume() {
+        super.onResume();
+        IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
+
+        registerReceiver(myBroadcastReceiver, intentFilter);
 
 
     }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(myBroadcastReceiver);
+    }
+
+    //----------------------------
 
     private void initView() {
         listViewSpecificAttFromFirebase = findViewById(R.id.listViewSpecificAttFromFirebaseId);

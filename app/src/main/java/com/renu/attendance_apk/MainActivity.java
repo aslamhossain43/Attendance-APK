@@ -2,6 +2,7 @@ package com.renu.attendance_apk;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -48,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
     SQLiteDatabase sqLiteDatabase;
     String rollNameAttFor;
     String rollNameDateTime;
+    private MyBroadcastReceiver myBroadcastReceiver;
 
 
     @Override
@@ -262,8 +264,25 @@ public class MainActivity extends AppCompatActivity {
 
         dataBaseHelper = new DataBaseHelper(this);
         sqLiteDatabase = dataBaseHelper.getWritableDatabase();
+        myBroadcastReceiver=new MyBroadcastReceiver();
+    }
+    //-------------------------------------
+    @Override
+    protected void onResume() {
+        super.onResume();
+        IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
+
+        registerReceiver(myBroadcastReceiver, intentFilter);
+
+
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(myBroadcastReceiver);
     }
 
+    //----------------------------
     private void initView() {
 
         parentLinearLayout = (LinearLayout) findViewById(R.id.parent_linear_layout);

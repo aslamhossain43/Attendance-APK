@@ -3,17 +3,27 @@ package com.renu.attendance_apk;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
 public class Informations extends AppCompatActivity {
+    private MyBroadcastReceiver myBroadcastReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_informations);
+
+
+        initOthers();
+    }
+
+    private void initOthers() {
+myBroadcastReceiver=new MyBroadcastReceiver();
+
     }
 
     @Override
@@ -72,4 +82,22 @@ public class Informations extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    //-------------------------------------
+    @Override
+    protected void onResume() {
+        super.onResume();
+        IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
+
+        registerReceiver(myBroadcastReceiver, intentFilter);
+
+
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(myBroadcastReceiver);
+    }
+
+    //----------------------------
 }

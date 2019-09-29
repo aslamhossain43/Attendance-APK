@@ -2,6 +2,7 @@ package com.renu.attendance_apk;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -33,6 +34,7 @@ public class ManageForAttIndex extends AppCompatActivity {
     List<String> dateTimeList;
     private AlertDialog.Builder alertDialogBuilder;
     String[] dateTimeForAttendanceIndexArray, attendanceForArray;
+    private MyBroadcastReceiver myBroadcastReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -144,8 +146,25 @@ public class ManageForAttIndex extends AppCompatActivity {
         attendancesList = new ArrayList<>();
         dateTimeList = new ArrayList<>();
         alertDialogBuilder = new AlertDialog.Builder(ManageForAttIndex.this);
+        myBroadcastReceiver=new MyBroadcastReceiver();
+    }
+    //-------------------------------------
+    @Override
+    protected void onResume() {
+        super.onResume();
+        IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
+
+        registerReceiver(myBroadcastReceiver, intentFilter);
+
+
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(myBroadcastReceiver);
     }
 
+    //----------------------------
     private void initView() {
         attendancesIndexListView = findViewById(R.id.manageAttendancesIndexListViewId);
 
