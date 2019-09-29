@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -37,7 +38,7 @@ public class Update extends AppCompatActivity {
     private LinearLayout updateParentLinearLayout;
     private EditText editTextForId, editTextForName, editTextForPAOff;
     private Spinner spinner;
-    private String roll, name, paoff, dateTime, position;
+    private String roll, name, paoff, dateTime, position,attFor;
     private Button updateButton;
 
     @Override
@@ -78,8 +79,14 @@ public class Update extends AppCompatActivity {
                 databaseReferenceForattendances.child(dateTime).child("rollList").child(position).setValue(rollFromEditText);
                 databaseReferenceForattendances.child(dateTime).child("nameList").child(position).setValue(nameFromEditText);
                 databaseReferenceForattendances.child(dateTime).child("attendanceList").child(position).setValue(paoffFromSpinner);
-
-
+                //go to attendancesindex
+                Intent intent=new Intent(Update.this,SpecificAttendancesFromFirebase.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("attFor", attFor);
+                bundle.putString("dt", dateTime);
+                intent.putExtras(bundle);
+                startActivity(intent);
+                Toast.makeText(Update.this, "Update Success !", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -93,6 +100,7 @@ public class Update extends AppCompatActivity {
         paoff = bundle.getString("paoff");
         dateTime = bundle.getString("dateTime");
         position = bundle.getString("position");
+        attFor = bundle.getString("attFor");
 
 
     }

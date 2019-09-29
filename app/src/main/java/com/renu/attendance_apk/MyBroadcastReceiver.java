@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -60,6 +61,9 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
 
 
             }
+            Intent i = new Intent(context, AttendancesIndex.class);
+            context.startActivity(i);
+            Toast.makeText(context, "Your Counted Attendances Saved Successfully !", Toast.LENGTH_SHORT).show();
 
 
         } else {

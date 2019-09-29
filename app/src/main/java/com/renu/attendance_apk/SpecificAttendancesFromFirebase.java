@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -119,6 +120,7 @@ public class SpecificAttendancesFromFirebase extends AppCompatActivity {
 
                                                 }
                                             });
+                                            Toast.makeText(SpecificAttendancesFromFirebase.this, "You Have Deleted Successfully !", Toast.LENGTH_SHORT).show();
 
                                         }
                                         if (rollList.size() > 0) {
@@ -131,13 +133,14 @@ public class SpecificAttendancesFromFirebase extends AppCompatActivity {
                                             AttendanceModel attendanceModel = new AttendanceModel(rollList, nameList, attList, dtList);
 
                                             databaseReferenceForattendances.setValue(attendanceModel);
+                                            Toast.makeText(SpecificAttendancesFromFirebase.this, "You Have Deleted Successfully !", Toast.LENGTH_SHORT).show();
                                         } else {
 
                                             dataSnapshot.getRef().removeValue();
 
-                                            Intent intent = new Intent(SpecificAttendancesFromFirebase.this, ExistRollNames.class);
+                                            Intent intent = new Intent(SpecificAttendancesFromFirebase.this, AttendancesIndex.class);
                                             startActivity(intent);
-
+                                            Toast.makeText(SpecificAttendancesFromFirebase.this, "You Have Deleted Successfully !", Toast.LENGTH_SHORT).show();
 
                                         }
 
@@ -162,6 +165,7 @@ public class SpecificAttendancesFromFirebase extends AppCompatActivity {
                                 bundle.putString("paoff", specificFinalAttendances[position]);
                                 bundle.putString("dateTime", specificFinalDateTime[position]);
                                 bundle.putString("position", String.valueOf(position));
+                                bundle.putString("attFor", attFromFirebaseIndex);
                                 intent.putExtras(bundle);
                                 startActivity(intent);
 

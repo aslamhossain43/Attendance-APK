@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -53,6 +54,7 @@ public class UpdateForManageAttIndex extends AppCompatActivity {
                 databaseReferenceForattendancesIndex.child(dateTime).child("attendanceFor").getRef().setValue(index);
                 Intent intent=new Intent(UpdateForManageAttIndex.this,ManageForAttIndex.class);
                 startActivity(intent);
+                Toast.makeText(UpdateForManageAttIndex.this, "Update Success !", Toast.LENGTH_SHORT).show();
             }
         });
 

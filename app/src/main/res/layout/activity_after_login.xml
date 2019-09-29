@@ -10,6 +10,17 @@
     tools:context=".AfterLogin">
 
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+    android:gravity="center"
+        android:textColor="#ffff"
+        android:textSize="30dp"
+        android:textStyle="bold"
+        android:text="Welcome !"
+        android:layout_marginBottom="40dp"
+        />
+
     <Button
         android:id="@+id/createNewBtnId"
         android:textStyle="bold"

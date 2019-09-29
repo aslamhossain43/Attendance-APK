@@ -9,6 +9,24 @@
     <string name="alreadyregistered">Already Registered ?</string>
     <string name="exist">Exist</string>
     <string name="create_new">Create New</string>
+    <string name="info_text">
+
+        This Attendance APK is usable for any attendance purpose like school
+        , college, university and any
+        institution where attendance need.
+
+Some direction is given below :
+        First you need to register then complete your login. If you have no existence roll, name for any
+        institution or class then create new. Next give the name for which you need the attendance and how many person
+        will be counted then click save button. If network is not connected then those exist in your local book. To keep the attendance click on local book.
+        After completing attendance save that. If network is not connected then these will be stored in your phone memory.
+        If network is connected then you see all these attendances. If you want to edit/delete then
+        go to setting and manage theme. To keep attendance you do not need network connection but to access them
+        you must need network connection.
+
+
+
+    </string>
     <string-array name="types">
         <item>P</item>
         <item>A</item>

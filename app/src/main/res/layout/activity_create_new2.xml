@@ -17,13 +17,14 @@
             android:layout_height="wrap_content"
             android:weightSum="2"
             android:orientation="horizontal"
-            android:background="#4CAF50"
+            android:background="#673AB7"
             >
             <TextView
                 android:layout_weight="1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:textSize="20sp"
+                android:textColor="#F4F5F2"
                 android:textStyle="bold"
                 android:padding="5sp"
                 android:text="Attendances For :"
@@ -37,6 +38,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="18sp"
                 android:padding="5sp"
+                android:textColor="#F4F5F2"
                 android:textStyle="bold"
 
                 />
@@ -50,7 +52,7 @@
             android:layout_height="wrap_content"
             android:weightSum="2"
             android:orientation="horizontal"
-            android:background="#4CAF50"
+            android:background="#673AB7"
             >
             <TextView
                 android:layout_weight="1"
@@ -58,6 +60,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="20sp"
                 android:textStyle="bold"
+                android:textColor="#F4F5F2"
                 android:text="Person No :"
                 android:padding="5sp"
 
@@ -69,6 +72,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:textSize="20sp"
+                android:textColor="#F4F5F2"
                 android:padding="5sp"
                 android:textStyle="bold"
 
@@ -113,32 +117,26 @@
 
         <Button
             android:id="@+id/save_button"
-            android:layout_width="wrap_content"
+            android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="50dp"
-            android:layout_marginBottom="50dp"
-            android:background="#8BC34A"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp"
+            android:layout_marginBottom="30dp"
+            android:background="#3F51B5"
+
             android:text="Save"
             android:textColor="#FFF"
-            android:textSize="30dp" />
+            android:textSize="20dp" />
 
         <Button
             android:id="@+id/back_btnId"
-            android:layout_width="wrap_content"
+            android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="100dp"
-            android:background="#8BC34A"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp"
+            android:background="#3F51B5"
+
             android:text="Previous"
             android:textColor="#FFF"
             android:textSize="20dp" />

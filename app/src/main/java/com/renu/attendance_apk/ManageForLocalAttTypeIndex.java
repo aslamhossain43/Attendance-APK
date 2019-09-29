@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -67,6 +68,7 @@ public class ManageForLocalAttTypeIndex extends AppCompatActivity {
                         dataBaseHelper.deleteRollNameByDate(sDateTime[position]);
                         fileList();
                         startActivity(getIntent());
+                        Toast.makeText(ManageForLocalAttTypeIndex.this, "You Have Deleted Successfully !", Toast.LENGTH_SHORT).show();
 
 
                     }

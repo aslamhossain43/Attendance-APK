@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -15,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private LinearLayout parentLinearLayout;
-    private EditText editTextForField,editTextNameForField;
+    private EditText editTextForField, editTextNameForField;
     private Button add_To_Firebase;
     private Spinner spinnerForField;
 
@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
     SQLiteDatabase sqLiteDatabase;
     String rollNameAttFor;
     String rollNameDateTime;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -225,7 +226,10 @@ public class MainActivity extends AppCompatActivity {
 
                 AttendanceModel attendanceModel = new AttendanceModel(roolList, nameList, attendanceList, dateTimeList);
                 databaseReferenceForattendances.child(dateTime).setValue(attendanceModel);
-
+                // go to attendance index
+                Intent intent = new Intent(MainActivity.this, AttendancesIndex.class);
+                startActivity(intent);
+                Toast.makeText(MainActivity.this, "Operation Success !", Toast.LENGTH_SHORT).show();
 
             } else {
 
@@ -234,6 +238,11 @@ public class MainActivity extends AppCompatActivity {
 
 
                 dataBaseHelper.insertDataInToAttendancesIndexTable(dateTime, attendancesFor);
+                // go to local book
+                Intent intent = new Intent(MainActivity.this, ExistRollNames.class);
+                startActivity(intent);
+                Toast.makeText(MainActivity.this, "Operation Success !", Toast.LENGTH_SHORT).show();
+
             }
 
 

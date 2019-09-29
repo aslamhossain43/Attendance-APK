@@ -109,7 +109,7 @@ public class AttendancesIndex extends AppCompatActivity {
 
     private void intitOthers() {
 
-         databaseReferenceForattendancesIndex = FirebaseDatabase.getInstance().getReference("attendanceindex");
+        databaseReferenceForattendancesIndex = FirebaseDatabase.getInstance().getReference("attendanceindex");
         attendanceIndexModelList = new ArrayList<>();
         rollList = new ArrayList<>();
         attendancesList = new ArrayList<>();
@@ -138,18 +138,37 @@ public class AttendancesIndex extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
+        if (item.getItemId() == R.id.homeId) {
+            Intent intent = new Intent(this, AfterLogin.class);
+            startActivity(intent);
+
+        }
+        if (item.getItemId() == R.id.infoId) {
+            Intent intent = new Intent(this, Informations.class);
+            startActivity(intent);
+
+        }
 
         if (item.getItemId() == R.id.openId) {
             Intent intent = new Intent(this, CreateNew1.class);
             startActivity(intent);
 
         }
-        if (item.getItemId() == R.id.localAttendances) {
-            Intent intent = new Intent(this, ExistRollNames.class);
+
+        if (item.getItemId() == R.id.logoutId) {
+            Intent intent = new Intent(this, Authentication.class);
             startActivity(intent);
 
-        }if (item.getItemId()==R.id.logoutId){
-            Intent intent = new Intent(this, Authentication.class);
+        }
+        if (item.getItemId() == R.id.settings) {
+            Intent intent = new Intent(this, Settings.class);
+            startActivity(intent);
+
+        }
+
+
+        if (item.getItemId() == R.id.localAttendances) {
+            Intent intent = new Intent(this, ExistRollNames.class);
             startActivity(intent);
 
         }

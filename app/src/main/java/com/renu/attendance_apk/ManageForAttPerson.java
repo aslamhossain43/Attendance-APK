@@ -16,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -96,7 +97,7 @@ public class ManageForAttPerson extends AppCompatActivity {
                         dataBaseHelper.deleteSpecificPersonByRoll(stringsRoll[position]);
                         finish();
                         startActivity(getIntent());
-
+                        Toast.makeText(ManageForAttPerson.this, "You Have Deleted Successfully !", Toast.LENGTH_SHORT).show();
 
                     }
                 });

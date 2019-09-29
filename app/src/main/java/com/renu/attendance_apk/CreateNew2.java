@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -81,7 +82,10 @@ public class CreateNew2 extends AppCompatActivity {
 
                 dataBaseHelper.insertRollNameIntoLocalStorage(rollList, nameList, attForList, dateTimeList);
                 dataBaseHelper.insertDataInToRollNameIndexTable(dateTime, attFor);
-
+               //go to local book
+                Intent intent=new Intent(CreateNew2.this,ExistRollNames.class);
+                startActivity(intent);
+                Toast.makeText(CreateNew2.this, "Operation Success !", Toast.LENGTH_SHORT).show();
 
             }
         });

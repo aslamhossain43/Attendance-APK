@@ -117,11 +117,7 @@ public class ExistRollNames extends AppCompatActivity {
             startActivity(intent);
 
         }
-        if (item.getItemId() == R.id.localAttendances) {
-            Intent intent = new Intent(this, ExistRollNames.class);
-            startActivity(intent);
 
-        }
         if (item.getItemId() == R.id.logoutId) {
             Intent intent = new Intent(this, Authentication.class);
             startActivity(intent);

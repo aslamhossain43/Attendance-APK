@@ -7,7 +7,35 @@
     tools:context=".Informations">
 
 
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
 
+    android:layout_marginTop="5dp"
+    android:layout_marginBottom="5dp"
+    >
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20dp"
+        android:textStyle="italic"
+        android:textColor="#3F51B5"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:justificationMode="inter_word"
+        android:text="@string/info_text"
+        />
+
+</LinearLayout>
+
+
+
+
+</ScrollView>
 
 
 

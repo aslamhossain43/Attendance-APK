@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="#673AB7"
     tools:context=".Settings">
 
     <ScrollView
@@ -29,7 +30,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#E62416"
+            android:textColor="#2196F3"
             android:textStyle="italic"
             android:textSize="20sp"
             android:text="Please Manage All Values Carefully !!!"
@@ -54,7 +55,7 @@
         android:layout_marginBottom="5dp"
         android:text="Manage Person's Information Index"
         android:textSize="20dp"
-        android:textColor="#0B2BDD"
+        android:textColor="#ffff"
         android:gravity="center"
         />
         <Button
@@ -64,8 +65,8 @@
             android:textStyle="italic"
             android:layout_marginTop="5dp"
             android:text="Manage"
-            android:textColor="#F4F7F1"
-            android:background="#009688"
+            android:textColor="#2196F3"
+            android:background="#3F51B5"
             android:gravity="center"/>
 
     </LinearLayout>
@@ -82,7 +83,7 @@
             android:layout_height="wrap_content"
             android:textStyle="italic"
 
-            android:textColor="#0B2BDD"
+            android:textColor="#ffff"
             android:layout_marginBottom="5dp"
             android:text="Manage Person's Information"
             android:textSize="20dp"
@@ -94,9 +95,9 @@
             android:layout_height="wrap_content"
             android:textStyle="italic"
             android:layout_marginTop="5dp"
+            android:textColor="#2196F3"
+            android:background="#3F51B5"
             android:text="Manage"
-            android:textColor="#F4F7F1"
-            android:background="#009688"
             android:gravity="center"/>
 
     </LinearLayout>
@@ -112,7 +113,7 @@
             android:layout_height="wrap_content"
             android:textStyle="italic"
 
-            android:textColor="#0B2BDD"
+            android:textColor="#ffff"
             android:layout_marginBottom="5dp"
             android:text="Manage Attendance Index"
             android:textSize="20dp"
@@ -124,9 +125,9 @@
             android:layout_height="wrap_content"
             android:textStyle="italic"
             android:layout_marginTop="5dp"
-            android:textColor="#F4F7F1"
-            android:background="#009688"
             android:text="Manage"
+            android:textColor="#2196F3"
+            android:background="#3F51B5"
             android:gravity="center"/>
 
     </LinearLayout>
@@ -142,7 +143,7 @@
             android:layout_height="wrap_content"
             android:textStyle="italic"
 
-            android:textColor="#0B2BDD"
+            android:textColor="#ffff"
             android:layout_marginBottom="5dp"
             android:text="Delete All Person's Informations"
             android:textSize="20dp"
@@ -154,10 +155,12 @@
             android:layout_height="wrap_content"
             android:textStyle="italic"
             android:layout_marginTop="5dp"
-            android:textColor="#F4F7F1"
-            android:background="#009688"
             android:text="Manage"
-            android:gravity="center"/>
+            android:textColor="#2196F3"
+            android:background="#3F51B5"
+            android:gravity="center"
+
+            />
 
     </LinearLayout>
 
@@ -176,7 +179,7 @@
             android:layout_height="wrap_content"
             android:textStyle="italic"
 
-            android:textColor="#0B2BDD"
+            android:textColor="#ffff"
             android:layout_marginBottom="5dp"
             android:text="Delete All Counted Attendances"
             android:textSize="20dp"
@@ -188,9 +191,9 @@
             android:layout_height="wrap_content"
             android:textStyle="italic"
             android:layout_marginTop="5dp"
-            android:textColor="#F4F7F1"
-            android:background="#009688"
             android:text="Delete"
+            android:textColor="#2196F3"
+            android:background="#3F51B5"
             android:gravity="center"/>
 
     </LinearLayout>

@@ -12,7 +12,7 @@
        android:layout_height="wrap_content"
        android:weightSum="100"
        android:orientation="vertical"
-       android:background="#4CAF50"
+       android:background="#673AB7"
        android:layout_marginTop="1dp">
        <TextView
            android:id="@+id/textViewHeadingForClassId"
@@ -20,6 +20,7 @@
            android:layout_height="wrap_content"
            android:layout_weight="60"
            android:textSize="20sp"
+           android:textColor="#ffff"
            android:textStyle="bold"
            android:text="Class 12"
            android:layout_marginTop="5sp"
@@ -33,6 +34,7 @@
            android:layout_height="wrap_content"
            android:layout_weight="40"
            android:textSize="15sp"
+           android:textColor="#ffff"
            android:textStyle="bold"
            android:text="2019/10/10 10/10 AM"
            android:layout_marginBottom="5sp"
@@ -50,7 +52,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:weightSum="100"
-        android:background="#4CAF50"
+        android:background="#673AB7"
         >
 
         <TextView
@@ -60,13 +62,15 @@
             android:text="Roll No :"
             android:textStyle="bold"
             android:textSize="12dp"
+            android:textColor="#ffff"
             android:gravity="center"
             />
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="72"
+            android:layout_weight="71"
             android:text="Person's Names :"
+            android:textColor="#ffff"
             android:textStyle="bold"
             android:textSize="12dp"
             android:gravity="center"
@@ -75,9 +79,10 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="13"
+            android:layout_weight="14"
             android:text="P/A/Off :"
             android:textStyle="bold"
+            android:textColor="#ffff"
 
             android:textSize="12dp"
             android:gravity="center"
@@ -91,8 +96,11 @@
         android:id="@+id/listViewSpecificAttFromFirebaseId"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:divider="#336B6F6F"
+        android:listSelector="#B3B6AE"
+        android:divider="#ED282929"
         android:dividerHeight="1dp"
-        android:listSelector="#B6DD89" />
+
+
+        />
 
 </LinearLayout>

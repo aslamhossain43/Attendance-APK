@@ -11,15 +11,16 @@
         android:layout_height="wrap_content"
         android:textStyle="bold"
         android:gravity="center"
-        android:background="#4CAF50"
+        android:textColor="#ffff"
+        android:background="#673AB7"
         android:text="All Attendance Indexes"
         android:padding="10sp"
         android:textSize="20sp"
         />
 
     <ListView
-        android:listSelector="#B6DD89"
-        android:divider="#336B6F6F"
+        android:listSelector="#B3B6AE"
+        android:divider="#ED282929"
         android:dividerHeight="1dp"
         android:id="@+id/manageAttendancesIndexListViewId"
         android:layout_width="match_parent"

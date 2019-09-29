@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -104,6 +105,7 @@ public class ManageForAttIndex extends AppCompatActivity {
                         //Load activity
                         finish();
                         startActivity(getIntent());
+                        Toast.makeText(ManageForAttIndex.this, "You Have Deleted Successfully !", Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -113,8 +115,8 @@ public class ManageForAttIndex extends AppCompatActivity {
                         Intent intent = new Intent(ManageForAttIndex.this, UpdateForManageAttIndex.class);
 
                         Bundle bundle = new Bundle();
-                        bundle.putString("index", String.valueOf(attendanceForArray));
-                        bundle.putString("dateTime", String.valueOf(dateTimeForAttendanceIndexArray));
+                        bundle.putString("index", attendanceForArray[position]);
+                        bundle.putString("dateTime", dateTimeForAttendanceIndexArray[position]);
                         intent.putExtras(bundle);
                         startActivity(intent);
 
@@ -200,8 +202,6 @@ public class ManageForAttIndex extends AppCompatActivity {
             startActivity(intent);
 
         }
-
-
 
 
         return super.onOptionsItemSelected(item);

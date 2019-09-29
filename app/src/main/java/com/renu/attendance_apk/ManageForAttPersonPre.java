@@ -55,7 +55,6 @@ public class ManageForAttPersonPre extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(ManageForAttPersonPre.this, ManageForAttPerson.class);
                 Bundle bundle = new Bundle();
-                Log.d("dd", "onItemClick: DATE : " + sDateTime[position]);
 
                 bundle.putString("dateTime", sDateTime[position]);
                 bundle.putString("attFor", sAtt[position]);

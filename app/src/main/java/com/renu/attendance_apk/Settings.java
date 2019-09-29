@@ -1,5 +1,6 @@
 package com.renu.attendance_apk;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -7,7 +8,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.database.DatabaseReference;
@@ -17,7 +20,7 @@ public class Settings extends AppCompatActivity {
     private Button btnForLocalAttTypeIndex, btnForLocalAttPerson, btnForAttIndex,
             btnAllPersonInfoIndex, btndeleteAttIndex;
     private DatabaseReference databaseReferenceForattendances, databaseReferenceForattendancesIndex;
-
+    AlertDialog.Builder alertDialogBuilder;
     DataBaseHelper dataBaseHelper;
 
     @Override
@@ -53,17 +56,58 @@ public class Settings extends AppCompatActivity {
         btnAllPersonInfoIndex.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                alertDialogBuilder.setMessage("Do You Want To Delete All Information From Your App ?");
+                alertDialogBuilder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dataBaseHelper.deleteAllValuesFromAllTables();
+                        Intent intent = new Intent(Settings.this, CreateNew1.class);
+                        startActivity(intent);
+                        Toast.makeText(Settings.this, "You Have Deleted All Information From Your App !", Toast.LENGTH_SHORT).show();
 
-                dataBaseHelper.deleteAllValuesFromAllTables();
 
+                    }
+                });
+                alertDialogBuilder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                alertDialog.show();
 
             }
         });
         btndeleteAttIndex.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                databaseReferenceForattendancesIndex.getRef().removeValue();
-                databaseReferenceForattendances.getRef().removeValue();
+
+
+                alertDialogBuilder.setMessage("Do You Want To Delete All Attendances From Your App ?");
+                alertDialogBuilder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+
+                        databaseReferenceForattendancesIndex.getRef().removeValue();
+                        databaseReferenceForattendances.getRef().removeValue();
+                        Intent intent = new Intent(Settings.this, ExistRollNames.class);
+                        startActivity(intent);
+                        Toast.makeText(Settings.this, "You Have Deleted All Attendances From Your App !", Toast.LENGTH_SHORT).show();
+
+                    }
+                });
+                alertDialogBuilder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                alertDialog.show();
+
+
             }
         });
 
@@ -74,7 +118,7 @@ public class Settings extends AppCompatActivity {
         databaseReferenceForattendances = FirebaseDatabase.getInstance().getReference("attendance");
         databaseReferenceForattendancesIndex = FirebaseDatabase.getInstance().getReference("attendanceindex");
         dataBaseHelper = new DataBaseHelper(this);
-
+        alertDialogBuilder = new AlertDialog.Builder(this);
     }
 
     private void initView() {
@@ -130,11 +174,6 @@ public class Settings extends AppCompatActivity {
         }
         if (item.getItemId() == R.id.logoutId) {
             Intent intent = new Intent(this, Authentication.class);
-            startActivity(intent);
-
-        }
-        if (item.getItemId() == R.id.settings) {
-            Intent intent = new Intent(this, Settings.class);
             startActivity(intent);
 
         }

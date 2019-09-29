@@ -16,15 +16,16 @@
         android:layout_height="wrap_content"
         android:textStyle="bold"
         android:gravity="center"
-        android:background="#4CAF50"
-        android:text=" Your Existance Attendance Types"
+        android:background="#673AB7"
+        android:text=" Your Created Attendance Types"
         android:padding="10sp"
+        android:textColor="#ffff"
         android:textSize="20sp"
         />
 
     <ListView
-        android:listSelector="#B6DD89"
-        android:divider="#336B6F6F"
+        android:listSelector="#B3B6AE"
+        android:divider="#ED282929"
         android:dividerHeight="1dp"
         android:id="@+id/existanceAttendanceListViewId"
         android:layout_width="match_parent"

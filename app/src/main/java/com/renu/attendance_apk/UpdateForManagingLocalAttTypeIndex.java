@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -46,7 +47,7 @@ public class UpdateForManagingLocalAttTypeIndex extends AppCompatActivity {
                 dataBaseHelper.updateForAttIndex(dateTime, index);
                 Intent intent = new Intent(UpdateForManagingLocalAttTypeIndex.this, ManageForLocalAttTypeIndex.class);
                 startActivity(intent);
-
+                Toast.makeText(UpdateForManagingLocalAttTypeIndex.this, "Update Success !", Toast.LENGTH_SHORT).show();
 
             }
         });
