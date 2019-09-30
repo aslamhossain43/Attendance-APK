@@ -128,8 +128,6 @@ public class CreateNew2 extends AppCompatActivity {
 
     private void initOthers() {
         dataBaseHelper = new DataBaseHelper(this);
-        databaseReferenceForRollName = FirebaseDatabase.getInstance().getReference("rollnames");
-        databaseReferenceForRollNameIndex = FirebaseDatabase.getInstance().getReference("rollnamesindex");
         rollList = new ArrayList<>();
         nameList = new ArrayList<>();
         attForList = new ArrayList<>();

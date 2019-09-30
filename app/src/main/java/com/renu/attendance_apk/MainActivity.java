@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String ROLL_NAME_TABLE = "rollname";
     private static final String DATETIME_FOR_ROLLNAME = "time";
 
-
+    private static final String FIREBASE_URL="https://attendance-apk.firebaseio.com/";
     DatabaseReference databaseReferenceForattendances, databaseReferenceForattendancesIndex;
     List<String> roolList;
     List<String> nameList;
@@ -47,8 +47,8 @@ public class MainActivity extends AppCompatActivity {
     List<String> dateTimeList;
     DataBaseHelper dataBaseHelper;
     SQLiteDatabase sqLiteDatabase;
-    String rollNameAttFor;
-    String rollNameDateTime;
+    String rollNameAttFor,rollNameDateTime;
+    String uuidForAtt,uuidForAttIndex;
     private MyBroadcastReceiver myBroadcastReceiver;
 
 
@@ -62,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
 
         initView();
         setVariousValues();
+        handleUUID();
         initOthers();
 
 
@@ -134,6 +135,15 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+    }
+    private void handleUUID() {
+
+        dataBaseHelper=new DataBaseHelper(this);
+        Cursor cursor=dataBaseHelper.getAllDataFromUUID();
+        while (cursor.moveToNext()){
+            this.uuidForAtt=cursor.getString(0);
+            this.uuidForAttIndex=cursor.getString(1);
+        }
     }
 
     private void getINtentValues() {
@@ -255,14 +265,13 @@ public class MainActivity extends AppCompatActivity {
 
     private void initOthers() {
 
-        databaseReferenceForattendances = FirebaseDatabase.getInstance().getReference("attendance");
-        databaseReferenceForattendancesIndex = FirebaseDatabase.getInstance().getReference("attendanceindex");
+        databaseReferenceForattendances = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL+uuidForAtt);
+        databaseReferenceForattendancesIndex = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL+uuidForAttIndex);
         roolList = new ArrayList<>();
         nameList = new ArrayList<>();
         attendanceList = new ArrayList<>();
         dateTimeList = new ArrayList<>();
 
-        dataBaseHelper = new DataBaseHelper(this);
         sqLiteDatabase = dataBaseHelper.getWritableDatabase();
         myBroadcastReceiver=new MyBroadcastReceiver();
     }

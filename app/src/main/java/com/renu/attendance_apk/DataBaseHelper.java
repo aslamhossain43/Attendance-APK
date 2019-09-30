@@ -12,14 +12,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public class DataBaseHelper extends SQLiteOpenHelper {
-    private static final String DATABASE_NAME = "AllStore.db";
+    private static final String DATABASE_NAME = "MyStore.db";
     private static final String ATTENDANCES_TABLE = "attendance";
     private static final String ATTENDANCES_INDEX_TABLE = "attendanceindex";
     private static final String ROLL_NAME_TABLE = "rollname";
     private static final String ROLL_NAME_INDEX_TABLE = "rollnameindex";
     private static final String REGISTER_TABLE = "register";
+    private static final String UUID_TABLE = "uuid";
     private static final int VERSION_NUMBER = 1;
 
     private static final String ROLL = "roll";
@@ -39,6 +41,10 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     private static final String ATT_FOR_ROLLNAME_INDEX = "attfor";
     private static final String DATETIME_FOR_ROLLNAME_INDEX = "time";
 
+    private static final String UUID_FOR_ATT = "uuidforatt";
+    private static final String UUID_FOR_ATT_INDEX = "uuidforattindex";
+
+
     private static final String REGISTER_ID = "_id";
     private static final String REGISTER_USERNAME = "username";
     private static final String REGISTER_PASSWORD = "password";
@@ -49,6 +55,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     private static final String CREATE_ROLLNAME_TABLE = "CREATE TABLE " + ROLL_NAME_TABLE + "( " + ROLL_FOR_ROLLNAME + " VARCHAR(100)," + NAME_FOR_ROLLNAME + " VARCHAR(100)," + ATT_FOR_ROLLNAME + " VARCHAR(100)," + DATETIME_FOR_ROLLNAME + " VARCHAR(100));";
     private static final String CREATE_ROLLNAME_INDEX_TABLE = "CREATE TABLE " + ROLL_NAME_INDEX_TABLE + "( " + ATT_FOR_ROLLNAME_INDEX + " VARCHAR(100)," + DATETIME_FOR_ROLLNAME_INDEX + " VARCHAR(100));";
     private static final String CREATE_REGISTER_TABLE = "CREATE TABLE " + REGISTER_TABLE + "( " + REGISTER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + REGISTER_USERNAME + " TEXT," + REGISTER_PASSWORD + " TEXT);";
+    private static final String CREATE_UUID_TABLE = "CREATE TABLE " + UUID_TABLE + "( " + UUID_FOR_ATT + " TEXT," + UUID_FOR_ATT_INDEX + " TEXT);";
 
 
     private static final String DROP_ATTENDANCES_TABLE = "DROP TABLE IF EXISTS " + ATTENDANCES_TABLE;
@@ -56,16 +63,19 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     private static final String DROP_ROLLNAME_TABLE = "DROP TABLE IF EXISTS " + ROLL_NAME_TABLE;
     private static final String DROP_ROLLNAME_INDEX_TABLE = "DROP TABLE IF EXISTS " + ROLL_NAME_INDEX_TABLE;
     private static final String DROP_REGISTER_TABLE = "DROP TABLE IF EXISTS " + REGISTER_TABLE;
+    private static final String DROP_UUID_TABLE = "DROP TABLE IF EXISTS " + UUID_TABLE;
 
     private static final String GET_ALL_ATTENDANCES_TABLE = "SELECT * FROM " + ATTENDANCES_TABLE;
     private static final String GET_ALL_ATTENDANCES_INDEX_TABLE = "SELECT * FROM " + ATTENDANCES_INDEX_TABLE;
     private static final String GET_ALL_ROLLNAME_TABLE = "SELECT * FROM " + ROLL_NAME_TABLE;
     private static final String GET_ALL_ROLLNAME_INDEX_TABLE = "SELECT * FROM " + ROLL_NAME_INDEX_TABLE;
+    private static final String GET_ALL_UUID_FROM_TABLE = "SELECT * FROM " + UUID_TABLE;
 
     private static final String DELETE_ALL_VALUES_FROM_ATTENDANCES_INDEX = "delete from " + ATTENDANCES_INDEX_TABLE;
     private static final String DELETE_ALL_VALUES_FROM_ATTENDANCE = "delete from " + ATTENDANCES_TABLE;
     private static final String DELETE_ALL_VALUES_FROM_ROLLNAME = "delete from " + ROLL_NAME_TABLE;
     private static final String DELETE_ALL_VALUES_FROM_ROLLNAME_INDEX = "delete from " + ROLL_NAME_INDEX_TABLE;
+    private static final String DELETE_ALL_VALUES_FROM_UUID = "delete from " + UUID_TABLE;
 
     private Context context;
 
@@ -83,6 +93,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             sqLiteDatabase.execSQL(CREATE_ROLLNAME_TABLE);
             sqLiteDatabase.execSQL(CREATE_ROLLNAME_INDEX_TABLE);
             sqLiteDatabase.execSQL(CREATE_REGISTER_TABLE);
+            sqLiteDatabase.execSQL(CREATE_UUID_TABLE);
 
         } catch (Exception e) {
 
@@ -99,6 +110,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             sqLiteDatabase.execSQL(DROP_ROLLNAME_TABLE);
             sqLiteDatabase.execSQL(DROP_ROLLNAME_INDEX_TABLE);
             sqLiteDatabase.execSQL(DROP_REGISTER_TABLE);
+            sqLiteDatabase.execSQL(DROP_UUID_TABLE);
             onCreate(sqLiteDatabase);
         } catch (Exception e) {
         }
@@ -167,6 +179,22 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     }
 
+    public void createUUID() {
+
+
+        String uuidForAtt = UUID.randomUUID().toString();
+        String uuidForAttIndex = UUID.randomUUID().toString();
+
+
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(UUID_FOR_ATT, uuidForAtt);
+        contentValues.put(UUID_FOR_ATT_INDEX, uuidForAttIndex);
+        sqLiteDatabase.insert(UUID_TABLE, null, contentValues);
+
+
+    }
+
 
     public Map<String, List<String>> getAllDataFromAttendancesTable() {
         List<String> rollList = new ArrayList<>();
@@ -215,6 +243,14 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public Cursor getAllDataFromAttendancesIndex() {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         Cursor cursor = sqLiteDatabase.rawQuery(GET_ALL_ATTENDANCES_INDEX_TABLE, null);
+        return cursor;
+
+
+    }
+
+    public Cursor getAllDataFromUUID() {
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        Cursor cursor = sqLiteDatabase.rawQuery(GET_ALL_UUID_FROM_TABLE, null);
         return cursor;
 
 
@@ -299,7 +335,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
 
     }
-    public void deleteAllValuesFromAllTables(){
+
+    public void deleteAllValuesFromAllTables() {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
 
 
@@ -313,11 +350,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         }
 
 
-
-
     }
 
-    public void delete_Att_And_Index(){
+    public void delete_Att_And_Index() {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
 
 

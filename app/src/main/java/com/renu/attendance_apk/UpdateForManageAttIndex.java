@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -22,6 +23,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class UpdateForManageAttIndex extends AppCompatActivity {
 
+    private static final String FIREBASE_URL="https://attendance-apk.firebaseio.com/";
     DatabaseReference databaseReferenceForattendances, databaseReferenceForattendancesIndex;
 
     private LinearLayout updateParentLinearLayout;
@@ -29,6 +31,8 @@ public class UpdateForManageAttIndex extends AppCompatActivity {
     private String dateTime,index;
     private Button updateButton;
     private MyBroadcastReceiver myBroadcastReceiver;
+    DataBaseHelper dataBaseHelper;
+    String uuidForAtt,uuidForAttIndex;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,6 +41,7 @@ public class UpdateForManageAttIndex extends AppCompatActivity {
 
         getIntentValues();
         initView();
+        handleUUID();
         initOthers();
 
 
@@ -65,11 +70,19 @@ public class UpdateForManageAttIndex extends AppCompatActivity {
 
     }
 
+    private void handleUUID() {
 
+        dataBaseHelper=new DataBaseHelper(this);
+        Cursor cursor=dataBaseHelper.getAllDataFromUUID();
+        while (cursor.moveToNext()){
+            this.uuidForAtt=cursor.getString(0);
+            this.uuidForAttIndex=cursor.getString(1);
+        }
+    }
 
     private void initOthers() {
-        databaseReferenceForattendances = FirebaseDatabase.getInstance().getReference("attendance");
-        databaseReferenceForattendancesIndex = FirebaseDatabase.getInstance().getReference("attendanceindex");
+        databaseReferenceForattendances = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL+uuidForAtt);
+        databaseReferenceForattendancesIndex = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL+uuidForAttIndex);
 myBroadcastReceiver=new MyBroadcastReceiver();
     }
     //-------------------------------------

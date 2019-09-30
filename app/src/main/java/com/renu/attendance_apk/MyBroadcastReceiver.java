@@ -16,20 +16,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MyBroadcastReceiver extends BroadcastReceiver {
+    DatabaseReference databaseReferenceForAttendances,databaseReferenceForAttendancesIndex;
+    private static final String FIREBASE_URL="https://attendance-apk.firebaseio.com/";
+    DataBaseHelper dataBaseHelper;
+    String uuidForAtt,uuidForAttIndex;
     @Override
     public void onReceive(Context context, Intent intent) {
 
-
         if (Network.isNetworkAvailable(context)) {
+            handleUUID(context);
 
 
             final String ATTENDANCES_TABLE = "attendance";
             final String ATTENDANCES_TIMES = "datetime";
 
 
-            DataBaseHelper dataBaseHelper = new DataBaseHelper(context);
-            DatabaseReference databaseReferenceForAttendances = FirebaseDatabase.getInstance().getReference("attendance");
-            DatabaseReference databaseReferenceForAttendancesIndex = FirebaseDatabase.getInstance().getReference("attendanceindex");
+            dataBaseHelper = new DataBaseHelper(context);
+            databaseReferenceForAttendances = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL+uuidForAtt);
+            databaseReferenceForAttendancesIndex = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL+uuidForAttIndex);
 
 
             List<String> rollList = new ArrayList<>();
@@ -72,5 +76,13 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
         }
     }
 
+    private void handleUUID(Context context) {
 
+        dataBaseHelper=new DataBaseHelper(context);
+        Cursor cursor=dataBaseHelper.getAllDataFromUUID();
+        while (cursor.moveToNext()){
+            this.uuidForAtt=cursor.getString(0);
+            this.uuidForAttIndex=cursor.getString(1);
+        }
+    }
 }

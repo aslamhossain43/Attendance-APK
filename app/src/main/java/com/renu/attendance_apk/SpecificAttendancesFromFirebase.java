@@ -3,6 +3,7 @@ package com.renu.attendance_apk;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -32,6 +33,8 @@ import java.util.Collections;
 import java.util.List;
 
 public class SpecificAttendancesFromFirebase extends AppCompatActivity {
+
+    private static final String FIREBASE_URL="https://attendance-apk.firebaseio.com/";
     private String attFromFirebaseIndex;
     private String dtFromFirebaseIndex;
     DatabaseReference databaseReferenceForattendances, databaseReferenceForattendancesIndex;
@@ -41,6 +44,8 @@ public class SpecificAttendancesFromFirebase extends AppCompatActivity {
     CustomAdupterForIndexFromFirebase customAdupterForIndexFromFirebase;
     String[] specificFinalRoll, specificFinalName, specificFinalAttendances, specificFinalDateTime;
 private MyBroadcastReceiver myBroadcastReceiver;
+    String uuidForAtt,uuidForAttIndex;
+    DataBaseHelper dataBaseHelper;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +54,7 @@ private MyBroadcastReceiver myBroadcastReceiver;
 
 
         initView();
+        handleUUID();
         initOthers();
         setValues();
 
@@ -68,7 +74,6 @@ private MyBroadcastReceiver myBroadcastReceiver;
 
                     AttendanceModel attendanceModel = new AttendanceModel();
                     attendanceModel = dataSnapshot.getValue(AttendanceModel.class);
-                    Log.d("rr", "onDataChange: " + attendanceModel.getRollList());
                     rollList.addAll(attendanceModel.getRollList());
                     nameList.addAll(attendanceModel.getNameList());
                     attList.addAll(attendanceModel.getAttendanceList());
@@ -194,7 +199,15 @@ private MyBroadcastReceiver myBroadcastReceiver;
 
 
     }
+    private void handleUUID() {
 
+        dataBaseHelper=new DataBaseHelper(this);
+        Cursor cursor=dataBaseHelper.getAllDataFromUUID();
+        while (cursor.moveToNext()){
+            this.uuidForAtt=cursor.getString(0);
+            this.uuidForAttIndex=cursor.getString(1);
+        }
+    }
     private void setValues() {
         textViewForClass.setText(attFromFirebaseIndex);
         textViewForDate.setText(dtFromFirebaseIndex);
@@ -212,8 +225,8 @@ private MyBroadcastReceiver myBroadcastReceiver;
 
     private void initOthers() {
 
-        databaseReferenceForattendances = FirebaseDatabase.getInstance().getReference("attendance").child(dtFromFirebaseIndex);
-        databaseReferenceForattendancesIndex = FirebaseDatabase.getInstance().getReference("attendanceindex").child(dtFromFirebaseIndex);
+        databaseReferenceForattendances = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL+uuidForAtt).child(dtFromFirebaseIndex);
+        databaseReferenceForattendancesIndex = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL+uuidForAttIndex).child(dtFromFirebaseIndex);
         alertDialogBuilder = new AlertDialog.Builder(SpecificAttendancesFromFirebase.this);
 myBroadcastReceiver=new MyBroadcastReceiver();
 

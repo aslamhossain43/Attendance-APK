@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -34,6 +35,7 @@ import java.util.Map;
 
 public class Update extends AppCompatActivity {
 
+    private static final String FIREBASE_URL="https://attendance-apk.firebaseio.com/";
     DatabaseReference databaseReferenceForattendances, databaseReferenceForattendancesIndex;
 
     private LinearLayout updateParentLinearLayout;
@@ -42,6 +44,8 @@ public class Update extends AppCompatActivity {
     private String roll, name, paoff, dateTime, position,attFor;
     private Button updateButton;
     private MyBroadcastReceiver myBroadcastReceiver;
+    DataBaseHelper dataBaseHelper;
+    String uuidForAtt,uuidForAttIndex;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +55,7 @@ public class Update extends AppCompatActivity {
 
         getIntentValues();
         initView();
+        handleUUID();
         initOthers();
         handleLayoutInflater();
 
@@ -108,8 +113,8 @@ public class Update extends AppCompatActivity {
     }
 
     private void initOthers() {
-        databaseReferenceForattendances = FirebaseDatabase.getInstance().getReference("attendance");
-        databaseReferenceForattendancesIndex = FirebaseDatabase.getInstance().getReference("attendanceindex");
+        databaseReferenceForattendances = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL+uuidForAtt);
+        databaseReferenceForattendancesIndex = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL+uuidForAttIndex);
 myBroadcastReceiver=new MyBroadcastReceiver();
 
     }
@@ -138,7 +143,15 @@ myBroadcastReceiver=new MyBroadcastReceiver();
         spinner = findViewById(R.id.updateSpecificLayoutForspinnerId);
 
     }
+    private void handleUUID() {
 
+        dataBaseHelper=new DataBaseHelper(this);
+        Cursor cursor=dataBaseHelper.getAllDataFromUUID();
+        while (cursor.moveToNext()){
+            this.uuidForAtt=cursor.getString(0);
+            this.uuidForAttIndex=cursor.getString(1);
+        }
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 

@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -25,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AttendancesIndex extends AppCompatActivity {
+    private static final String FIREBASE_URL="https://attendance-apk.firebaseio.com/";
     DatabaseReference databaseReferenceForattendances, databaseReferenceForattendancesIndex;
     List<AttendanceIndexModel> attendanceIndexModelList;
     List<String> rollList;
@@ -32,13 +34,19 @@ public class AttendancesIndex extends AppCompatActivity {
     List<String> dateTimeList;
     private ListView attendancesIndexListView;
     private MyBroadcastReceiver myBroadcastReceiver;
+    private String uuidForAtt,uuidForAttIndex;
+    private DataBaseHelper dataBaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_attendances_index);
+
+
         initView();
+        handleUUID();
         intitOthers();
+
 
         databaseReferenceForattendancesIndex.addValueEventListener(new ValueEventListener() {
 
@@ -80,6 +88,17 @@ public class AttendancesIndex extends AppCompatActivity {
 
 
     }
+
+    private void handleUUID() {
+
+        dataBaseHelper=new DataBaseHelper(this);
+        Cursor cursor=dataBaseHelper.getAllDataFromUUID();
+        while (cursor.moveToNext()){
+            this.uuidForAtt=cursor.getString(0);
+            this.uuidForAttIndex=cursor.getString(1);
+        }
+    }
+
 
     private void listViewHandleForAttendancesIndex(final String[] dateTimeForAttendanceIndexArray, final String[] attendanceForArray) {
 
@@ -126,7 +145,7 @@ public class AttendancesIndex extends AppCompatActivity {
 
     private void intitOthers() {
 
-        databaseReferenceForattendancesIndex = FirebaseDatabase.getInstance().getReference("attendanceindex");
+        databaseReferenceForattendancesIndex = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL+uuidForAttIndex);
         attendanceIndexModelList = new ArrayList<>();
         rollList = new ArrayList<>();
         attendancesList = new ArrayList<>();
