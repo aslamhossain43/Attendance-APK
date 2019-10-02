@@ -49,6 +49,14 @@
         android:icon="@drawable/ic_local_attendance_black_24dp"
 
         />
+
+    <item
+
+        android:id="@+id/summary"
+        app:showAsAction="always"
+        android:icon="@drawable/ic_iso_black_24dp"
+
+        />
     <item
 
         android:id="@+id/settings"

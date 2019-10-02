@@ -91,6 +91,18 @@ public class CreateNew2 extends AppCompatActivity {
 
             }
         });
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(CreateNew2.this,CreateNew1.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("attFor", attFor);
+                bundle.putInt("pNo", pNo);
+                intent.putExtras(bundle);
+
+                startActivity(intent);
+            }
+        });
 
 
     }

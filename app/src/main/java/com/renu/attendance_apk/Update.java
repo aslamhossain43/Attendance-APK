@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -46,6 +47,12 @@ public class Update extends AppCompatActivity {
     private MyBroadcastReceiver myBroadcastReceiver;
     DataBaseHelper dataBaseHelper;
     String uuidForAtt,uuidForAttIndex;
+    SQLiteDatabase sqLiteDatabase;
+    private static final String PERCENTAGE_ATT_FOR = "attfor";
+    private static final String PERCENTAGE_ROLL = "roll";
+    private static final String TEST_TABLE = "test";
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +93,9 @@ public class Update extends AppCompatActivity {
                 databaseReferenceForattendances.child(dateTime).child("rollList").child(position).setValue(rollFromEditText);
                 databaseReferenceForattendances.child(dateTime).child("nameList").child(position).setValue(nameFromEditText);
                 databaseReferenceForattendances.child(dateTime).child("attendanceList").child(position).setValue(paoffFromSpinner);
+                updatePercentage(roll,attFor,paoff,rollFromEditText,paoffFromSpinner);
+
+
                 //go to attendancesindex
                 Intent intent=new Intent(Update.this,SpecificAttendancesFromFirebase.class);
                 Bundle bundle = new Bundle();
@@ -96,6 +106,125 @@ public class Update extends AppCompatActivity {
                 Toast.makeText(Update.this, "Update Success !", Toast.LENGTH_SHORT).show();
             }
         });
+
+
+    }
+
+    private void updatePercentage(String oldRoll, String attFor,String oldPaoff, String newRollFromEditText, String paoffFromSpinner) {
+
+        String q = "SELECT * FROM " + TEST_TABLE + " WHERE " + PERCENTAGE_ATT_FOR + " = '" + attFor + "'"+" AND "+ PERCENTAGE_ROLL + " = '" + oldRoll + "'";
+
+        Cursor cursor=sqLiteDatabase.rawQuery(q,null);
+
+        String gettingRoll = null;
+        int gettingDaySum=0;
+        int gettingPSum=0;
+        int gettingASum=0;
+        int gettingDay = 0,gettingP = 0,gettingA = 0;
+        int gettingPercentSum=0;
+        int gettingPercent;
+
+
+        while (cursor.moveToNext()){
+            gettingRoll=cursor.getString(1);
+            gettingDay=cursor.getInt(2);
+            gettingP=cursor.getInt(3);
+            gettingA=cursor.getInt(4);
+            gettingPercent=cursor.getInt(5);
+
+
+
+
+
+
+        }
+
+
+        if (paoff.equals("Off")){
+
+            if (paoffFromSpinner.equals("P")) {
+                gettingDaySum = gettingDay;
+                gettingPSum = gettingP + 1;
+                gettingASum = gettingA;
+                gettingPercentSum = gettingPSum * 100 / gettingDaySum;
+
+            }
+            if (paoffFromSpinner.equals("A")) {
+                gettingDaySum = gettingDay;
+                gettingASum = gettingA + 1;
+                gettingPSum = gettingP;
+                gettingPercentSum = gettingPSum * 100 / gettingDaySum;
+
+            }if (paoffFromSpinner.equals("Off")) {
+                gettingDaySum = gettingDay;
+                gettingASum = gettingA;
+                gettingPSum = gettingP;
+                gettingPercentSum = gettingPSum * 100 / gettingDaySum;
+
+            }
+
+
+        }
+
+        if (paoff.equals("P")){
+            if (paoffFromSpinner.equals("P")) {
+                gettingDaySum = gettingDay;
+                gettingPSum = gettingP;
+                gettingASum = gettingA;
+                gettingPercentSum = gettingPSum * 100 / gettingDaySum;
+
+            }
+
+            if (paoffFromSpinner.equals("A")) {
+                gettingDaySum = gettingDay;
+                gettingASum = gettingA + 1;
+                gettingPSum = gettingP-1;
+                gettingPercentSum = gettingPSum * 100 / gettingDaySum;
+
+            }if (paoffFromSpinner.equals("Off")) {
+                gettingDaySum = gettingDay;
+                gettingASum = gettingA + 0;
+                gettingPSum = gettingP - 1;
+                gettingPercentSum = gettingPSum * 100 / gettingDaySum;
+
+            }
+
+
+        }
+        if (paoff.equals("A")){
+
+
+            if (paoffFromSpinner.equals("P")) {
+                gettingDaySum = gettingDay;
+                gettingPSum = gettingP + 1;
+                gettingASum = gettingA - 1;
+                gettingPercentSum = gettingPSum * 100 / gettingDaySum;
+
+            }if (paoffFromSpinner.equals("A")) {
+                gettingDaySum = gettingDay;
+                gettingASum = gettingA;
+                gettingPSum = gettingP;
+                gettingPercentSum = gettingPSum * 100 / gettingDaySum;
+
+            }
+
+            if (paoffFromSpinner.equals("Off")) {
+                gettingDaySum = gettingDay;
+                gettingASum = gettingA - 1;
+                gettingPSum = gettingP + 0;
+                gettingPercentSum = gettingPSum * 100 / gettingDaySum;
+
+            }
+
+
+        }
+
+
+
+
+        dataBaseHelper.updatePercentage(oldRoll,attFor,gettingRoll,gettingDaySum,gettingPSum,gettingASum,gettingPercentSum);
+
+
 
 
     }
@@ -116,6 +245,8 @@ public class Update extends AppCompatActivity {
         databaseReferenceForattendances = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL+uuidForAtt);
         databaseReferenceForattendancesIndex = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL+uuidForAttIndex);
 myBroadcastReceiver=new MyBroadcastReceiver();
+dataBaseHelper=new DataBaseHelper(this);
+sqLiteDatabase=dataBaseHelper.getWritableDatabase();
 
     }
     //-------------------------------------

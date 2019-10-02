@@ -35,8 +35,7 @@ import java.util.List;
 public class SpecificAttendancesFromFirebase extends AppCompatActivity {
 
     private static final String FIREBASE_URL="https://attendance-apk.firebaseio.com/";
-    private String attFromFirebaseIndex;
-    private String dtFromFirebaseIndex;
+    private String attFromFirebaseIndex,dtFromFirebaseIndex;
     DatabaseReference databaseReferenceForattendances, databaseReferenceForattendancesIndex;
     private ListView listViewSpecificAttFromFirebase;
     private TextView textViewForClass, textViewForDate;
@@ -103,10 +102,20 @@ private MyBroadcastReceiver myBroadcastReceiver;
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
 
+
+
+
+
+
+
+
+
                                 Query qForAtt = databaseReferenceForattendances;
                                 qForAtt.addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        dataBaseHelper.updatePercentageWhenDeleteOne(rollList.get(position),attFromFirebaseIndex,
+                                                dataSnapshot.child("attendanceList").child(""+position).getValue().toString());
 
 
                                         rollList.remove(position);
@@ -131,7 +140,7 @@ private MyBroadcastReceiver myBroadcastReceiver;
                                         }
                                         if (rollList.size() > 0) {
 
-                                            dataSnapshot.child("rollList").getRef().removeValue();
+                                           dataSnapshot.child("rollList").getRef().removeValue();
                                             dataSnapshot.child("nameList").getRef().removeValue();
                                             dataSnapshot.child("dateTimeList").getRef().removeValue();
                                             dataSnapshot.child("attendanceList").getRef().removeValue();

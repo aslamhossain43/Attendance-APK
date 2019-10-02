@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".Percentage">
+
+
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:background="#673AB7"
+        android:text=" Final Calculation"
+        android:padding="10sp"
+        android:textColor="#ffff"
+        android:textSize="20sp"
+        />
+
+    <ListView
+        android:listSelector="#B3B6AE"
+        android:divider="#ED282929"
+        android:dividerHeight="1dp"
+        android:id="@+id/percentageListViewId"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"></ListView>
+
+
+
+</LinearLayout>

@@ -6,6 +6,7 @@ import android.content.IntentFilter;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -39,18 +40,19 @@ public class MainActivity extends AppCompatActivity {
     private static final String ROLL_NAME_TABLE = "rollname";
     private static final String DATETIME_FOR_ROLLNAME = "time";
 
-    private static final String FIREBASE_URL="https://attendance-apk.firebaseio.com/";
+    private static final String FIREBASE_URL = "https://attendance-apk.firebaseio.com/";
     DatabaseReference databaseReferenceForattendances, databaseReferenceForattendancesIndex;
-    List<String> roolList;
-    List<String> nameList;
-    List<String> attendanceList;
-    List<String> dateTimeList;
+    List<String> roolList, nameList, attendanceList, dateTimeList, attListForPercentage;
     DataBaseHelper dataBaseHelper;
     SQLiteDatabase sqLiteDatabase;
-    String rollNameAttFor,rollNameDateTime;
-    String uuidForAtt,uuidForAttIndex;
+    String rollNameAttFor, rollNameDateTime;
+    String uuidForAtt, uuidForAttIndex;
     private MyBroadcastReceiver myBroadcastReceiver;
+    //private static final String PERCENTAGE_TABLE = "percentage";
+    private static final String PERCENTAGE_ATT_FOR = "attfor";
 
+    private static final String TEST_TABLE = "test";
+    private static final String PERCENT_TABLE = "percentages";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -136,13 +138,14 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
     private void handleUUID() {
 
-        dataBaseHelper=new DataBaseHelper(this);
-        Cursor cursor=dataBaseHelper.getAllDataFromUUID();
-        while (cursor.moveToNext()){
-            this.uuidForAtt=cursor.getString(0);
-            this.uuidForAttIndex=cursor.getString(1);
+        dataBaseHelper = new DataBaseHelper(this);
+        Cursor cursor = dataBaseHelper.getAllDataFromUUID();
+        while (cursor.moveToNext()) {
+            this.uuidForAtt = cursor.getString(0);
+            this.uuidForAttIndex = cursor.getString(1);
         }
     }
 
@@ -228,6 +231,7 @@ public class MainActivity extends AppCompatActivity {
 
             for (int i = 0; i < roolList.size(); i++) {
                 dateTimeList.add(dateTime);
+
             }
 
 
@@ -238,6 +242,15 @@ public class MainActivity extends AppCompatActivity {
 
                 AttendanceModel attendanceModel = new AttendanceModel(roolList, nameList, attendanceList, dateTimeList);
                 databaseReferenceForattendances.child(dateTime).setValue(attendanceModel);
+                //-----------------------------------
+
+
+                handlePercentage(roolList, attendanceList);
+
+
+                //----------------------------------
+
+
                 // go to attendance index
                 Intent intent = new Intent(MainActivity.this, AttendancesIndex.class);
                 startActivity(intent);
@@ -250,6 +263,8 @@ public class MainActivity extends AppCompatActivity {
 
 
                 dataBaseHelper.insertDataInToAttendancesIndexTable(dateTime, attendancesFor);
+                //handle percentage
+                handlePercentage(roolList, attendanceList);
                 // go to local book
                 Intent intent = new Intent(MainActivity.this, ExistRollNames.class);
                 startActivity(intent);
@@ -263,18 +278,212 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private void handlePercentage(List<String> roolList, List<String> attendanceList) {
+        for (int i = 0; i < roolList.size(); i++) {
+            attListForPercentage.add(rollNameAttFor);
+
+        }
+
+        List<String> attListForPer = new ArrayList<>();
+        List<String> rollListForPer = new ArrayList<>();
+
+        List<Integer> dayListForPer = new ArrayList<>();
+        List<Integer> pListForPer = new ArrayList<>();
+        List<Integer> aListForPer = new ArrayList<>();
+        List<Integer> percentListForPer = new ArrayList<>();
+        String getValues = "SELECT * FROM " + TEST_TABLE + " WHERE " + PERCENTAGE_ATT_FOR + " = '" + rollNameAttFor + "'";
+
+
+        Cursor cursor = sqLiteDatabase.rawQuery(getValues, null);
+
+        List<Integer> fDayList = new ArrayList<>();
+        List<Integer> fPList = new ArrayList<>();
+        List<Integer> fAList = new ArrayList<>();
+        List<Integer> fPercentList = new ArrayList<>();
+
+        if (cursor.getCount() == 0) {
+
+
+            for (int i = 0; i < roolList.size(); i++) {
+
+                fDayList.add(0);
+                fPList.add(0);
+                fAList.add(0);
+                fPercentList.add(0);
+
+            }
+
+            Log.d("rr", "handlePercentage: " + fDayList.size());
+            Log.d("rr", "handlePercentage: " + fPList.size());
+            Log.d("rr", "handlePercentage: " + fAList.size());
+            Log.d("rr", "handlePercentage: " + fPercentList.size());
+
+
+
+            dataBaseHelper.insertIntoPercentage(attListForPercentage, roolList, fDayList, fPList, fAList, fPercentList);
+
+            String getValuesWhenNull = "SELECT * FROM " + TEST_TABLE + " WHERE " + PERCENTAGE_ATT_FOR + " = '" + rollNameAttFor + "'";
+
+            Cursor c1 = sqLiteDatabase.rawQuery(getValuesWhenNull, null);
+            int attendanceCount = 0;
+            while (c1.moveToNext()) {
+                String attFor = c1.getString(0);
+                String roll = c1.getString(1);
+                attListForPer.add(attFor);
+                rollListForPer.add(roll);
+                int day = c1.getInt(2);
+                int p = c1.getInt(3);
+                int a = c1.getInt(4);
+                int percent = c1.getInt(5);
+                int pSum = 0;
+                int aSum = 0;
+                int daySum = 0;
+                int percentSum = 0;
+
+                String pFromMethod = attendanceList.get(attendanceCount);
+                if (pFromMethod.equals("P")) {
+                    daySum = day + 1;
+                    dayListForPer.add(daySum);
+
+                    pSum = p + 1;
+                    pListForPer.add(pSum);
+                    aSum = a + 0;
+                    aListForPer.add(aSum);
+
+                    percentSum = pSum * 100 / daySum;
+                    percentListForPer.add(percentSum);
+
+                }
+                if (pFromMethod.equals("A")) {
+                    daySum = day + 1;
+                    dayListForPer.add(daySum);
+
+                    pSum = p + 0;
+                    pListForPer.add(pSum);
+                    aSum = a + 1;
+                    aListForPer.add(aSum);
+
+                    percentSum = pSum * 100 / daySum;
+                    percentListForPer.add(percentSum);
+
+                }
+                if (pFromMethod.equalsIgnoreCase("Off")) {
+                    daySum = day+1;
+                    dayListForPer.add(daySum);
+
+                    pSum = p + 0;
+                    pListForPer.add(pSum);
+                    aSum = a + 0;
+                    aListForPer.add(aSum);
+
+                    percentSum = pSum * 100 / daySum;
+                    percentListForPer.add(percentSum);
+
+                }
+                attendanceCount++;
+
+            }
+            Log.d("rr", "handlePercentage: cursor null ------------------");
+            dataBaseHelper.deleteAllFromPercentage(rollNameAttFor);
+            dataBaseHelper.insertIntoPercentage(attListForPercentage, roolList, dayListForPer, pListForPer, aListForPer, percentListForPer);
+
+
+        } else {
+
+
+            int attendanceCount = 0;
+
+
+            Log.d("rrr", "handlePercentage: " + attendanceList);
+            String getValuesWhenNotNull = "SELECT * FROM " + TEST_TABLE + " WHERE " + PERCENTAGE_ATT_FOR + " = '" + rollNameAttFor + "'";
+
+            Cursor cursor2 = sqLiteDatabase.rawQuery(getValuesWhenNotNull, null);
+
+            while (cursor2.moveToNext()) {
+                String attFor = cursor2.getString(0);
+                String roll = cursor2.getString(1);
+                attListForPer.add(attFor);
+                rollListForPer.add(roll);
+                int day = cursor2.getInt(2);
+                int p = cursor2.getInt(3);
+                int a = cursor2.getInt(4);
+                int percent = cursor2.getInt(5);
+                int pSum = 0;
+                int aSum = 0;
+                int daySum = 0;
+                int percentSum = 0;
+
+                String pFromMethod = attendanceList.get(attendanceCount);
+
+
+                if (pFromMethod.equals("P")) {
+                    daySum = day + 1;
+                    dayListForPer.add(daySum);
+
+                    pSum = p + 1;
+                    pListForPer.add(pSum);
+                    aSum = a + 0;
+                    aListForPer.add(aSum);
+
+                    percentSum = pSum * 100 / daySum;
+                    percentListForPer.add(percentSum);
+
+                }
+                if (pFromMethod.equals("A")) {
+                    daySum = day + 1;
+                    dayListForPer.add(daySum);
+
+                    pSum = p + 0;
+                    pListForPer.add(pSum);
+                    aSum = a + 1;
+                    aListForPer.add(aSum);
+
+                    percentSum = pSum * 100 / daySum;
+                    percentListForPer.add(percentSum);
+
+                }
+                if (pFromMethod.equals("Off")) {
+                    daySum = day + 1;
+                    dayListForPer.add(daySum);
+
+                    pSum = p + 0;
+                    pListForPer.add(pSum);
+                    aSum = a + 0;
+                    aListForPer.add(aSum);
+
+                    percentSum = pSum * 100 / daySum;
+                    percentListForPer.add(percentSum);
+
+                }
+
+                attendanceCount++;
+
+            }
+
+
+            Log.d("rr", "handlePercentage: cursor not null------------------");
+            dataBaseHelper.deleteAllFromPercentage(rollNameAttFor);
+            dataBaseHelper.insertIntoPercentage(attListForPercentage, roolList, dayListForPer, pListForPer, aListForPer, percentListForPer);
+
+
+        }
+
+
+    }
+
     private void initOthers() {
 
-        databaseReferenceForattendances = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL+uuidForAtt);
-        databaseReferenceForattendancesIndex = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL+uuidForAttIndex);
+        databaseReferenceForattendances = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL + uuidForAtt);
+        databaseReferenceForattendancesIndex = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL + uuidForAttIndex);
         roolList = new ArrayList<>();
         nameList = new ArrayList<>();
         attendanceList = new ArrayList<>();
         dateTimeList = new ArrayList<>();
-
+        attListForPercentage = new ArrayList<>();
         sqLiteDatabase = dataBaseHelper.getWritableDatabase();
-        myBroadcastReceiver=new MyBroadcastReceiver();
+        myBroadcastReceiver = new MyBroadcastReceiver();
     }
+
     //-------------------------------------
     @Override
     protected void onResume() {
@@ -285,6 +494,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
     @Override
     protected void onPause() {
         super.onPause();
@@ -300,9 +510,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void onDelete(View v) {
+    /*public void onDelete(View v) {
         parentLinearLayout.removeView((View) v.getParent());
-    }
+    }*/
 
 
 }
