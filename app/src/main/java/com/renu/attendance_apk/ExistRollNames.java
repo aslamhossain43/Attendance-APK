@@ -56,6 +56,15 @@ public class ExistRollNames extends AppCompatActivity {
         handleRollNameIndex();
 
     }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
+
+        registerReceiver(myBroadcastReceiver, intentFilter);
+        unregisterReceiver(myBroadcastReceiver);
+
+    }
 
     private void handleRollNameIndex() {
 
@@ -149,21 +158,7 @@ public class ExistRollNames extends AppCompatActivity {
 
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
 
-        IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
-
-        registerReceiver(myBroadcastReceiver, intentFilter);
-
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        unregisterReceiver(myBroadcastReceiver);
-    }
 
     private void initOthers() {
 
@@ -235,8 +230,8 @@ public class ExistRollNames extends AppCompatActivity {
 
         }
 
-        if (item.getItemId() == R.id.logoutId) {
-            Intent intent = new Intent(this, Authentication.class);
+        if (item.getItemId() == R.id.summary) {
+            Intent intent = new Intent(this, Percentage.class);
             startActivity(intent);
 
         }

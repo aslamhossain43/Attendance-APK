@@ -1,19 +1,17 @@
 package com.renu.attendance_apk;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +19,7 @@ import java.util.List;
 public class ManageForAttPersonPre extends AppCompatActivity {
     private DataBaseHelper dataBaseHelper;
     private ListView listViewForPersonPre;
-private MyBroadcastReceiver myBroadcastReceiver;
+    private MyBroadcastReceiver myBroadcastReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,25 +68,20 @@ private MyBroadcastReceiver myBroadcastReceiver;
 
     private void initOthers() {
         dataBaseHelper = new DataBaseHelper(this);
-        myBroadcastReceiver=new MyBroadcastReceiver();
+        myBroadcastReceiver = new MyBroadcastReceiver();
 
     }
-    //-------------------------------------
+
     @Override
     protected void onResume() {
         super.onResume();
         IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
 
         registerReceiver(myBroadcastReceiver, intentFilter);
-
-
-    }
-    @Override
-    protected void onPause() {
-        super.onPause();
         unregisterReceiver(myBroadcastReceiver);
+
     }
-    //----------------------------
+
     private void initView() {
         listViewForPersonPre = findViewById(R.id.managePersonInformarionListViewId);
 
@@ -135,11 +128,7 @@ private MyBroadcastReceiver myBroadcastReceiver;
             startActivity(intent);
 
         }
-        if (item.getItemId() == R.id.logoutId) {
-            Intent intent = new Intent(this, Authentication.class);
-            startActivity(intent);
 
-        }
         if (item.getItemId() == R.id.settings) {
             Intent intent = new Intent(this, Settings.class);
             startActivity(intent);

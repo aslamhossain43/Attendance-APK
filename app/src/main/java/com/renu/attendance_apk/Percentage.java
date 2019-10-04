@@ -1,8 +1,5 @@
 package com.renu.attendance_apk;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
@@ -14,6 +11,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -58,6 +58,15 @@ public class Percentage extends AppCompatActivity {
 
         handlePercentageIndex();
 
+
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
+
+        registerReceiver(myBroadcastReceiver, intentFilter);
+        unregisterReceiver(myBroadcastReceiver);
 
     }
 
@@ -177,24 +186,6 @@ public class Percentage extends AppCompatActivity {
 
     }
 
-/*
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
-
-        registerReceiver(myBroadcastReceiver, intentFilter);
-
-    }
-
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        unregisterReceiver(myBroadcastReceiver);
-    }
-*/
 
 
     private void initOthers() {
@@ -246,12 +237,12 @@ public class Percentage extends AppCompatActivity {
             startActivity(intent);
 
         }
-
-        if (item.getItemId() == R.id.logoutId) {
-            Intent intent = new Intent(this, Authentication.class);
+        if (item.getItemId() == R.id.localAttendances) {
+            Intent intent = new Intent(this, ExistRollNames.class);
             startActivity(intent);
 
         }
+
         if (item.getItemId() == R.id.settings) {
             Intent intent = new Intent(this, Settings.class);
             startActivity(intent);

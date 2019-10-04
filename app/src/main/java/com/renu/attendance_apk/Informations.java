@@ -1,13 +1,13 @@
 package com.renu.attendance_apk;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class Informations extends AppCompatActivity {
     private MyBroadcastReceiver myBroadcastReceiver;
@@ -22,7 +22,7 @@ public class Informations extends AppCompatActivity {
     }
 
     private void initOthers() {
-myBroadcastReceiver=new MyBroadcastReceiver();
+        myBroadcastReceiver = new MyBroadcastReceiver();
 
     }
 
@@ -45,11 +45,7 @@ myBroadcastReceiver=new MyBroadcastReceiver();
             startActivity(intent);
 
         }
-        if (item.getItemId() == R.id.infoId) {
-            Intent intent = new Intent(this, Informations.class);
-            startActivity(intent);
 
-        }
 
         if (item.getItemId() == R.id.listId) {
             Intent intent = new Intent(this, AttendancesIndex.class);
@@ -66,11 +62,13 @@ myBroadcastReceiver=new MyBroadcastReceiver();
             startActivity(intent);
 
         }
-        if (item.getItemId() == R.id.logoutId) {
-            Intent intent = new Intent(this, Authentication.class);
+
+        if (item.getItemId() == R.id.summary) {
+            Intent intent = new Intent(this, Percentage.class);
             startActivity(intent);
 
         }
+
         if (item.getItemId() == R.id.settings) {
             Intent intent = new Intent(this, Settings.class);
             startActivity(intent);
@@ -78,26 +76,18 @@ myBroadcastReceiver=new MyBroadcastReceiver();
         }
 
 
-
-
         return super.onOptionsItemSelected(item);
     }
 
-    //-------------------------------------
     @Override
     protected void onResume() {
         super.onResume();
         IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
 
         registerReceiver(myBroadcastReceiver, intentFilter);
-
-
-    }
-    @Override
-    protected void onPause() {
-        super.onPause();
         unregisterReceiver(myBroadcastReceiver);
+
     }
 
-    //----------------------------
+
 }

@@ -1,8 +1,5 @@
 package com.renu.attendance_apk;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
@@ -15,6 +12,9 @@ import android.view.MenuItem;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -62,8 +62,6 @@ public class ShowPercentage extends AppCompatActivity {
 
 
         getValuesFromIntent();
-        Log.d("tt", "onCreate: " + attFromFirebaseIndex);
-        Log.d("tt", "onCreate: " + dtFromFirebaseIndex);
 
         initView();
         getWholeInformation();
@@ -75,114 +73,103 @@ public class ShowPercentage extends AppCompatActivity {
 
     }
 
+
     @Override
     protected void onResume() {
         super.onResume();
-
         IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
 
         registerReceiver(myBroadcastReceiver, intentFilter);
-
-    }
-
-
-    @Override
-    protected void onPause() {
-        super.onPause();
         unregisterReceiver(myBroadcastReceiver);
+
     }
-
-
 
     private void getValuesFromPercentageTable() {
+        if (Network.isNetworkAvailable(ShowPercentage.this)) {
 
 
-        databaseReferenceForPercentage.addValueEventListener(new ValueEventListener() {
+
+            databaseReferenceForPercentage.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-if (Network.isNetworkAvailable(ShowPercentage.this)) {
+
+                    try {
+                        List<String> attListForPer = new ArrayList<>();
+                        List<String> rollListForPer = new ArrayList<>();
+
+                        List<Integer> dayListForPer = new ArrayList<>();
+                        List<Integer> pListForPer = new ArrayList<>();
+                        List<Integer> aListForPer = new ArrayList<>();
+                        List<Integer> percentListForPer = new ArrayList<>();
 
 
-    try {
-        final List<String> attListForPer = new ArrayList<>();
-        final List<String> rollListForPer = new ArrayList<>();
-
-        final List<Integer> dayListForPer = new ArrayList<>();
-        final List<Integer> pListForPer = new ArrayList<>();
-        final List<Integer> aListForPer = new ArrayList<>();
-        final List<Integer> percentListForPer = new ArrayList<>();
+                        PercentageModel percentageModel = dataSnapshot.getValue(PercentageModel.class);
 
 
-        PercentageModel percentageModel = dataSnapshot.getValue(PercentageModel.class);
+                        attListForPer.addAll(percentageModel.getAttList());
+                        rollListForPer.addAll(percentageModel.getRollList());
+                        dayListForPer.addAll(percentageModel.getDayList());
+                        pListForPer.addAll(percentageModel.getpList());
+                        aListForPer.addAll(percentageModel.getaList());
+                        percentListForPer.addAll(percentageModel.getPercentList());
 
 
-        attListForPer.addAll(percentageModel.getAttList());
-        rollListForPer.addAll(percentageModel.getRollList());
-        dayListForPer.addAll(percentageModel.getDayList());
-        pListForPer.addAll(percentageModel.getpList());
-        aListForPer.addAll(percentageModel.getaList());
-        percentListForPer.addAll(percentageModel.getPercentList());
-
-
-        percentageFinalRoll = rollListForPer.toArray(new String[rollListForPer.size()]);
+                        percentageFinalRoll = rollListForPer.toArray(new String[rollListForPer.size()]);
 //convert List<Integer> into int[]
-        int daysize = dayListForPer.size();
-        int[] dayresult = new int[daysize];
-        Integer[] daytemp = dayListForPer.toArray(new Integer[daysize]);
-        for (int n = 0; n < daysize; ++n) {
-            dayresult[n] = daytemp[n];
-        }
-        percentageFinalDay = dayresult;
+                        int daysize = dayListForPer.size();
+                        int[] dayresult = new int[daysize];
+                        Integer[] daytemp = dayListForPer.toArray(new Integer[daysize]);
+                        for (int n = 0; n < daysize; ++n) {
+                            dayresult[n] = daytemp[n];
+                        }
+                        percentageFinalDay = dayresult;
 
 
-        //convert List<Integer> into int[]
-        int psize = pListForPer.size();
-        int[] presult = new int[psize];
-        Integer[] ptemp = pListForPer.toArray(new Integer[psize]);
-        for (int n = 0; n < psize; ++n) {
-            presult[n] = ptemp[n];
-        }
-        percentageFinalP = presult;
+                        //convert List<Integer> into int[]
+                        int psize = pListForPer.size();
+                        int[] presult = new int[psize];
+                        Integer[] ptemp = pListForPer.toArray(new Integer[psize]);
+                        for (int n = 0; n < psize; ++n) {
+                            presult[n] = ptemp[n];
+                        }
+                        percentageFinalP = presult;
 
-        //convert List<Integer> into int[]
-        int asize = aListForPer.size();
-        int[] aresult = new int[asize];
-        Integer[] atemp = aListForPer.toArray(new Integer[asize]);
-        for (int n = 0; n < asize; ++n) {
-            aresult[n] = atemp[n];
-        }
-        percentageFinalA = aresult;
+                        //convert List<Integer> into int[]
+                        int asize = aListForPer.size();
+                        int[] aresult = new int[asize];
+                        Integer[] atemp = aListForPer.toArray(new Integer[asize]);
+                        for (int n = 0; n < asize; ++n) {
+                            aresult[n] = atemp[n];
+                        }
+                        percentageFinalA = aresult;
 
-        //convert List<Integer> into int[]
-        int percentsize = percentListForPer.size();
-        int[] percentresult = new int[percentsize];
-        Integer[] percenttemp = percentListForPer.toArray(new Integer[percentsize]);
-        for (int n = 0; n < percentsize; ++n) {
-            percentresult[n] = percenttemp[n];
-        }
+                        //convert List<Integer> into int[]
+                        int percentsize = percentListForPer.size();
+                        int[] percentresult = new int[percentsize];
+                        Integer[] percenttemp = percentListForPer.toArray(new Integer[percentsize]);
+                        for (int n = 0; n < percentsize; ++n) {
+                            percentresult[n] = percenttemp[n];
+                        }
 
-        percentageFinalPercent = percentresult;
-
-
-        CustomAdupterForShowPercentageDetails customAdupterForShowPercentageDetails = new CustomAdupterForShowPercentageDetails(ShowPercentage.this, percentageFinalRoll, percentageFinalDay, percentageFinalP,
-                percentageFinalA, percentageFinalPercent);
-        listViewShowPercentageId.setAdapter(customAdupterForShowPercentageDetails);
+                        percentageFinalPercent = percentresult;
 
 
-    } catch (Exception e) {
-
-        Intent intent = new Intent(ShowPercentage.this, Percentage.class);
-        startActivity(intent);
-
-        Toast.makeText(ShowPercentage.this, "Persons insufficient !", Toast.LENGTH_SHORT).show();
+                        CustomAdupterForShowPercentageDetails customAdupterForShowPercentageDetails = new CustomAdupterForShowPercentageDetails(ShowPercentage.this, percentageFinalRoll, percentageFinalDay, percentageFinalP,
+                                percentageFinalA, percentageFinalPercent);
+                        listViewShowPercentageId.setAdapter(customAdupterForShowPercentageDetails);
 
 
-    }
+                    } catch (Exception e) {
 
-}else {
-    Toast.makeText(ShowPercentage.this, "Connect internet !", Toast.LENGTH_SHORT).show();
-}
+                        Toast.makeText(ShowPercentage.this, "Persons insufficient !", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(ShowPercentage.this, Percentage.class);
+                        startActivity(intent);
+
+
+                    }
+
+
             }
 
             @Override
@@ -191,7 +178,9 @@ if (Network.isNetworkAvailable(ShowPercentage.this)) {
             }
         });
 
-
+        } else {
+            Toast.makeText(ShowPercentage.this, "Connect internet !", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void setValues() {
@@ -213,10 +202,9 @@ if (Network.isNetworkAvailable(ShowPercentage.this)) {
     }
 
 
-
     private void getWholeInformation() {
-        dataBaseHelper=new DataBaseHelper(this);
-        sqLiteDatabase=dataBaseHelper.getWritableDatabase();
+        dataBaseHelper = new DataBaseHelper(this);
+        sqLiteDatabase = dataBaseHelper.getWritableDatabase();
         Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM " + WHOLE_INFORMATION_TABLE, null);
 
         if (cursor.getCount() != 0) {
@@ -278,12 +266,12 @@ if (Network.isNetworkAvailable(ShowPercentage.this)) {
             startActivity(intent);
 
         }
-
-        if (item.getItemId() == R.id.logoutId) {
-            Intent intent = new Intent(this, Authentication.class);
+        if (item.getItemId() == R.id.localAttendances) {
+            Intent intent = new Intent(this, ExistRollNames.class);
             startActivity(intent);
 
         }
+
         if (item.getItemId() == R.id.settings) {
             Intent intent = new Intent(this, Settings.class);
             startActivity(intent);

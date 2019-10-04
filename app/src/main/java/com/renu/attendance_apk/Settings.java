@@ -21,16 +21,16 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class Settings extends AppCompatActivity {
 
-    private static final String FIREBASE_URL="https://attendance-apk.firebaseio.com/";
+    private static final String FIREBASE_URL = "https://attendance-apk.firebaseio.com/";
     private Button btnForLocalAttTypeIndex, btnForLocalAttPerson, btnForAttIndex,
             btnAllPersonInfoIndex, btndeleteAttIndex;
     private DatabaseReference databaseReferenceForattendances, databaseReferenceForattendancesIndex,
-    databaseReferenceForRollnameIndex,databaseReferenceForRollname,databaseReferenceForPercentage;
+            databaseReferenceForRollnameIndex, databaseReferenceForRollname, databaseReferenceForPercentage;
     AlertDialog.Builder alertDialogBuilder;
     DataBaseHelper dataBaseHelper;
     SQLiteDatabase sqLiteDatabase;
     private MyBroadcastReceiver myBroadcastReceiver;
-    String uuidForAtt,uuidForAttIndex;
+    String uuidForAtt, uuidForAttIndex;
 
 
     private static final String WHOLE_INFORMATION_TABLE = "wholeinformations";
@@ -78,25 +78,23 @@ public class Settings extends AppCompatActivity {
                 alertDialogBuilder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-if (Network.isNetworkAvailable(Settings.this)){
+                        if (Network.isNetworkAvailable(Settings.this)) {
 
 
-
-    databaseReferenceForattendancesIndex.getRef().removeValue();
-    databaseReferenceForattendances.getRef().removeValue();
-    databaseReferenceForRollnameIndex.getRef().removeValue();
-    databaseReferenceForRollname.getRef().removeValue();
-    databaseReferenceForPercentage.getRef().removeValue();
-
+                            databaseReferenceForattendancesIndex.getRef().removeValue();
+                            databaseReferenceForattendances.getRef().removeValue();
+                            databaseReferenceForRollnameIndex.getRef().removeValue();
+                            databaseReferenceForRollname.getRef().removeValue();
+                            databaseReferenceForPercentage.getRef().removeValue();
 
 
-    dataBaseHelper.deleteAllValuesFromAllTables();
-    Intent intent = new Intent(Settings.this, Authentication.class);
-    startActivity(intent);
-    Toast.makeText(Settings.this, "You Have Deleted All Information From Your App !", Toast.LENGTH_SHORT).show();
-}else {
-    Toast.makeText(Settings.this, "Connect internet !", Toast.LENGTH_SHORT).show();
-}
+                            dataBaseHelper.deleteAllValuesFromAllTables();
+                            Intent intent = new Intent(Settings.this, Authentication.class);
+                            startActivity(intent);
+                            Toast.makeText(Settings.this, "You Have Deleted All Information From Your App !", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(Settings.this, "Connect internet !", Toast.LENGTH_SHORT).show();
+                        }
 
 
                     }
@@ -122,20 +120,20 @@ if (Network.isNetworkAvailable(Settings.this)){
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
-if (Network.isNetworkAvailable(Settings.this)){
+                        if (Network.isNetworkAvailable(Settings.this)) {
 
 
-    databaseReferenceForattendancesIndex.getRef().removeValue();
-    databaseReferenceForattendances.getRef().removeValue();
-    databaseReferenceForPercentage.getRef().removeValue();
+                            databaseReferenceForattendancesIndex.getRef().removeValue();
+                            databaseReferenceForattendances.getRef().removeValue();
+                            databaseReferenceForPercentage.getRef().removeValue();
 
-    dataBaseHelper.deleteAllFromPercentage();
-    Intent intent = new Intent(Settings.this, ExistRollNames.class);
-    startActivity(intent);
-    Toast.makeText(Settings.this, "You Have Deleted All Attendances From Your App !", Toast.LENGTH_SHORT).show();
-}else {
-    Toast.makeText(Settings.this, "Connect network !", Toast.LENGTH_SHORT).show();
-}
+                            dataBaseHelper.deleteAllFromPercentage();
+                            Intent intent = new Intent(Settings.this, ExistRollNames.class);
+                            startActivity(intent);
+                            Toast.makeText(Settings.this, "You Have Deleted All Attendances From Your App !", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(Settings.this, "Connect network !", Toast.LENGTH_SHORT).show();
+                        }
 
                     }
                 });
@@ -155,27 +153,42 @@ if (Network.isNetworkAvailable(Settings.this)){
 
     }
 
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
+
+        registerReceiver(myBroadcastReceiver, intentFilter);
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(myBroadcastReceiver);
+    }
+
     private void initOthers() {
-        databaseReferenceForattendances = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL+emailMobilePassAtt);
-        databaseReferenceForattendancesIndex = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL+emailMobilePassAttIndex);
+        databaseReferenceForattendances = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL + emailMobilePassAtt);
+        databaseReferenceForattendancesIndex = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL + emailMobilePassAttIndex);
 
-        databaseReferenceForRollname = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL+emailMobilePassRollname);
-        databaseReferenceForRollnameIndex = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL+emailMobilePassRollnameIndex);
+        databaseReferenceForRollname = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL + emailMobilePassRollname);
+        databaseReferenceForRollnameIndex = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL + emailMobilePassRollnameIndex);
 
 
-        databaseReferenceForPercentage = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL+emailMobilePassTest);
-
+        databaseReferenceForPercentage = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL + emailMobilePassTest);
 
 
         alertDialogBuilder = new AlertDialog.Builder(this);
-        myBroadcastReceiver=new MyBroadcastReceiver();
+        myBroadcastReceiver = new MyBroadcastReceiver();
     }
+
     private void getWholeInformation() {
 
 
-
-        dataBaseHelper=new DataBaseHelper(this);
-        sqLiteDatabase=dataBaseHelper.getWritableDatabase();
+        dataBaseHelper = new DataBaseHelper(this);
+        sqLiteDatabase = dataBaseHelper.getWritableDatabase();
         Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM " + WHOLE_INFORMATION_TABLE, null);
 
         if (cursor.getCount() != 0) {
@@ -193,22 +206,7 @@ if (Network.isNetworkAvailable(Settings.this)){
             }
         }
     }
-    //-------------------------------------
-    @Override
-    protected void onResume() {
-        super.onResume();
-        IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
 
-        registerReceiver(myBroadcastReceiver, intentFilter);
-
-
-    }
-    @Override
-    protected void onPause() {
-        super.onPause();
-        unregisterReceiver(myBroadcastReceiver);
-    }
-    //----------------------------
 
     private void initView() {
 
@@ -256,13 +254,13 @@ if (Network.isNetworkAvailable(Settings.this)){
             startActivity(intent);
 
         }
-        if (item.getItemId() == R.id.localAttendances) {
-            Intent intent = new Intent(this, ExistRollNames.class);
+        if (item.getItemId() == R.id.summary) {
+            Intent intent = new Intent(this, Percentage.class);
             startActivity(intent);
 
         }
-        if (item.getItemId() == R.id.logoutId) {
-            Intent intent = new Intent(this, Authentication.class);
+        if (item.getItemId() == R.id.localAttendances) {
+            Intent intent = new Intent(this, ExistRollNames.class);
             startActivity(intent);
 
         }

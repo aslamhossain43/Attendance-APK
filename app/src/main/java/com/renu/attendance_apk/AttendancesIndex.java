@@ -1,21 +1,19 @@
 package com.renu.attendance_apk;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -129,8 +127,6 @@ public class AttendancesIndex extends AppCompatActivity {
     }
 
 
-
-
     private void listViewHandleForAttendancesIndex(final String[] dateTimeForAttendanceIndexArray, final String[] attendanceForArray) {
 
         CustomAdupterForAttendancesIndex customAdupterForAttendancesIndex = new CustomAdupterForAttendancesIndex(this, dateTimeForAttendanceIndexArray, attendanceForArray);
@@ -155,23 +151,15 @@ public class AttendancesIndex extends AppCompatActivity {
 
     }
 
-    //-------------------------------------
     @Override
     protected void onResume() {
         super.onResume();
         IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
 
         registerReceiver(myBroadcastReceiver, intentFilter);
-
-
-    }
-    @Override
-    protected void onPause() {
-        super.onPause();
         unregisterReceiver(myBroadcastReceiver);
-    }
 
-    //----------------------------
+    }
 
 
     private void intitOthers() {
@@ -222,8 +210,8 @@ public class AttendancesIndex extends AppCompatActivity {
 
         }
 
-        if (item.getItemId() == R.id.logoutId) {
-            Intent intent = new Intent(this, Authentication.class);
+        if (item.getItemId() == R.id.summary) {
+            Intent intent = new Intent(this, Percentage.class);
             startActivity(intent);
 
         }

@@ -6,13 +6,11 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 public class DataBaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "AttMydatabase.db";
@@ -28,10 +26,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     private static final String REGISTER_TABLE = "register";
     private static final String WHOLE_INFORMATION_TABLE = "wholeinformations";
-    private static final String UUID_TABLE = "uuid";
-    //private static final String PERCENTAGE_TABLE = "percent";
     private static final String TEST_TABLE = "test";
-    //private static final String PERCENT_TABLE = "percentages";
     private static final int VERSION_NUMBER = 1;
 
     private static final String ROLL = "roll";
@@ -50,9 +45,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     private static final String ATT_FOR_ROLLNAME_INDEX = "attfor";
     private static final String DATETIME_FOR_ROLLNAME_INDEX = "time";
-
-    private static final String UUID_FOR_ATT = "uuidforatt";
-    private static final String UUID_FOR_ATT_INDEX = "uuidforattindex";
 
 
     private static final String REGISTER_ID = "_id";
@@ -86,10 +78,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
 
     private static final String CREATE_REGISTER_TABLE = "CREATE TABLE " + REGISTER_TABLE + "( " + REGISTER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + REGISTER_EMAIL + " TEXT," + REGISTER_PHONE + " TEXT," + REGISTER_PASSWORD + " TEXT);";
-    private static final String CREATE_UUID_TABLE = "CREATE TABLE " + UUID_TABLE + "( " + UUID_FOR_ATT + " TEXT," + UUID_FOR_ATT_INDEX + " TEXT);";
-    //private static final String CREATE_PERCENTAGE_TABLE = "CREATE TABLE " + PERCENTAGE_TABLE + "( " + PERCENTAGE_ATT_FOR + " TEXT," + PERCENTAGE_ROLL + " TEXT," + PERCENTAGE_DAY + " INT," + PERCENTAGE_P + " INT," + PERCENTAGE_A + " INT," + PERCENTAGE_PERCENT + " INT);";
     private static final String CREATE_TEST_TABLE = "CREATE TABLE " + TEST_TABLE + "( " + PERCENTAGE_ATT_FOR + " TEXT," + PERCENTAGE_ROLL + " TEXT," + PERCENTAGE_DAY + " INT," + PERCENTAGE_P + " INT," + PERCENTAGE_A + " INT," + PERCENTAGE_PERCENT + " INT);";
-    //private static final String CREATE_PERCENT_TABLE = "CREATE TABLE " + PERCENT_TABLE + "( " + PERCENT_ATT_FOR + " TEXT," + PERCENT_ROLL + " TEXT," + PERCENT_DAY +" INT," + PERCENT_P + " INT," + PERCENT_A + " INT," + PERCENT_PERCENT +" INT);";
     private static final String CREATE_WHOLE_INFORMATION_TABLE = "CREATE TABLE " + WHOLE_INFORMATION_TABLE + "( " + WI_EMAIL_MOBILE_PASS_ROLLNAME_INDEX + " TEXT," + WI_EMAIL_MOBILE_PASS_ROLLNAME + " TEXT," + WI_EMAIL_MOBILE_PASS_ATT_INDEX + " TEXT," + WI_EMAIL_MOBILE_PASS_ATT + " TEXT," + WI_EMAIL_MOBILE_PASS_TEST + " TEXT," + WI_EMAIL_MOBILE_PASS + " TEXT);";
 
 
@@ -105,11 +94,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
 
     private static final String DROP_REGISTER_TABLE = "DROP TABLE IF EXISTS " + REGISTER_TABLE;
-    private static final String DROP_UUID_TABLE = "DROP TABLE IF EXISTS " + UUID_TABLE;
-    //private static final String DROP_PERCENTAGE_TABLE = "DROP TABLE IF EXISTS " + PERCENTAGE_TABLE;
     private static final String DROP_TEST_TABLE = "DROP TABLE IF EXISTS " + TEST_TABLE;
     private static final String DROP_WHOLE_INFORMATION_TABLE = "DROP TABLE IF EXISTS " + WHOLE_INFORMATION_TABLE;
-    //private static final String DROP_PERCENT_TABLE = "DROP TABLE IF EXISTS " + PERCENT_TABLE;
 
     private static final String GET_ALL_ATTENDANCES_TABLE = "SELECT * FROM " + ATTENDANCES_TABLE;
     private static final String GET_ALL_ATTENDANCES_INDEX_TABLE = "SELECT * FROM " + ATTENDANCES_INDEX_TABLE;
@@ -122,19 +108,13 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     private static final String GET_ALL_ROLLNAME_INDEX_TABLE_FIREBASE = "SELECT * FROM " + ROLL_NAME_INDEX_TABLE_FIREBASE;
 
 
-    private static final String GET_ALL_UUID_FROM_TABLE = "SELECT * FROM " + UUID_TABLE;
     private static final String GET_ALL_FROM_WHOLE_INFORMATION_TABLE = "SELECT * FROM " + WHOLE_INFORMATION_TABLE;
-    //private static final String GET_ALL_FROM_PERCENTAGE_TABLE = "SELECT * FROM " + PERCENTAGE_TABLE;
 
     private static final String DELETE_ALL_VALUES_FROM_ATTENDANCES_INDEX = "delete from " + ATTENDANCES_INDEX_TABLE;
     private static final String DELETE_ALL_VALUES_FROM_ATTENDANCE = "delete from " + ATTENDANCES_TABLE;
     private static final String DELETE_ALL_VALUES_FROM_ROLLNAME = "delete from " + ROLL_NAME_TABLE;
     private static final String DELETE_ALL_VALUES_FROM_ROLLNAME_INDEX = "delete from " + ROLL_NAME_INDEX_TABLE;
-    private static final String DELETE_ALL_VALUES_FROM_UUID = "delete from " + UUID_TABLE;
     private static final String DELETE_ALL_VALUES_FROM_WHOLE_INFORMATION = "delete from " + WHOLE_INFORMATION_TABLE;
-    //private static final String DELETE_ALL_VALUES_FROM_PERCENTAGE = "delete from " + PERCENTAGE_TABLE;
-    //private static final String DELETE_ALL_VALUES_FROM_PERCENT = "delete from " + PERCENT_TABLE;
-    //private static final String DELETE_ALL_VALUES_FROM_TEST = "delete from " + TEST_TABLE;
 
     private Context context;
 
@@ -159,11 +139,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
 
             sqLiteDatabase.execSQL(CREATE_REGISTER_TABLE);
-            sqLiteDatabase.execSQL(CREATE_UUID_TABLE);
-            //sqLiteDatabase.execSQL(CREATE_PERCENTAGE_TABLE);
             sqLiteDatabase.execSQL(CREATE_TEST_TABLE);
             sqLiteDatabase.execSQL(CREATE_WHOLE_INFORMATION_TABLE);
-            //sqLiteDatabase.execSQL(CREATE_PERCENT_TABLE);
 
         } catch (Exception e) {
 
@@ -187,11 +164,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
 
             sqLiteDatabase.execSQL(DROP_REGISTER_TABLE);
-            sqLiteDatabase.execSQL(DROP_UUID_TABLE);
-            //sqLiteDatabase.execSQL(DROP_PERCENTAGE_TABLE);
             sqLiteDatabase.execSQL(DROP_TEST_TABLE);
             sqLiteDatabase.execSQL(DROP_WHOLE_INFORMATION_TABLE);
-            //sqLiteDatabase.execSQL(DROP_PERCENT_TABLE);
             onCreate(sqLiteDatabase);
         } catch (Exception e) {
         }
@@ -219,28 +193,25 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
 
         String emailReplace1 = email.replace(".", "-");
-        String email_mobile_pass_rollname_index = emailReplace1 + "-"+mobile+"-" + password+"-" + "rollnameindex";
+        String email_mobile_pass_rollname_index = emailReplace1 + "-" + mobile + "-" + password + "-" + "rollnameindex";
 
         String emailReplace2 = email.replace(".", "-");
-        String email_mobile_pass_rollname = emailReplace2 + "-"+mobile+"-" + password+"-" +"rollname";
-
+        String email_mobile_pass_rollname = emailReplace2 + "-" + mobile + "-" + password + "-" + "rollname";
 
 
         String emailReplace3 = email.replace(".", "-");
-        String email_mobile_pass_att_index = emailReplace3 + "-"+mobile +"-" + password+"-" +"attindex";
-
+        String email_mobile_pass_att_index = emailReplace3 + "-" + mobile + "-" + password + "-" + "attindex";
 
 
         String emailReplace4 = email.replace(".", "-");
-        String email_mobile_pass_att = emailReplace4 + "-"+mobile+"-" + password+"-" +"att";
-
+        String email_mobile_pass_att = emailReplace4 + "-" + mobile + "-" + password + "-" + "att";
 
 
         String emailReplace5 = email.replace(".", "-");
-        String email_mobile_pass_test = emailReplace5 + "-"+mobile +"-" + password+"-" +"test";
+        String email_mobile_pass_test = emailReplace5 + "-" + mobile + "-" + password + "-" + "test";
 
         String emailReplace6 = email.replace(".", "-");
-        String email_mobile_pass = emailReplace6 + "-"+mobile +"-" + password;
+        String email_mobile_pass = emailReplace6 + "-" + mobile + "-" + password;
 
 
         ContentValues contentValues = new ContentValues();
@@ -321,23 +292,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     }
 
 
-    public void createUUID() {
-
-
-        String uuidForAtt = UUID.randomUUID().toString();
-        String uuidForAttIndex = UUID.randomUUID().toString();
-
-
-        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(UUID_FOR_ATT, uuidForAtt);
-        contentValues.put(UUID_FOR_ATT_INDEX, uuidForAttIndex);
-        sqLiteDatabase.insert(UUID_TABLE, null, contentValues);
-
-
-    }
-
-
     public Map<String, List<String>> getAllDataFromAttendancesTable() {
         List<String> rollList = new ArrayList<>();
         List<String> nameList = new ArrayList<>();
@@ -390,14 +344,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     }
 
-
-    public Cursor getAllDataFromUUID() {
-        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
-        Cursor cursor = sqLiteDatabase.rawQuery(GET_ALL_UUID_FROM_TABLE, null);
-        return cursor;
-
-
-    }
 
     public Cursor getAllDataFromRollNameIndex() {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
@@ -620,7 +566,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         try {
 
 
-
             sqLiteDatabase.execSQL(DROP_ATTENDANCES_TABLE);
             sqLiteDatabase.execSQL(CREATE_ATTENDANCES_TABLE);
 
@@ -695,8 +640,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             try {
 
                 finalPercent = finalP * 100 / finalday;
-            }catch (ArithmeticException ae){
-                finalPercent=percentFromTable;
+            } catch (ArithmeticException ae) {
+                finalPercent = 0;
             }
 
 
@@ -708,8 +653,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             try {
 
                 finalPercent = finalP * 100 / finalday;
-            }catch (ArithmeticException ae){
-                finalPercent=percentFromTable;
+            } catch (ArithmeticException ae) {
+                finalPercent = 0;
             }
 
 
@@ -721,8 +666,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             try {
 
                 finalPercent = finalP * 100 / finalday;
-            }catch (ArithmeticException ae){
-                finalPercent=percentFromTable;
+            } catch (ArithmeticException ae) {
+                finalPercent = 0;
             }
 
 
@@ -736,7 +681,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         contentValues.put(PERCENTAGE_A, finalA);
         contentValues.put(PERCENTAGE_PERCENT, finalPercent);
 
-        Log.d("rr", "================updatePercentageWhenDeleteOne: ================" + finalday + " " + finalP + "" + finalA + " " + finalPercent);
         sqLiteDatabase.update(TEST_TABLE, contentValues, PERCENTAGE_ATT_FOR + "='" + attFor + "' AND " + PERCENTAGE_ROLL + "='" + oldRoll + "'", null);
 
         return true;

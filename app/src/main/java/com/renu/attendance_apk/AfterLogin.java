@@ -86,14 +86,10 @@ public class AfterLogin extends AppCompatActivity {
         IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
 
         registerReceiver(myBroadcastReceiver, intentFilter);
-
-
-    }
-    @Override
-    protected void onPause() {
-        super.onPause();
         unregisterReceiver(myBroadcastReceiver);
+
     }
+
 
 
     private void initView() {

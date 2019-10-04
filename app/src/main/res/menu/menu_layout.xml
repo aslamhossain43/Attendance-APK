@@ -66,17 +66,6 @@
         />
 
 
-    <item
-
-        android:id="@+id/logoutId"
-        app:showAsAction="always"
-        android:icon="@drawable/ic_lock_black_24dp"
-
-        />
-
-
-
-
 
 
 

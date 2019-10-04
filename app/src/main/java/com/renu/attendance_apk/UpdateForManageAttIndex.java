@@ -1,7 +1,5 @@
 package com.renu.attendance_apk;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -16,27 +14,28 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.Spinner;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class UpdateForManageAttIndex extends AppCompatActivity {
 
-    private static final String FIREBASE_URL="https://attendance-apk.firebaseio.com/";
+    private static final String FIREBASE_URL = "https://attendance-apk.firebaseio.com/";
     DatabaseReference databaseReferenceForattendances, databaseReferenceForattendancesIndex;
 
     private LinearLayout updateParentLinearLayout;
     private EditText editTextForIndex;
-    private String dateTime,index;
+    private String dateTime, index;
     private Button updateButton;
     private MyBroadcastReceiver myBroadcastReceiver;
     DataBaseHelper dataBaseHelper;
-    String uuidForAtt,uuidForAttIndex;
+    String uuidForAtt, uuidForAttIndex;
 
 
-SQLiteDatabase sqLiteDatabase;
+    SQLiteDatabase sqLiteDatabase;
     private static final String WHOLE_INFORMATION_TABLE = "wholeinformations";
     private String emailMobilePassRollnameIndex = null;
     private String emailMobilePassRollname = null;
@@ -44,7 +43,6 @@ SQLiteDatabase sqLiteDatabase;
     private String emailMobilePassAtt = null;
     private String emailMobilePassTest = null;
     private String emailMobilePass = null;
-
 
 
     @Override
@@ -75,13 +73,11 @@ SQLiteDatabase sqLiteDatabase;
                 String index = editTextForIndex.getText().toString().trim();
 
                 databaseReferenceForattendancesIndex.child(dateTime).child("attendanceFor").getRef().setValue(index);
-                Intent intent=new Intent(UpdateForManageAttIndex.this,ManageForAttIndex.class);
+                Intent intent = new Intent(UpdateForManageAttIndex.this, ManageForAttIndex.class);
                 startActivity(intent);
                 Toast.makeText(UpdateForManageAttIndex.this, "Update Success !", Toast.LENGTH_SHORT).show();
             }
         });
-
-
 
 
     }
@@ -105,28 +101,23 @@ SQLiteDatabase sqLiteDatabase;
             }
         }
     }
+
     private void initOthers() {
-        databaseReferenceForattendances = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL+emailMobilePassAtt);
-        databaseReferenceForattendancesIndex = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL+emailMobilePassAttIndex);
-myBroadcastReceiver=new MyBroadcastReceiver();
+        databaseReferenceForattendances = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL + emailMobilePassAtt);
+        databaseReferenceForattendancesIndex = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL + emailMobilePassAttIndex);
+        myBroadcastReceiver = new MyBroadcastReceiver();
     }
-    //-------------------------------------
+
     @Override
     protected void onResume() {
         super.onResume();
         IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
 
         registerReceiver(myBroadcastReceiver, intentFilter);
-
-
-    }
-    @Override
-    protected void onPause() {
-        super.onPause();
         unregisterReceiver(myBroadcastReceiver);
+
     }
 
-    //----------------------------
 
     private void initView() {
 
@@ -139,7 +130,7 @@ myBroadcastReceiver=new MyBroadcastReceiver();
 
         Bundle bundle = getIntent().getExtras();
         dateTime = bundle.getString("dateTime");
-        index=bundle.getString("index");
+        index = bundle.getString("index");
     }
 
 
@@ -183,18 +174,12 @@ myBroadcastReceiver=new MyBroadcastReceiver();
             startActivity(intent);
 
         }
-        if (item.getItemId() == R.id.logoutId) {
-            Intent intent = new Intent(this, Authentication.class);
-            startActivity(intent);
 
-        }
         if (item.getItemId() == R.id.settings) {
             Intent intent = new Intent(this, Settings.class);
             startActivity(intent);
 
         }
-
-
 
 
         return super.onOptionsItemSelected(item);

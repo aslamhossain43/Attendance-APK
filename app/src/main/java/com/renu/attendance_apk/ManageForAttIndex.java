@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ManageForAttIndex extends AppCompatActivity {
-    private static final String FIREBASE_URL="https://attendance-apk.firebaseio.com/";
+    private static final String FIREBASE_URL = "https://attendance-apk.firebaseio.com/";
     DatabaseReference databaseReferenceForattendancesIndex, databaseReferenceForattendances;
     ValueEventListener myValueEventListner;
     List<AttendanceIndexModel> attendanceIndexModelList;
@@ -38,10 +38,9 @@ public class ManageForAttIndex extends AppCompatActivity {
     private AlertDialog.Builder alertDialogBuilder;
     String[] dateTimeForAttendanceIndexArray, attendanceForArray;
     private MyBroadcastReceiver myBroadcastReceiver;
-    String uuidForAtt,uuidForAttIndex;
-private DataBaseHelper dataBaseHelper;
-SQLiteDatabase sqLiteDatabase;
-
+    String uuidForAtt, uuidForAttIndex;
+    private DataBaseHelper dataBaseHelper;
+    SQLiteDatabase sqLiteDatabase;
 
 
     private static final String WHOLE_INFORMATION_TABLE = "wholeinformations";
@@ -51,7 +50,6 @@ SQLiteDatabase sqLiteDatabase;
     private String emailMobilePassAtt = null;
     private String emailMobilePassTest = null;
     private String emailMobilePass = null;
-
 
 
     @Override
@@ -106,6 +104,15 @@ SQLiteDatabase sqLiteDatabase;
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
+
+        registerReceiver(myBroadcastReceiver, intentFilter);
+        unregisterReceiver(myBroadcastReceiver);
+
+    }
 
     private void listViewHandleForAttendancesIndex(final String[] dateTimeForAttendanceIndexArray, final String[] attendanceForArray) {
 
@@ -160,18 +167,19 @@ SQLiteDatabase sqLiteDatabase;
     }
 
     private void initOthers() {
-        databaseReferenceForattendancesIndex = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL+emailMobilePassAttIndex);
-        databaseReferenceForattendances = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL+emailMobilePassAtt);
+        databaseReferenceForattendancesIndex = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL + emailMobilePassAttIndex);
+        databaseReferenceForattendances = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL + emailMobilePassAtt);
 
         attendanceIndexModelList = new ArrayList<>();
         attendancesList = new ArrayList<>();
         dateTimeList = new ArrayList<>();
         alertDialogBuilder = new AlertDialog.Builder(ManageForAttIndex.this);
-        myBroadcastReceiver=new MyBroadcastReceiver();
+        myBroadcastReceiver = new MyBroadcastReceiver();
     }
+
     private void getWholeInformation() {
-        dataBaseHelper=new DataBaseHelper(this);
-        sqLiteDatabase=dataBaseHelper.getWritableDatabase();
+        dataBaseHelper = new DataBaseHelper(this);
+        sqLiteDatabase = dataBaseHelper.getWritableDatabase();
         Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM " + WHOLE_INFORMATION_TABLE, null);
 
         if (cursor.getCount() != 0) {
@@ -189,22 +197,8 @@ SQLiteDatabase sqLiteDatabase;
             }
         }
     }
-    //-------------------------------------
-    @Override
-    protected void onResume() {
-        super.onResume();
-        IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
-
-        registerReceiver(myBroadcastReceiver, intentFilter);
 
 
-    }
-    @Override
-    protected void onPause() {
-        super.onPause();
-        unregisterReceiver(myBroadcastReceiver);
-    }
-    //----------------------------
     private void initView() {
         attendancesIndexListView = findViewById(R.id.manageAttendancesIndexListViewId);
 
@@ -251,11 +245,7 @@ SQLiteDatabase sqLiteDatabase;
             startActivity(intent);
 
         }
-        if (item.getItemId() == R.id.logoutId) {
-            Intent intent = new Intent(this, Authentication.class);
-            startActivity(intent);
 
-        }
         if (item.getItemId() == R.id.settings) {
             Intent intent = new Intent(this, Settings.class);
             startActivity(intent);

@@ -1,9 +1,6 @@
 
 package com.renu.attendance_apk;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -15,24 +12,16 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class Update extends AppCompatActivity {
 
@@ -152,21 +141,38 @@ public class Update extends AppCompatActivity {
                 gettingDaySum = gettingDay;
                 gettingPSum = gettingP + 1;
                 gettingASum = gettingA;
-                gettingPercentSum = gettingPSum * 100 / gettingDaySum;
+
+
+                try {
+
+                    gettingPercentSum = gettingPSum * 100 / gettingDaySum;
+                } catch (ArithmeticException ae) {
+                    gettingPercentSum = 0;
+                }
 
             }
             if (paoffFromSpinner.equals("A")) {
                 gettingDaySum = gettingDay;
                 gettingASum = gettingA + 1;
                 gettingPSum = gettingP;
-                gettingPercentSum = gettingPSum * 100 / gettingDaySum;
+                try {
+
+                    gettingPercentSum = gettingPSum * 100 / gettingDaySum;
+                } catch (ArithmeticException ae) {
+                    gettingPercentSum = 0;
+                }
 
             }
             if (paoffFromSpinner.equals("Off")) {
                 gettingDaySum = gettingDay;
                 gettingASum = gettingA;
                 gettingPSum = gettingP;
-                gettingPercentSum = gettingPSum * 100 / gettingDaySum;
+                try {
+
+                    gettingPercentSum = gettingPSum * 100 / gettingDaySum;
+                } catch (ArithmeticException ae) {
+                    gettingPercentSum = 0;
+                }
 
             }
 
@@ -178,7 +184,12 @@ public class Update extends AppCompatActivity {
                 gettingDaySum = gettingDay;
                 gettingPSum = gettingP;
                 gettingASum = gettingA;
-                gettingPercentSum = gettingPSum * 100 / gettingDaySum;
+                try {
+
+                    gettingPercentSum = gettingPSum * 100 / gettingDaySum;
+                } catch (ArithmeticException ae) {
+                    gettingPercentSum = 0;
+                }
 
             }
 
@@ -186,14 +197,24 @@ public class Update extends AppCompatActivity {
                 gettingDaySum = gettingDay;
                 gettingASum = gettingA + 1;
                 gettingPSum = gettingP - 1;
-                gettingPercentSum = gettingPSum * 100 / gettingDaySum;
+                try {
+
+                    gettingPercentSum = gettingPSum * 100 / gettingDaySum;
+                } catch (ArithmeticException ae) {
+                    gettingPercentSum = 0;
+                }
 
             }
             if (paoffFromSpinner.equals("Off")) {
                 gettingDaySum = gettingDay;
                 gettingASum = gettingA + 0;
                 gettingPSum = gettingP - 1;
-                gettingPercentSum = gettingPSum * 100 / gettingDaySum;
+                try {
+
+                    gettingPercentSum = gettingPSum * 100 / gettingDaySum;
+                } catch (ArithmeticException ae) {
+                    gettingPercentSum = 0;
+                }
 
             }
 
@@ -206,14 +227,24 @@ public class Update extends AppCompatActivity {
                 gettingDaySum = gettingDay;
                 gettingPSum = gettingP + 1;
                 gettingASum = gettingA - 1;
-                gettingPercentSum = gettingPSum * 100 / gettingDaySum;
+                try {
+
+                    gettingPercentSum = gettingPSum * 100 / gettingDaySum;
+                } catch (ArithmeticException ae) {
+                    gettingPercentSum = 0;
+                }
 
             }
             if (paoffFromSpinner.equals("A")) {
                 gettingDaySum = gettingDay;
                 gettingASum = gettingA;
                 gettingPSum = gettingP;
-                gettingPercentSum = gettingPSum * 100 / gettingDaySum;
+                try {
+
+                    gettingPercentSum = gettingPSum * 100 / gettingDaySum;
+                } catch (ArithmeticException ae) {
+                    gettingPercentSum = 0;
+                }
 
             }
 
@@ -221,7 +252,12 @@ public class Update extends AppCompatActivity {
                 gettingDaySum = gettingDay;
                 gettingASum = gettingA - 1;
                 gettingPSum = gettingP + 0;
-                gettingPercentSum = gettingPSum * 100 / gettingDaySum;
+                try {
+
+                    gettingPercentSum = gettingPSum * 100 / gettingDaySum;
+                } catch (ArithmeticException ae) {
+                    gettingPercentSum = 0;
+                }
 
             }
 
@@ -248,8 +284,8 @@ public class Update extends AppCompatActivity {
 
 
     private void getWholeInformation() {
-        dataBaseHelper=new DataBaseHelper(this);
-        sqLiteDatabase=dataBaseHelper.getWritableDatabase();
+        dataBaseHelper = new DataBaseHelper(this);
+        sqLiteDatabase = dataBaseHelper.getWritableDatabase();
         Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM " + WHOLE_INFORMATION_TABLE, null);
 
         if (cursor.getCount() != 0) {
@@ -276,24 +312,16 @@ public class Update extends AppCompatActivity {
 
     }
 
-    //-------------------------------------
     @Override
     protected void onResume() {
         super.onResume();
         IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
 
         registerReceiver(myBroadcastReceiver, intentFilter);
-
-
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
         unregisterReceiver(myBroadcastReceiver);
     }
 
-    //----------------------------
+
 
     private void initView() {
         updateParentLinearLayout = findViewById(R.id.updateParentLinearLayoutId);
@@ -302,7 +330,6 @@ public class Update extends AppCompatActivity {
         spinner = findViewById(R.id.updateSpecificLayoutForspinnerId);
 
     }
-
 
 
     @Override
@@ -345,11 +372,7 @@ public class Update extends AppCompatActivity {
             startActivity(intent);
 
         }
-        if (item.getItemId() == R.id.logoutId) {
-            Intent intent = new Intent(this, Authentication.class);
-            startActivity(intent);
 
-        }
         if (item.getItemId() == R.id.settings) {
             Intent intent = new Intent(this, Settings.class);
             startActivity(intent);

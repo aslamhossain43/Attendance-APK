@@ -6,7 +6,6 @@ import android.content.IntentFilter;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -17,11 +16,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -30,7 +27,6 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class SpecificAttendancesFromFirebase extends AppCompatActivity {
@@ -216,12 +212,20 @@ public class SpecificAttendancesFromFirebase extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
 
+        registerReceiver(myBroadcastReceiver, intentFilter);
+        unregisterReceiver(myBroadcastReceiver);
+
+    }
 
     private void getWholeInformation() {
         dataBaseHelper = new DataBaseHelper(this);
 
-        sqLiteDatabase=dataBaseHelper.getWritableDatabase();
+        sqLiteDatabase = dataBaseHelper.getWritableDatabase();
         Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM " + WHOLE_INFORMATION_TABLE, null);
 
         if (cursor.getCount() != 0) {
@@ -264,23 +268,7 @@ public class SpecificAttendancesFromFirebase extends AppCompatActivity {
 
     }
 
-    //-------------------------------------
-    @Override
-    protected void onResume() {
-        super.onResume();
-        IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
 
-        registerReceiver(myBroadcastReceiver, intentFilter);
-
-
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        unregisterReceiver(myBroadcastReceiver);
-    }
-    //----------------------------
 
     private void initView() {
         listViewSpecificAttFromFirebase = findViewById(R.id.listViewSpecificAttFromFirebaseId);
@@ -329,8 +317,8 @@ public class SpecificAttendancesFromFirebase extends AppCompatActivity {
             startActivity(intent);
 
         }
-        if (item.getItemId() == R.id.logoutId) {
-            Intent intent = new Intent(this, Authentication.class);
+        if (item.getItemId() == R.id.summary) {
+            Intent intent = new Intent(this, Percentage.class);
             startActivity(intent);
 
         }

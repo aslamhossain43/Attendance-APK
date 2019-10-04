@@ -1,7 +1,5 @@
 package com.renu.attendance_apk;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -20,6 +18,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -31,8 +31,6 @@ import java.util.List;
 public class CreateNew2 extends AppCompatActivity {
     private static final String FIREBASE_URL = "https://attendance-apk.firebaseio.com/";
     DatabaseReference databaseReferenceForRollName, databaseReferenceForRollNameIndex;
-
-
 
 
     DataBaseHelper dataBaseHelper;
@@ -213,22 +211,16 @@ public class CreateNew2 extends AppCompatActivity {
 
     }
 
-    //-------------------------------------
     @Override
     protected void onResume() {
         super.onResume();
         IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
 
         registerReceiver(myBroadcastReceiver, intentFilter);
-
-
-    }
-    @Override
-    protected void onPause() {
-        super.onPause();
         unregisterReceiver(myBroadcastReceiver);
+
     }
-    //----------------------------
+
     private void initView() {
         textViewAttFor = findViewById(R.id.textAttendancesForId);
         textViewPersonNo = findViewById(R.id.textPersonNoId);
@@ -283,11 +275,7 @@ public class CreateNew2 extends AppCompatActivity {
             startActivity(intent);
 
         }
-        if (item.getItemId() == R.id.logoutId) {
-            Intent intent = new Intent(this, Authentication.class);
-            startActivity(intent);
 
-        }
         if (item.getItemId() == R.id.settings) {
             Intent intent = new Intent(this, Settings.class);
             startActivity(intent);

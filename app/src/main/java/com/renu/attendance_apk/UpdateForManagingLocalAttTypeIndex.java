@@ -63,23 +63,16 @@ public class UpdateForManagingLocalAttTypeIndex extends AppCompatActivity {
         myBroadcastReceiver = new MyBroadcastReceiver();
     }
 
-    //-------------------------------------
     @Override
     protected void onResume() {
         super.onResume();
         IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
 
         registerReceiver(myBroadcastReceiver, intentFilter);
-
-
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
         unregisterReceiver(myBroadcastReceiver);
+
     }
-    //----------------------------
+
 
     private void initView() {
         updateParentLinearLayout = findViewById(R.id.updateParentLinearLayoutForManageLocalAttIndexId);
@@ -136,11 +129,7 @@ public class UpdateForManagingLocalAttTypeIndex extends AppCompatActivity {
             startActivity(intent);
 
         }
-        if (item.getItemId() == R.id.logoutId) {
-            Intent intent = new Intent(this, Authentication.class);
-            startActivity(intent);
 
-        }
         if (item.getItemId() == R.id.settings) {
             Intent intent = new Intent(this, Settings.class);
             startActivity(intent);
