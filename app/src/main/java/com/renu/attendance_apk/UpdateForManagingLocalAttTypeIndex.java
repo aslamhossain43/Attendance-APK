@@ -60,8 +60,9 @@ public class UpdateForManagingLocalAttTypeIndex extends AppCompatActivity {
     private void initOthers() {
 
         dataBaseHelper = new DataBaseHelper(this);
-        myBroadcastReceiver=new MyBroadcastReceiver();
+        myBroadcastReceiver = new MyBroadcastReceiver();
     }
+
     //-------------------------------------
     @Override
     protected void onResume() {
@@ -72,12 +73,12 @@ public class UpdateForManagingLocalAttTypeIndex extends AppCompatActivity {
 
 
     }
+
     @Override
     protected void onPause() {
         super.onPause();
         unregisterReceiver(myBroadcastReceiver);
     }
-
     //----------------------------
 
     private void initView() {

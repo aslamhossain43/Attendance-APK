@@ -18,10 +18,14 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -41,7 +45,8 @@ public class MainActivity extends AppCompatActivity {
     private static final String DATETIME_FOR_ROLLNAME = "time";
 
     private static final String FIREBASE_URL = "https://attendance-apk.firebaseio.com/";
-    DatabaseReference databaseReferenceForattendances, databaseReferenceForattendancesIndex;
+    DatabaseReference databaseReferenceForattendances, databaseReferenceForattendancesIndex,
+            databaseReferenceForRollName,databaseReferenceForRollNameIndex;
     List<String> roolList, nameList, attendanceList, dateTimeList, attListForPercentage;
     DataBaseHelper dataBaseHelper;
     SQLiteDatabase sqLiteDatabase;
@@ -54,6 +59,17 @@ public class MainActivity extends AppCompatActivity {
     private static final String TEST_TABLE = "test";
     private static final String PERCENT_TABLE = "percentages";
 
+    private static final String WHOLE_INFORMATION_TABLE = "wholeinformations";
+    private String emailMobilePassRollnameIndex=null;
+    private String emailMobilePassRollname=null;
+    private String emailMobilePassAttIndex=null;
+    private String emailMobilePassAtt=null;
+    private String emailMobilePassTest=null;
+    private String emailMobilePass=null;
+
+    List<String> roll,name,attFor,date;
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,46 +80,13 @@ public class MainActivity extends AppCompatActivity {
 
         initView();
         setVariousValues();
-        handleUUID();
+        getWholeInformation();
         initOthers();
 
 
-        List<String> roll = new ArrayList<>();
-        List<String> name = new ArrayList<>();
-        List<String> attFor = new ArrayList<>();
-        List<String> date = new ArrayList<>();
-
+       handleRollNames();
 
 //--------------------------
-        String q = "SELECT * FROM " + ROLL_NAME_TABLE + " WHERE " + DATETIME_FOR_ROLLNAME + " = '" + rollNameDateTime + "'";
-
-        Cursor cursor1 = sqLiteDatabase.rawQuery(q, null);
-        while (cursor1.moveToNext()) {
-            roll.add(cursor1.getString(0));
-            name.add(cursor1.getString(1));
-            attFor.add(cursor1.getString(2));
-            date.add(cursor1.getString(3));
-
-        }
-
-
-        String[] stringsForRoll = roll.toArray(new String[roll.size()]);
-        String[] stringsForNames = name.toArray(new String[name.size()]);
-        for (int i = 0; i < roll.size(); i++) {
-
-
-            LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View rowView = inflater.inflate(R.layout.field, null);
-            // Add the new row before the add field button.
-
-            parentLinearLayout.addView(rowView, parentLinearLayout.getChildCount() - 1);
-            editTextForField = rowView.findViewById(R.id.rollForFieldId);
-            editTextNameForField = rowView.findViewById(R.id.nameForFieldId);
-            spinnerForField = rowView.findViewById(R.id.spinnerForFieldId);
-            editTextForField.setText(stringsForRoll[i]);
-            editTextNameForField.setText(stringsForNames[i]);
-
-        }
 
 
         add_To_Firebase.setOnClickListener(new View.OnClickListener() {
@@ -137,6 +120,120 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    private void handleRollNames() {
+
+
+  if (Network.isNetworkAvailable(this)){
+
+      databaseReferenceForRollName.addValueEventListener(new ValueEventListener() {
+          @Override
+          public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+              RollNameModel rollNameModel=dataSnapshot.getValue(RollNameModel.class);
+              roll.addAll(rollNameModel.getRollNo());
+              name.addAll(rollNameModel.getName());
+              attFor.addAll(rollNameModel.getAttFor());
+              date.addAll(rollNameModel.getDateTime());
+
+
+
+              String[] stringsForRoll = roll.toArray(new String[roll.size()]);
+              String[] stringsForNames = name.toArray(new String[name.size()]);
+              for (int i = 0; i < roll.size(); i++) {
+
+
+                  LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                  View rowView = inflater.inflate(R.layout.field, null);
+                  // Add the new row before the add field button.
+
+                  parentLinearLayout.addView(rowView, parentLinearLayout.getChildCount() - 1);
+                  editTextForField = rowView.findViewById(R.id.rollForFieldId);
+                  editTextNameForField = rowView.findViewById(R.id.nameForFieldId);
+                  spinnerForField = rowView.findViewById(R.id.spinnerForFieldId);
+                  editTextForField.setText(stringsForRoll[i]);
+                  editTextNameForField.setText(stringsForNames[i]);
+
+              }
+
+
+
+
+
+
+          }
+
+          @Override
+          public void onCancelled(@NonNull DatabaseError databaseError) {
+
+          }
+      });
+
+
+
+  }else {
+
+
+      String q = "SELECT * FROM " + ROLL_NAME_TABLE + " WHERE " + DATETIME_FOR_ROLLNAME + " = '" + rollNameDateTime + "'";
+
+      Cursor cursor1 = sqLiteDatabase.rawQuery(q, null);
+      while (cursor1.moveToNext()) {
+          roll.add(cursor1.getString(0));
+          name.add(cursor1.getString(1));
+          attFor.add(cursor1.getString(2));
+          date.add(cursor1.getString(3));
+
+      }
+
+      String[] stringsForRoll = roll.toArray(new String[roll.size()]);
+      String[] stringsForNames = name.toArray(new String[name.size()]);
+      for (int i = 0; i < roll.size(); i++) {
+
+
+          LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+          View rowView = inflater.inflate(R.layout.field, null);
+          // Add the new row before the add field button.
+
+          parentLinearLayout.addView(rowView, parentLinearLayout.getChildCount() - 1);
+          editTextForField = rowView.findViewById(R.id.rollForFieldId);
+          editTextNameForField = rowView.findViewById(R.id.nameForFieldId);
+          spinnerForField = rowView.findViewById(R.id.spinnerForFieldId);
+          editTextForField.setText(stringsForRoll[i]);
+          editTextNameForField.setText(stringsForNames[i]);
+
+      }
+
+
+
+  }
+
+
+
+    }
+
+    private void getWholeInformation() {
+
+        dataBaseHelper = new DataBaseHelper(this);
+
+sqLiteDatabase=dataBaseHelper.getWritableDatabase();
+
+        Cursor cursor=sqLiteDatabase.rawQuery("SELECT * FROM "+WHOLE_INFORMATION_TABLE,null);
+
+        if (cursor.getCount()!=0) {
+
+
+            while (cursor.moveToNext()) {
+
+                emailMobilePassRollnameIndex = cursor.getString(0);
+                emailMobilePassRollname = cursor.getString(1);
+                emailMobilePassAttIndex = cursor.getString(2);
+                emailMobilePassAtt = cursor.getString(3);
+                emailMobilePassTest = cursor.getString(4);
+                emailMobilePass = cursor.getString(5);
+
+            }
+        }
     }
 
     private void handleUUID() {
@@ -313,12 +410,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
 
-            Log.d("rr", "handlePercentage: " + fDayList.size());
-            Log.d("rr", "handlePercentage: " + fPList.size());
-            Log.d("rr", "handlePercentage: " + fAList.size());
-            Log.d("rr", "handlePercentage: " + fPercentList.size());
-
-
 
             dataBaseHelper.insertIntoPercentage(attListForPercentage, roolList, fDayList, fPList, fAList, fPercentList);
 
@@ -383,8 +474,7 @@ public class MainActivity extends AppCompatActivity {
                 attendanceCount++;
 
             }
-            Log.d("rr", "handlePercentage: cursor null ------------------");
-            dataBaseHelper.deleteAllFromPercentage(rollNameAttFor);
+            dataBaseHelper.deleteSpecificFromPercentage(rollNameAttFor);
             dataBaseHelper.insertIntoPercentage(attListForPercentage, roolList, dayListForPer, pListForPer, aListForPer, percentListForPer);
 
 
@@ -394,7 +484,6 @@ public class MainActivity extends AppCompatActivity {
             int attendanceCount = 0;
 
 
-            Log.d("rrr", "handlePercentage: " + attendanceList);
             String getValuesWhenNotNull = "SELECT * FROM " + TEST_TABLE + " WHERE " + PERCENTAGE_ATT_FOR + " = '" + rollNameAttFor + "'";
 
             Cursor cursor2 = sqLiteDatabase.rawQuery(getValuesWhenNotNull, null);
@@ -461,8 +550,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
 
-            Log.d("rr", "handlePercentage: cursor not null------------------");
-            dataBaseHelper.deleteAllFromPercentage(rollNameAttFor);
+            dataBaseHelper.deleteSpecificFromPercentage(rollNameAttFor);
             dataBaseHelper.insertIntoPercentage(attListForPercentage, roolList, dayListForPer, pListForPer, aListForPer, percentListForPer);
 
 
@@ -473,14 +561,26 @@ public class MainActivity extends AppCompatActivity {
 
     private void initOthers() {
 
-        databaseReferenceForattendances = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL + uuidForAtt);
-        databaseReferenceForattendancesIndex = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL + uuidForAttIndex);
+        databaseReferenceForattendances = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL + emailMobilePassAtt);
+        databaseReferenceForattendancesIndex = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL + emailMobilePassAttIndex);
+        databaseReferenceForRollName = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL + emailMobilePassRollname+"/"+rollNameDateTime);
+        databaseReferenceForRollNameIndex = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL + emailMobilePassRollnameIndex+"/"+rollNameDateTime);
+
+
+        roll = new ArrayList<>();
+        name = new ArrayList<>();
+        attFor = new ArrayList<>();
+        date = new ArrayList<>();
+
+
+
+
+
         roolList = new ArrayList<>();
         nameList = new ArrayList<>();
         attendanceList = new ArrayList<>();
         dateTimeList = new ArrayList<>();
         attListForPercentage = new ArrayList<>();
-        sqLiteDatabase = dataBaseHelper.getWritableDatabase();
         myBroadcastReceiver = new MyBroadcastReceiver();
     }
 
@@ -500,7 +600,6 @@ public class MainActivity extends AppCompatActivity {
         super.onPause();
         unregisterReceiver(myBroadcastReceiver);
     }
-
     //----------------------------
     private void initView() {
 

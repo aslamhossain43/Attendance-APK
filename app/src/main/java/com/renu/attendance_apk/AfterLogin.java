@@ -53,7 +53,6 @@ public class AfterLogin extends AppCompatActivity {
 
         initView();
         initOthers();
-        handleUUID();
 
         createNewBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,18 +70,12 @@ public class AfterLogin extends AppCompatActivity {
         });
     }
 
-    private void handleUUID() {
-        Cursor cursor = dataBaseHelper.getAllDataFromUUID();
-        if (cursor.getCount()==0){
-            dataBaseHelper.createUUID();
-        }else {
-            return;
-        }
-    }
+
 
     private void initOthers() {
         myBroadcastReceiver = new MyBroadcastReceiver();
         dataBaseHelper = new DataBaseHelper(this);
+
     }
 
 
@@ -95,6 +88,11 @@ public class AfterLogin extends AppCompatActivity {
         registerReceiver(myBroadcastReceiver, intentFilter);
 
 
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(myBroadcastReceiver);
     }
 
 
@@ -122,9 +120,5 @@ public class AfterLogin extends AppCompatActivity {
     }
 
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        unregisterReceiver(myBroadcastReceiver);
-    }
+
 }

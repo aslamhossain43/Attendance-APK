@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -39,6 +40,19 @@ public class ManageForAttIndex extends AppCompatActivity {
     private MyBroadcastReceiver myBroadcastReceiver;
     String uuidForAtt,uuidForAttIndex;
 private DataBaseHelper dataBaseHelper;
+SQLiteDatabase sqLiteDatabase;
+
+
+
+    private static final String WHOLE_INFORMATION_TABLE = "wholeinformations";
+    private String emailMobilePassRollnameIndex = null;
+    private String emailMobilePassRollname = null;
+    private String emailMobilePassAttIndex = null;
+    private String emailMobilePassAtt = null;
+    private String emailMobilePassTest = null;
+    private String emailMobilePass = null;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,8 +61,8 @@ private DataBaseHelper dataBaseHelper;
 
 
         initView();
-handleUUID();
 
+        getWholeInformation();
         initOthers();
 
 
@@ -91,15 +105,7 @@ handleUUID();
 
 
     }
-    private void handleUUID() {
 
-        dataBaseHelper=new DataBaseHelper(this);
-        Cursor cursor=dataBaseHelper.getAllDataFromUUID();
-        while (cursor.moveToNext()){
-            this.uuidForAtt=cursor.getString(0);
-            this.uuidForAttIndex=cursor.getString(1);
-        }
-    }
 
     private void listViewHandleForAttendancesIndex(final String[] dateTimeForAttendanceIndexArray, final String[] attendanceForArray) {
 
@@ -154,13 +160,34 @@ handleUUID();
     }
 
     private void initOthers() {
-        databaseReferenceForattendancesIndex = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL+uuidForAttIndex);
-        databaseReferenceForattendances = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL+uuidForAttIndex);
+        databaseReferenceForattendancesIndex = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL+emailMobilePassAttIndex);
+        databaseReferenceForattendances = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL+emailMobilePassAtt);
+
         attendanceIndexModelList = new ArrayList<>();
         attendancesList = new ArrayList<>();
         dateTimeList = new ArrayList<>();
         alertDialogBuilder = new AlertDialog.Builder(ManageForAttIndex.this);
         myBroadcastReceiver=new MyBroadcastReceiver();
+    }
+    private void getWholeInformation() {
+        dataBaseHelper=new DataBaseHelper(this);
+        sqLiteDatabase=dataBaseHelper.getWritableDatabase();
+        Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM " + WHOLE_INFORMATION_TABLE, null);
+
+        if (cursor.getCount() != 0) {
+
+
+            while (cursor.moveToNext()) {
+
+                emailMobilePassRollnameIndex = cursor.getString(0);
+                emailMobilePassRollname = cursor.getString(1);
+                emailMobilePassAttIndex = cursor.getString(2);
+                emailMobilePassAtt = cursor.getString(3);
+                emailMobilePassTest = cursor.getString(4);
+                emailMobilePass = cursor.getString(5);
+
+            }
+        }
     }
     //-------------------------------------
     @Override
@@ -177,7 +204,6 @@ handleUUID();
         super.onPause();
         unregisterReceiver(myBroadcastReceiver);
     }
-
     //----------------------------
     private void initView() {
         attendancesIndexListView = findViewById(R.id.manageAttendancesIndexListViewId);

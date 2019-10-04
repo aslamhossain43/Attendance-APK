@@ -145,7 +145,6 @@ private MyBroadcastReceiver myBroadcastReceiver;
         super.onPause();
         unregisterReceiver(myBroadcastReceiver);
     }
-
     //----------------------------
 
     private void initView() {

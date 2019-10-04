@@ -27,6 +27,8 @@ Some direction is given below :
 
 
     </string>
+    <string name="email">Email Address</string>
+    <string name="phone">Phone Number</string>
     <string-array name="types">
         <item>P</item>
         <item>A</item>

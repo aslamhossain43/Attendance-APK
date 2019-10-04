@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -33,6 +34,19 @@ public class UpdateForManageAttIndex extends AppCompatActivity {
     private MyBroadcastReceiver myBroadcastReceiver;
     DataBaseHelper dataBaseHelper;
     String uuidForAtt,uuidForAttIndex;
+
+
+SQLiteDatabase sqLiteDatabase;
+    private static final String WHOLE_INFORMATION_TABLE = "wholeinformations";
+    private String emailMobilePassRollnameIndex = null;
+    private String emailMobilePassRollname = null;
+    private String emailMobilePassAttIndex = null;
+    private String emailMobilePassAtt = null;
+    private String emailMobilePassTest = null;
+    private String emailMobilePass = null;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,7 +55,9 @@ public class UpdateForManageAttIndex extends AppCompatActivity {
 
         getIntentValues();
         initView();
-        handleUUID();
+
+        getWholeInformation();
+
         initOthers();
 
 
@@ -70,19 +86,28 @@ public class UpdateForManageAttIndex extends AppCompatActivity {
 
     }
 
-    private void handleUUID() {
 
-        dataBaseHelper=new DataBaseHelper(this);
-        Cursor cursor=dataBaseHelper.getAllDataFromUUID();
-        while (cursor.moveToNext()){
-            this.uuidForAtt=cursor.getString(0);
-            this.uuidForAttIndex=cursor.getString(1);
+    private void getWholeInformation() {
+        Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM " + WHOLE_INFORMATION_TABLE, null);
+
+        if (cursor.getCount() != 0) {
+
+
+            while (cursor.moveToNext()) {
+
+                emailMobilePassRollnameIndex = cursor.getString(0);
+                emailMobilePassRollname = cursor.getString(1);
+                emailMobilePassAttIndex = cursor.getString(2);
+                emailMobilePassAtt = cursor.getString(3);
+                emailMobilePassTest = cursor.getString(4);
+                emailMobilePass = cursor.getString(5);
+
+            }
         }
     }
-
     private void initOthers() {
-        databaseReferenceForattendances = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL+uuidForAtt);
-        databaseReferenceForattendancesIndex = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL+uuidForAttIndex);
+        databaseReferenceForattendances = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL+emailMobilePassAtt);
+        databaseReferenceForattendancesIndex = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL+emailMobilePassAttIndex);
 myBroadcastReceiver=new MyBroadcastReceiver();
     }
     //-------------------------------------

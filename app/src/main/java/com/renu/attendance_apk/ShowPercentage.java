@@ -1,5 +1,6 @@
 package com.renu.attendance_apk;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -13,11 +14,34 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ShowPercentage extends AppCompatActivity {
+
+    DatabaseReference databaseReferenceForPercentage;
+    private static final String FIREBASE_URL = "https://attendance-apk.firebaseio.com/";
+    List<String> attListForTest, rollListForTest;
+    List<Integer> dayList, pList, aList, percentList;
+
+
+    private static final String WHOLE_INFORMATION_TABLE = "wholeinformations";
+    private String emailMobilePassRollnameIndex = null;
+    private String emailMobilePassRollname = null;
+    private String emailMobilePassAttIndex = null;
+    private String emailMobilePassAtt = null;
+    private String emailMobilePassTest = null;
+    private String emailMobilePass = null;
+
+
     private ListView listViewShowPercentageId;
     private String attFromFirebaseIndex, dtFromFirebaseIndex;
     private TextView textViewForClass, textViewForDate;
@@ -42,13 +66,15 @@ public class ShowPercentage extends AppCompatActivity {
         Log.d("tt", "onCreate: " + dtFromFirebaseIndex);
 
         initView();
-        handleUUID();
+        getWholeInformation();
+
         initOthers();
         setValues();
         getValuesFromPercentageTable();
 
 
     }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -58,40 +84,46 @@ public class ShowPercentage extends AppCompatActivity {
         registerReceiver(myBroadcastReceiver, intentFilter);
 
     }
+
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(myBroadcastReceiver);
+    }
+
+
+
     private void getValuesFromPercentageTable() {
 
-        List<String> attListForPer = new ArrayList<>();
-        List<String> rollListForPer = new ArrayList<>();
 
-        List<Integer> dayListForPer = new ArrayList<>();
-        List<Integer> pListForPer = new ArrayList<>();
-        List<Integer> aListForPer = new ArrayList<>();
-        List<Integer> percentListForPer = new ArrayList<>();
-        String getValues = "SELECT * FROM " + TEST_TABLE + " WHERE " + PERCENTAGE_ATT_FOR + " = '" + attFromFirebaseIndex + "'";
+        databaseReferenceForPercentage.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+if (Network.isNetworkAvailable(ShowPercentage.this)) {
 
 
-        Cursor cursor = sqLiteDatabase.rawQuery(getValues, null);
+    try {
+        final List<String> attListForPer = new ArrayList<>();
+        final List<String> rollListForPer = new ArrayList<>();
 
-        if (cursor.getCount() != 0) {
-            while (cursor.moveToNext()) {
-
-                String atforPer = cursor.getString(0);
-                attListForPer.add(atforPer);
-                String roForPer = cursor.getString(1);
-                rollListForPer.add(roForPer);
-                int dayForPer = cursor.getInt(2);
-                dayListForPer.add(dayForPer);
-                int pForPer = cursor.getInt(3);
-                pListForPer.add(pForPer);
-                int aForPer = cursor.getInt(4);
-                aListForPer.add(aForPer);
-                int percentForPer = cursor.getInt(5);
-                percentListForPer.add(percentForPer);
+        final List<Integer> dayListForPer = new ArrayList<>();
+        final List<Integer> pListForPer = new ArrayList<>();
+        final List<Integer> aListForPer = new ArrayList<>();
+        final List<Integer> percentListForPer = new ArrayList<>();
 
 
-            }
+        PercentageModel percentageModel = dataSnapshot.getValue(PercentageModel.class);
 
-        }
+
+        attListForPer.addAll(percentageModel.getAttList());
+        rollListForPer.addAll(percentageModel.getRollList());
+        dayListForPer.addAll(percentageModel.getDayList());
+        pListForPer.addAll(percentageModel.getpList());
+        aListForPer.addAll(percentageModel.getaList());
+        percentListForPer.addAll(percentageModel.getPercentList());
+
 
         percentageFinalRoll = rollListForPer.toArray(new String[rollListForPer.size()]);
 //convert List<Integer> into int[]
@@ -138,6 +170,28 @@ public class ShowPercentage extends AppCompatActivity {
         listViewShowPercentageId.setAdapter(customAdupterForShowPercentageDetails);
 
 
+    } catch (Exception e) {
+
+        Intent intent = new Intent(ShowPercentage.this, Percentage.class);
+        startActivity(intent);
+
+        Toast.makeText(ShowPercentage.this, "Persons insufficient !", Toast.LENGTH_SHORT).show();
+
+
+    }
+
+}else {
+    Toast.makeText(ShowPercentage.this, "Connect internet !", Toast.LENGTH_SHORT).show();
+}
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
     }
 
     private void setValues() {
@@ -147,7 +201,8 @@ public class ShowPercentage extends AppCompatActivity {
 
     private void initOthers() {
         myBroadcastReceiver = new MyBroadcastReceiver();
-        sqLiteDatabase = dataBaseHelper.getWritableDatabase();
+        databaseReferenceForPercentage = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL + emailMobilePassTest + "/" + attFromFirebaseIndex);
+
     }
 
     private void initView() {
@@ -157,12 +212,26 @@ public class ShowPercentage extends AppCompatActivity {
         textViewForDate = findViewById(R.id.textViewHeadingForDtaeId);
     }
 
-    private void handleUUID() {
-        dataBaseHelper = new DataBaseHelper(this);
-        Cursor cursor = dataBaseHelper.getAllDataFromUUID();
-        while (cursor.moveToNext()) {
-            this.uuidForAtt = cursor.getString(0);
-            this.uuidForAttIndex = cursor.getString(1);
+
+
+    private void getWholeInformation() {
+        dataBaseHelper=new DataBaseHelper(this);
+        sqLiteDatabase=dataBaseHelper.getWritableDatabase();
+        Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM " + WHOLE_INFORMATION_TABLE, null);
+
+        if (cursor.getCount() != 0) {
+
+
+            while (cursor.moveToNext()) {
+
+                emailMobilePassRollnameIndex = cursor.getString(0);
+                emailMobilePassRollname = cursor.getString(1);
+                emailMobilePassAttIndex = cursor.getString(2);
+                emailMobilePassAtt = cursor.getString(3);
+                emailMobilePassTest = cursor.getString(4);
+                emailMobilePass = cursor.getString(5);
+
+            }
         }
     }
 
@@ -222,14 +291,8 @@ public class ShowPercentage extends AppCompatActivity {
         }
 
 
-
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        unregisterReceiver(myBroadcastReceiver);
-    }
 
 }

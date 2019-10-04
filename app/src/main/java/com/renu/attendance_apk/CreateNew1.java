@@ -86,7 +86,6 @@ public class CreateNew1 extends AppCompatActivity {
         super.onPause();
         unregisterReceiver(myBroadcastReceiver);
     }
-
     //----------------------------
     private void initView() {
 

@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -26,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AttendancesIndex extends AppCompatActivity {
-    private static final String FIREBASE_URL="https://attendance-apk.firebaseio.com/";
+    private static final String FIREBASE_URL = "https://attendance-apk.firebaseio.com/";
     DatabaseReference databaseReferenceForattendances, databaseReferenceForattendancesIndex;
     List<AttendanceIndexModel> attendanceIndexModelList;
     List<String> rollList;
@@ -34,8 +35,19 @@ public class AttendancesIndex extends AppCompatActivity {
     List<String> dateTimeList;
     private ListView attendancesIndexListView;
     private MyBroadcastReceiver myBroadcastReceiver;
-    private String uuidForAtt,uuidForAttIndex;
+    private String uuidForAtt, uuidForAttIndex;
     private DataBaseHelper dataBaseHelper;
+    SQLiteDatabase sqLiteDatabase;
+
+
+    private static final String WHOLE_INFORMATION_TABLE = "wholeinformations";
+    private String emailMobilePassRollnameIndex = null;
+    private String emailMobilePassRollname = null;
+    private String emailMobilePassAttIndex = null;
+    private String emailMobilePassAtt = null;
+    private String emailMobilePassTest = null;
+    private String emailMobilePass = null;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +56,10 @@ public class AttendancesIndex extends AppCompatActivity {
 
 
         initView();
-        handleUUID();
+
+        getWholeInformation();
+
+
         intitOthers();
 
 
@@ -89,15 +104,31 @@ public class AttendancesIndex extends AppCompatActivity {
 
     }
 
-    private void handleUUID() {
+    private void getWholeInformation() {
+        dataBaseHelper = new DataBaseHelper(this);
+        sqLiteDatabase = dataBaseHelper.getWritableDatabase();
 
-        dataBaseHelper=new DataBaseHelper(this);
-        Cursor cursor=dataBaseHelper.getAllDataFromUUID();
-        while (cursor.moveToNext()){
-            this.uuidForAtt=cursor.getString(0);
-            this.uuidForAttIndex=cursor.getString(1);
+        Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM " + WHOLE_INFORMATION_TABLE, null);
+
+        if (cursor.getCount() != 0) {
+
+
+            while (cursor.moveToNext()) {
+
+                emailMobilePassRollnameIndex = cursor.getString(0);
+                emailMobilePassRollname = cursor.getString(1);
+                emailMobilePassAttIndex = cursor.getString(2);
+                emailMobilePassAtt = cursor.getString(3);
+                emailMobilePassTest = cursor.getString(4);
+                emailMobilePass = cursor.getString(5);
+
+            }
         }
+
+
     }
+
+
 
 
     private void listViewHandleForAttendancesIndex(final String[] dateTimeForAttendanceIndexArray, final String[] attendanceForArray) {
@@ -145,12 +176,12 @@ public class AttendancesIndex extends AppCompatActivity {
 
     private void intitOthers() {
 
-        databaseReferenceForattendancesIndex = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL+uuidForAttIndex);
+        databaseReferenceForattendancesIndex = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL + emailMobilePassAttIndex);
         attendanceIndexModelList = new ArrayList<>();
         rollList = new ArrayList<>();
         attendancesList = new ArrayList<>();
         dateTimeList = new ArrayList<>();
-myBroadcastReceiver=new MyBroadcastReceiver();
+        myBroadcastReceiver = new MyBroadcastReceiver();
 
     }
 

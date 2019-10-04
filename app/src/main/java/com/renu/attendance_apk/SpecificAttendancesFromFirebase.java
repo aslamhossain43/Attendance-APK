@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -34,17 +35,28 @@ import java.util.List;
 
 public class SpecificAttendancesFromFirebase extends AppCompatActivity {
 
-    private static final String FIREBASE_URL="https://attendance-apk.firebaseio.com/";
-    private String attFromFirebaseIndex,dtFromFirebaseIndex;
+    private static final String FIREBASE_URL = "https://attendance-apk.firebaseio.com/";
+    private String attFromFirebaseIndex, dtFromFirebaseIndex;
     DatabaseReference databaseReferenceForattendances, databaseReferenceForattendancesIndex;
     private ListView listViewSpecificAttFromFirebase;
     private TextView textViewForClass, textViewForDate;
     private AlertDialog.Builder alertDialogBuilder;
     CustomAdupterForIndexFromFirebase customAdupterForIndexFromFirebase;
     String[] specificFinalRoll, specificFinalName, specificFinalAttendances, specificFinalDateTime;
-private MyBroadcastReceiver myBroadcastReceiver;
-    String uuidForAtt,uuidForAttIndex;
+    private MyBroadcastReceiver myBroadcastReceiver;
+    String uuidForAtt, uuidForAttIndex;
     DataBaseHelper dataBaseHelper;
+    SQLiteDatabase sqLiteDatabase;
+
+    private static final String WHOLE_INFORMATION_TABLE = "wholeinformations";
+    private String emailMobilePassRollnameIndex = null;
+    private String emailMobilePassRollname = null;
+    private String emailMobilePassAttIndex = null;
+    private String emailMobilePassAtt = null;
+    private String emailMobilePassTest = null;
+    private String emailMobilePass = null;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,7 +65,9 @@ private MyBroadcastReceiver myBroadcastReceiver;
 
 
         initView();
-        handleUUID();
+        getWholeInformation();
+
+
         initOthers();
         setValues();
 
@@ -103,19 +117,12 @@ private MyBroadcastReceiver myBroadcastReceiver;
                             public void onClick(DialogInterface dialog, int which) {
 
 
-
-
-
-
-
-
-
                                 Query qForAtt = databaseReferenceForattendances;
                                 qForAtt.addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                        dataBaseHelper.updatePercentageWhenDeleteOne(rollList.get(position),attFromFirebaseIndex,
-                                                dataSnapshot.child("attendanceList").child(""+position).getValue().toString());
+                                        dataBaseHelper.updatePercentageWhenDeleteOne(rollList.get(position), attFromFirebaseIndex,
+                                                dataSnapshot.child("attendanceList").child("" + position).getValue().toString());
 
 
                                         rollList.remove(position);
@@ -140,7 +147,7 @@ private MyBroadcastReceiver myBroadcastReceiver;
                                         }
                                         if (rollList.size() > 0) {
 
-                                           dataSnapshot.child("rollList").getRef().removeValue();
+                                            dataSnapshot.child("rollList").getRef().removeValue();
                                             dataSnapshot.child("nameList").getRef().removeValue();
                                             dataSnapshot.child("dateTimeList").getRef().removeValue();
                                             dataSnapshot.child("attendanceList").getRef().removeValue();
@@ -208,15 +215,31 @@ private MyBroadcastReceiver myBroadcastReceiver;
 
 
     }
-    private void handleUUID() {
 
-        dataBaseHelper=new DataBaseHelper(this);
-        Cursor cursor=dataBaseHelper.getAllDataFromUUID();
-        while (cursor.moveToNext()){
-            this.uuidForAtt=cursor.getString(0);
-            this.uuidForAttIndex=cursor.getString(1);
+
+
+    private void getWholeInformation() {
+        dataBaseHelper = new DataBaseHelper(this);
+
+        sqLiteDatabase=dataBaseHelper.getWritableDatabase();
+        Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM " + WHOLE_INFORMATION_TABLE, null);
+
+        if (cursor.getCount() != 0) {
+
+
+            while (cursor.moveToNext()) {
+
+                emailMobilePassRollnameIndex = cursor.getString(0);
+                emailMobilePassRollname = cursor.getString(1);
+                emailMobilePassAttIndex = cursor.getString(2);
+                emailMobilePassAtt = cursor.getString(3);
+                emailMobilePassTest = cursor.getString(4);
+                emailMobilePass = cursor.getString(5);
+
+            }
         }
     }
+
     private void setValues() {
         textViewForClass.setText(attFromFirebaseIndex);
         textViewForDate.setText(dtFromFirebaseIndex);
@@ -234,12 +257,13 @@ private MyBroadcastReceiver myBroadcastReceiver;
 
     private void initOthers() {
 
-        databaseReferenceForattendances = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL+uuidForAtt).child(dtFromFirebaseIndex);
-        databaseReferenceForattendancesIndex = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL+uuidForAttIndex).child(dtFromFirebaseIndex);
+        databaseReferenceForattendances = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL + emailMobilePassAtt).child(dtFromFirebaseIndex);
+        databaseReferenceForattendancesIndex = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL + emailMobilePassAttIndex).child(dtFromFirebaseIndex);
         alertDialogBuilder = new AlertDialog.Builder(SpecificAttendancesFromFirebase.this);
-myBroadcastReceiver=new MyBroadcastReceiver();
+        myBroadcastReceiver = new MyBroadcastReceiver();
 
     }
+
     //-------------------------------------
     @Override
     protected void onResume() {
@@ -250,12 +274,12 @@ myBroadcastReceiver=new MyBroadcastReceiver();
 
 
     }
+
     @Override
     protected void onPause() {
         super.onPause();
         unregisterReceiver(myBroadcastReceiver);
     }
-
     //----------------------------
 
     private void initView() {

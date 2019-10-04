@@ -37,7 +37,13 @@ public class RollNameModel {
         this.name = name;
     }
 
-    public RollNameModel(List<String> rollNo) { this.rollNo = rollNo; }
+    public List<String> getAttFor() {
+        return attFor;
+    }
+
+    public void setAttFor(List<String> attFor) {
+        this.attFor = attFor;
+    }
 
     public List<String> getDateTime() { return dateTime; }
 

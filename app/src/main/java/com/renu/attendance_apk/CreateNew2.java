@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -27,8 +29,17 @@ import java.util.Date;
 import java.util.List;
 
 public class CreateNew2 extends AppCompatActivity {
+    private static final String FIREBASE_URL = "https://attendance-apk.firebaseio.com/";
     DatabaseReference databaseReferenceForRollName, databaseReferenceForRollNameIndex;
-    private DataBaseHelper dataBaseHelper;
+
+
+
+
+    DataBaseHelper dataBaseHelper;
+    SQLiteDatabase sqLiteDatabase;
+    private static final String WHOLE_INFORMATION_TABLE = "wholeinformations";
+
+
     private TextView textViewAttFor, textViewPersonNo;
     private Button saveBtn, backBtn;
     private LinearLayout parent_linear_layout_for_create_new2;
@@ -38,6 +49,13 @@ public class CreateNew2 extends AppCompatActivity {
     private List<String> rollList, nameList, attForList, dateTimeList;
     private MyBroadcastReceiver myBroadcastReceiver;
 
+    private String emailMobilePassRollnameIndex = null;
+    private String emailMobilePassRollname = null;
+    private String emailMobilePassAttIndex = null;
+    private String emailMobilePassAtt = null;
+    private String emailMobilePassTest = null;
+    private String emailMobilePass = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,6 +64,7 @@ public class CreateNew2 extends AppCompatActivity {
 
         getValuesFromIntent();
         initView();
+        getWholeInformation();
         initOthers();
         setValues();
         handleRollNameFields();
@@ -80,12 +99,30 @@ public class CreateNew2 extends AppCompatActivity {
                     dateTimeList.add(dateTime);
                     attForList.add(attFor);
                 }
+                if (Network.isNetworkAvailable(CreateNew2.this)) {
 
 
-                dataBaseHelper.insertRollNameIntoLocalStorage(rollList, nameList, attForList, dateTimeList);
-                dataBaseHelper.insertDataInToRollNameIndexTable(dateTime, attFor);
-               //go to local book
-                Intent intent=new Intent(CreateNew2.this,ExistRollNames.class);
+                    dataBaseHelper.insertDataInToRollNameIndexTable(dateTime, attFor);
+                    dataBaseHelper.insertRollNameIntoLocalStorage(rollList, nameList, attForList, dateTimeList);
+
+                    RollNameIndexModel rollNameIndexModel = new RollNameIndexModel(dateTime, attFor);
+                    databaseReferenceForRollNameIndex.child(dateTime).setValue(rollNameIndexModel);
+                    RollNameModel rollNameModel = new RollNameModel(rollList, nameList, attForList, dateTimeList);
+                    databaseReferenceForRollName.child(dateTime).setValue(rollNameModel);
+
+
+                } else {
+                    dataBaseHelper.insertDataInToRollNameIndexTable(dateTime, attFor);
+                    dataBaseHelper.insertRollNameIntoLocalStorage(rollList, nameList, attForList, dateTimeList);
+
+                    dataBaseHelper.insertDataInToRollNameIndexTableFirebase(dateTime, attFor);
+                    dataBaseHelper.insertRollNameIntoLocalStorageFirebase(rollList, nameList, attForList, dateTimeList);
+
+
+                }
+
+                //go to local book
+                Intent intent = new Intent(CreateNew2.this, ExistRollNames.class);
                 startActivity(intent);
                 Toast.makeText(CreateNew2.this, "Operation Success !", Toast.LENGTH_SHORT).show();
 
@@ -94,7 +131,7 @@ public class CreateNew2 extends AppCompatActivity {
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(CreateNew2.this,CreateNew1.class);
+                Intent intent = new Intent(CreateNew2.this, CreateNew1.class);
                 Bundle bundle = new Bundle();
                 bundle.putString("attFor", attFor);
                 bundle.putInt("pNo", pNo);
@@ -105,6 +142,29 @@ public class CreateNew2 extends AppCompatActivity {
         });
 
 
+    }
+
+    private void getWholeInformation() {
+        dataBaseHelper = new DataBaseHelper(this);
+
+        sqLiteDatabase = dataBaseHelper.getWritableDatabase();
+
+        Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM " + WHOLE_INFORMATION_TABLE, null);
+
+        if (cursor.getCount() != 0) {
+
+
+            while (cursor.moveToNext()) {
+
+                emailMobilePassRollnameIndex = cursor.getString(0);
+                emailMobilePassRollname = cursor.getString(1);
+                emailMobilePassAttIndex = cursor.getString(2);
+                emailMobilePassAtt = cursor.getString(3);
+                emailMobilePassTest = cursor.getString(4);
+                emailMobilePass = cursor.getString(5);
+
+            }
+        }
     }
 
     private void getValuesFromIntent() {
@@ -139,14 +199,20 @@ public class CreateNew2 extends AppCompatActivity {
     }
 
     private void initOthers() {
+
+
         dataBaseHelper = new DataBaseHelper(this);
+        sqLiteDatabase = dataBaseHelper.getWritableDatabase();
+        databaseReferenceForRollNameIndex = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL + emailMobilePassRollnameIndex);
+        databaseReferenceForRollName = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL + emailMobilePassRollname);
         rollList = new ArrayList<>();
         nameList = new ArrayList<>();
         attForList = new ArrayList<>();
         dateTimeList = new ArrayList<>();
-        myBroadcastReceiver=new MyBroadcastReceiver();
+        myBroadcastReceiver = new MyBroadcastReceiver();
 
     }
+
     //-------------------------------------
     @Override
     protected void onResume() {
@@ -162,7 +228,6 @@ public class CreateNew2 extends AppCompatActivity {
         super.onPause();
         unregisterReceiver(myBroadcastReceiver);
     }
-
     //----------------------------
     private void initView() {
         textViewAttFor = findViewById(R.id.textAttendancesForId);

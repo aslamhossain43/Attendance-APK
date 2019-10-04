@@ -3,8 +3,18 @@ package com.renu.attendance_apk;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+
+import javax.mail.MessagingException;
+import javax.mail.Transport;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+
+import android.os.StrictMode;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,12 +23,23 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.mail.Message;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+
 public class RegisterActivity extends AppCompatActivity {
     private int currentApiVersion;
     //-----------------
-
+    int SDK_INT = android.os.Build.VERSION.SDK_INT;
     DataBaseHelper dataBaseHelper;
-    private EditText editTextUaserName, editTextPassword, editTextConfirmPassword;
+    SQLiteDatabase sqLiteDatabase;
+    private EditText editTextEmail, editTextPhone, editTextPassword, editTextConfirmPassword;
     private Button registerBtn;
     TextView textViewLogin;
     private MyBroadcastReceiver myBroadcastReceiver;
@@ -27,6 +48,7 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+
 
 //-------------------------------------------
         //for full screen
@@ -64,27 +86,53 @@ public class RegisterActivity extends AppCompatActivity {
         registerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String user = editTextUaserName.getText().toString().trim();
+                String email = editTextEmail.getText().toString().trim();
+                String phone = editTextPhone.getText().toString().trim();
                 String pass = editTextPassword.getText().toString().trim();
                 String confirmPass = editTextConfirmPassword.getText().toString().trim();
 
-                if (pass.equals(confirmPass)) {
-                    long l = dataBaseHelper.addUser(user, pass);
-                    if (l > 0) {
+                dataBaseHelper.dropRegisterAndWholeInformationsTable();
 
-                        Toast.makeText(RegisterActivity.this, "You have registered !", Toast.LENGTH_LONG).show();
-                        Intent intent = new Intent(RegisterActivity.this, Authentication.class);
-                        startActivity(intent);
+
+
+                if (isValidMail(email)&&isValidMobile(phone)&&(pass.length()>=8&&pass.length()<=100)) {
+
+                    if (pass.equals(confirmPass)) {
+                        if (Network.isNetworkAvailable(RegisterActivity.this)){
+
+
+                            sendEmail(email, phone, pass);
+                        }else {
+                            Toast.makeText(RegisterActivity.this, "Your network is not connected !" +
+                                    " See the settings", Toast.LENGTH_SHORT).show();
+                        }
+
+                        long l = dataBaseHelper.addUser(email, phone, pass);
+                        long ll = dataBaseHelper.addWholeInformation(email, phone, pass);
+
+                        if (l > 0&&ll>0) {
+
+                            Toast.makeText(RegisterActivity.this, "You have registered !", Toast.LENGTH_LONG).show();
+                            Intent intent = new Intent(RegisterActivity.this, Authentication.class);
+                            startActivity(intent);
+
+                        } else {
+                            Toast.makeText(RegisterActivity.this, "Registration Error !", Toast.LENGTH_LONG).show();
+                        }
+
 
                     } else {
-                        Toast.makeText(RegisterActivity.this, "Registration Error !", Toast.LENGTH_LONG).show();
+                        Toast.makeText(RegisterActivity.this, "Password not matching ! Try again", Toast.LENGTH_LONG).show();
                     }
 
 
-                } else {
-                    Toast.makeText(RegisterActivity.this, "Password not matching ! Try again", Toast.LENGTH_LONG).show();
+            }if (!isValidMail(email)){
+                    Toast.makeText(RegisterActivity.this, "Email Address Not Valid !", Toast.LENGTH_SHORT).show();
+                }if (!isValidMobile(phone)){
+                    Toast.makeText(RegisterActivity.this, "Phone Number Not Valid !", Toast.LENGTH_SHORT).show();
+                }if (!(pass.length()>=8&&pass.length()<=100)){
+                    Toast.makeText(RegisterActivity.this, "Insert Minimum 8 Characters And Maximum 100 Password !", Toast.LENGTH_SHORT).show();
                 }
-
 
             }
         });
@@ -92,11 +140,76 @@ public class RegisterActivity extends AppCompatActivity {
 
     }
 
+    private boolean isValidMobile(String phone) {
+        if(!Pattern.matches("[a-zA-Z]+", phone)) {
+            return phone.length() > 6 && phone.length() <= 13;
+        }
+        return false;
+    }
+
+    private boolean isValidMail(String email) {
+        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
+    }
+
+    private void sendEmail(String email, String phone, String pass) {
+        final String fromEmail = "studentsfundbd@gmail.com";
+        final String toEmail = email;
+
+        final String password = "ecehstuaslam43";
+        final String subject = "V.V.I Documents To Access Attendance Application's\n Previous Information";
+        final String msg = "You have to store these information to access Attendance application's previous data : \n" +
+                "Email : " + email + ", Phone : " + phone + ", Password : " + pass;
+
+
+        if (SDK_INT > 8) {
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
+                    .permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+            //----------------------------------
+            Properties props = new Properties();
+            props.put("mail.smtp.auth", "true");
+            props.put("mail.smtp.starttls.enable", "true");
+            props.put("mail.smtp.host", "smtp.gmail.com");
+            props.put("mail.smtp.port", "587");
+
+            Session session = Session.getInstance(props,
+                    new javax.mail.Authenticator() {
+                        protected PasswordAuthentication getPasswordAuthentication() {
+                            return new PasswordAuthentication(fromEmail, password);
+                        }
+                    });
+
+            try {
+
+                Message message = new MimeMessage(session);
+                message.setFrom(new InternetAddress(fromEmail));
+                message.setRecipients(Message.RecipientType.TO,
+                        InternetAddress.parse(toEmail));
+                message.setSubject(subject);
+                message.setText(msg);
+
+
+                Transport.send(message);
+
+            } catch (MessagingException e) {
+                throw new RuntimeException(e);
+
+            }
+
+
+        }
+
+
+    }
+
     private void initOthers() {
         dataBaseHelper = new DataBaseHelper(this);
-        myBroadcastReceiver=new MyBroadcastReceiver();
+        sqLiteDatabase = dataBaseHelper.getWritableDatabase();
+        myBroadcastReceiver = new MyBroadcastReceiver();
     }
+
     //-------------------------------------
+/*
     @Override
     protected void onResume() {
         super.onResume();
@@ -106,23 +219,27 @@ public class RegisterActivity extends AppCompatActivity {
 
 
     }
+
     @Override
     protected void onPause() {
         super.onPause();
         unregisterReceiver(myBroadcastReceiver);
     }
+*/
 
     //----------------------------
     private void initView() {
 
 
-        editTextUaserName = findViewById(R.id.editTextUserNameId);
+        editTextEmail = findViewById(R.id.editTextEmailId);
+        editTextPhone = findViewById(R.id.editTextPhoneId);
         editTextPassword = findViewById(R.id.editTextPasswordId);
         editTextConfirmPassword = findViewById(R.id.editTextConfirmPasswordId);
         registerBtn = findViewById(R.id.registerBtnid);
         textViewLogin = findViewById(R.id.textViewForLoginId);
 
     }
+
     //----------------------------------------------------
     // for full screen
     @SuppressLint("NewApi")

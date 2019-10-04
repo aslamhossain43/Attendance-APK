@@ -36,22 +36,30 @@ import java.util.Map;
 
 public class Update extends AppCompatActivity {
 
-    private static final String FIREBASE_URL="https://attendance-apk.firebaseio.com/";
+    private static final String FIREBASE_URL = "https://attendance-apk.firebaseio.com/";
     DatabaseReference databaseReferenceForattendances, databaseReferenceForattendancesIndex;
 
     private LinearLayout updateParentLinearLayout;
     private EditText editTextForId, editTextForName, editTextForPAOff;
     private Spinner spinner;
-    private String roll, name, paoff, dateTime, position,attFor;
+    private String roll, name, paoff, dateTime, position, attFor;
     private Button updateButton;
     private MyBroadcastReceiver myBroadcastReceiver;
     DataBaseHelper dataBaseHelper;
-    String uuidForAtt,uuidForAttIndex;
+    String uuidForAtt, uuidForAttIndex;
     SQLiteDatabase sqLiteDatabase;
     private static final String PERCENTAGE_ATT_FOR = "attfor";
     private static final String PERCENTAGE_ROLL = "roll";
     private static final String TEST_TABLE = "test";
 
+
+    private static final String WHOLE_INFORMATION_TABLE = "wholeinformations";
+    private String emailMobilePassRollnameIndex = null;
+    private String emailMobilePassRollname = null;
+    private String emailMobilePassAttIndex = null;
+    private String emailMobilePassAtt = null;
+    private String emailMobilePassTest = null;
+    private String emailMobilePass = null;
 
 
     @Override
@@ -62,7 +70,9 @@ public class Update extends AppCompatActivity {
 
         getIntentValues();
         initView();
-        handleUUID();
+
+        getWholeInformation();
+
         initOthers();
         handleLayoutInflater();
 
@@ -93,11 +103,11 @@ public class Update extends AppCompatActivity {
                 databaseReferenceForattendances.child(dateTime).child("rollList").child(position).setValue(rollFromEditText);
                 databaseReferenceForattendances.child(dateTime).child("nameList").child(position).setValue(nameFromEditText);
                 databaseReferenceForattendances.child(dateTime).child("attendanceList").child(position).setValue(paoffFromSpinner);
-                updatePercentage(roll,attFor,paoff,rollFromEditText,paoffFromSpinner);
+                updatePercentage(roll, attFor, paoff, rollFromEditText, paoffFromSpinner);
 
 
                 //go to attendancesindex
-                Intent intent=new Intent(Update.this,SpecificAttendancesFromFirebase.class);
+                Intent intent = new Intent(Update.this, SpecificAttendancesFromFirebase.class);
                 Bundle bundle = new Bundle();
                 bundle.putString("attFor", attFor);
                 bundle.putString("dt", dateTime);
@@ -110,37 +120,33 @@ public class Update extends AppCompatActivity {
 
     }
 
-    private void updatePercentage(String oldRoll, String attFor,String oldPaoff, String newRollFromEditText, String paoffFromSpinner) {
+    private void updatePercentage(String oldRoll, String attFor, String oldPaoff, String newRollFromEditText, String paoffFromSpinner) {
 
-        String q = "SELECT * FROM " + TEST_TABLE + " WHERE " + PERCENTAGE_ATT_FOR + " = '" + attFor + "'"+" AND "+ PERCENTAGE_ROLL + " = '" + oldRoll + "'";
+        String q = "SELECT * FROM " + TEST_TABLE + " WHERE " + PERCENTAGE_ATT_FOR + " = '" + attFor + "'" + " AND " + PERCENTAGE_ROLL + " = '" + oldRoll + "'";
 
-        Cursor cursor=sqLiteDatabase.rawQuery(q,null);
+        Cursor cursor = sqLiteDatabase.rawQuery(q, null);
 
         String gettingRoll = null;
-        int gettingDaySum=0;
-        int gettingPSum=0;
-        int gettingASum=0;
-        int gettingDay = 0,gettingP = 0,gettingA = 0;
-        int gettingPercentSum=0;
+        int gettingDaySum = 0;
+        int gettingPSum = 0;
+        int gettingASum = 0;
+        int gettingDay = 0, gettingP = 0, gettingA = 0;
+        int gettingPercentSum = 0;
         int gettingPercent;
 
 
-        while (cursor.moveToNext()){
-            gettingRoll=cursor.getString(1);
-            gettingDay=cursor.getInt(2);
-            gettingP=cursor.getInt(3);
-            gettingA=cursor.getInt(4);
-            gettingPercent=cursor.getInt(5);
-
-
-
-
+        while (cursor.moveToNext()) {
+            gettingRoll = cursor.getString(1);
+            gettingDay = cursor.getInt(2);
+            gettingP = cursor.getInt(3);
+            gettingA = cursor.getInt(4);
+            gettingPercent = cursor.getInt(5);
 
 
         }
 
 
-        if (paoff.equals("Off")){
+        if (paoff.equals("Off")) {
 
             if (paoffFromSpinner.equals("P")) {
                 gettingDaySum = gettingDay;
@@ -155,7 +161,8 @@ public class Update extends AppCompatActivity {
                 gettingPSum = gettingP;
                 gettingPercentSum = gettingPSum * 100 / gettingDaySum;
 
-            }if (paoffFromSpinner.equals("Off")) {
+            }
+            if (paoffFromSpinner.equals("Off")) {
                 gettingDaySum = gettingDay;
                 gettingASum = gettingA;
                 gettingPSum = gettingP;
@@ -166,7 +173,7 @@ public class Update extends AppCompatActivity {
 
         }
 
-        if (paoff.equals("P")){
+        if (paoff.equals("P")) {
             if (paoffFromSpinner.equals("P")) {
                 gettingDaySum = gettingDay;
                 gettingPSum = gettingP;
@@ -178,10 +185,11 @@ public class Update extends AppCompatActivity {
             if (paoffFromSpinner.equals("A")) {
                 gettingDaySum = gettingDay;
                 gettingASum = gettingA + 1;
-                gettingPSum = gettingP-1;
+                gettingPSum = gettingP - 1;
                 gettingPercentSum = gettingPSum * 100 / gettingDaySum;
 
-            }if (paoffFromSpinner.equals("Off")) {
+            }
+            if (paoffFromSpinner.equals("Off")) {
                 gettingDaySum = gettingDay;
                 gettingASum = gettingA + 0;
                 gettingPSum = gettingP - 1;
@@ -191,7 +199,7 @@ public class Update extends AppCompatActivity {
 
 
         }
-        if (paoff.equals("A")){
+        if (paoff.equals("A")) {
 
 
             if (paoffFromSpinner.equals("P")) {
@@ -200,7 +208,8 @@ public class Update extends AppCompatActivity {
                 gettingASum = gettingA - 1;
                 gettingPercentSum = gettingPSum * 100 / gettingDaySum;
 
-            }if (paoffFromSpinner.equals("A")) {
+            }
+            if (paoffFromSpinner.equals("A")) {
                 gettingDaySum = gettingDay;
                 gettingASum = gettingA;
                 gettingPSum = gettingP;
@@ -220,11 +229,7 @@ public class Update extends AppCompatActivity {
         }
 
 
-
-
-        dataBaseHelper.updatePercentage(oldRoll,attFor,gettingRoll,gettingDaySum,gettingPSum,gettingASum,gettingPercentSum);
-
-
+        dataBaseHelper.updatePercentage(oldRoll, attFor, gettingRoll, gettingDaySum, gettingPSum, gettingASum, gettingPercentSum);
 
 
     }
@@ -241,14 +246,36 @@ public class Update extends AppCompatActivity {
 
     }
 
+
+    private void getWholeInformation() {
+        dataBaseHelper=new DataBaseHelper(this);
+        sqLiteDatabase=dataBaseHelper.getWritableDatabase();
+        Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM " + WHOLE_INFORMATION_TABLE, null);
+
+        if (cursor.getCount() != 0) {
+
+
+            while (cursor.moveToNext()) {
+
+                emailMobilePassRollnameIndex = cursor.getString(0);
+                emailMobilePassRollname = cursor.getString(1);
+                emailMobilePassAttIndex = cursor.getString(2);
+                emailMobilePassAtt = cursor.getString(3);
+                emailMobilePassTest = cursor.getString(4);
+                emailMobilePass = cursor.getString(5);
+
+            }
+        }
+    }
+
+
     private void initOthers() {
-        databaseReferenceForattendances = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL+uuidForAtt);
-        databaseReferenceForattendancesIndex = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL+uuidForAttIndex);
-myBroadcastReceiver=new MyBroadcastReceiver();
-dataBaseHelper=new DataBaseHelper(this);
-sqLiteDatabase=dataBaseHelper.getWritableDatabase();
+        databaseReferenceForattendances = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL + emailMobilePassAtt);
+        databaseReferenceForattendancesIndex = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL + emailMobilePassAttIndex);
+        myBroadcastReceiver = new MyBroadcastReceiver();
 
     }
+
     //-------------------------------------
     @Override
     protected void onResume() {
@@ -259,6 +286,7 @@ sqLiteDatabase=dataBaseHelper.getWritableDatabase();
 
 
     }
+
     @Override
     protected void onPause() {
         super.onPause();
@@ -274,15 +302,9 @@ sqLiteDatabase=dataBaseHelper.getWritableDatabase();
         spinner = findViewById(R.id.updateSpecificLayoutForspinnerId);
 
     }
-    private void handleUUID() {
 
-        dataBaseHelper=new DataBaseHelper(this);
-        Cursor cursor=dataBaseHelper.getAllDataFromUUID();
-        while (cursor.moveToNext()){
-            this.uuidForAtt=cursor.getString(0);
-            this.uuidForAttIndex=cursor.getString(1);
-        }
-    }
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 

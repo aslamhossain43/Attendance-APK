@@ -18,7 +18,7 @@ import android.widget.Toast;
 public class Authentication extends AppCompatActivity {
     private int currentApiVersion;
     //-----------------
-    private EditText editTextUaserName, editTextPassword;
+    private EditText editTextPassword;
     private Button loginBtn;
     TextView textViewForRegister;
     DataBaseHelper dataBaseHelper;
@@ -68,10 +68,10 @@ public class Authentication extends AppCompatActivity {
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String user = editTextUaserName.getText().toString();
+               // String user = editTextUaserName.getText().toString();
                 String pass = editTextPassword.getText().toString();
 
-                Boolean b = dataBaseHelper.checkUser(user, pass);
+                Boolean b = dataBaseHelper.checkUser(pass);
                 if (b == true) {
                     Toast.makeText(Authentication.this, "Successfully logged in", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(Authentication.this, AfterLogin.class);
@@ -91,7 +91,7 @@ public class Authentication extends AppCompatActivity {
 
 
     //-------------------------------------
-    @Override
+ /*   @Override
     protected void onResume() {
         super.onResume();
         IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
@@ -105,7 +105,7 @@ public class Authentication extends AppCompatActivity {
         super.onPause();
         unregisterReceiver(myBroadcastReceiver);
     }
-
+*/
     //----------------------------
 
     private void initOther() {
@@ -114,7 +114,7 @@ public class Authentication extends AppCompatActivity {
     }
 
     private void initView() {
-        editTextUaserName = findViewById(R.id.editTextUserNameId);
+        //editTextUaserName = findViewById(R.id.editTextUserNameId);
         editTextPassword = findViewById(R.id.editTextPasswordId);
         loginBtn = findViewById(R.id.loginBtnid);
         textViewForRegister = findViewById(R.id.textViewForRegisterId);

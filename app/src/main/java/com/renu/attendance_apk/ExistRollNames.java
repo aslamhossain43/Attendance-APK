@@ -26,9 +26,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ExistRollNames extends AppCompatActivity {
+    private static final String FIREBASE_URL = "https://attendance-apk.firebaseio.com/";
+
     DataBaseHelper dataBaseHelper;
-     private ListView listViewExistAttTypes;
-     private MyBroadcastReceiver myBroadcastReceiver;
+    SQLiteDatabase sqLiteDatabase;
+    DatabaseReference databaseReferenceForRollNameIndex;
+    private ListView listViewExistAttTypes;
+    private MyBroadcastReceiver myBroadcastReceiver;
+
+
+    private static final String WHOLE_INFORMATION_TABLE = "wholeinformations";
+    private String emailMobilePassRollnameIndex = null;
+    private String emailMobilePassRollname = null;
+    private String emailMobilePassAttIndex = null;
+    private String emailMobilePassAtt = null;
+    private String emailMobilePassTest = null;
+    private String emailMobilePass = null;
 
 
     @Override
@@ -37,37 +50,102 @@ public class ExistRollNames extends AppCompatActivity {
         setContentView(R.layout.activity_exist_roll_names);
 
         initView();
+        getWholeInformation();
         initOthers();
 
+        handleRollNameIndex();
 
-    SQLiteDatabase sqLiteDatabase=dataBaseHelper.getWritableDatabase();
-    Cursor cursor=dataBaseHelper.getAllDataFromRollNameIndex();
-    List<String>stringAttFor=new ArrayList<>();
-    List<String>stringDate=new ArrayList<>();
-    while (cursor.moveToNext()){
-        stringAttFor.add(cursor.getString(0));
-        stringDate.add(cursor.getString(1));
     }
 
-    final String[] sAtt = stringAttFor.toArray(new String[stringAttFor.size()]);
-    final String[] sDateTime = stringDate.toArray(new String[stringDate.size()]);
-    CustomAdupterForAttendanceTypes customAdupterForAttendanceTypes = new CustomAdupterForAttendanceTypes(ExistRollNames.this, sAtt,sDateTime);
-    listViewExistAttTypes.setAdapter(customAdupterForAttendanceTypes);
-    listViewExistAttTypes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            Intent intent = new Intent(ExistRollNames.this, MainActivity.class);
-            Bundle bundle = new Bundle();
-            bundle.putString("sAtt", sAtt[position]);
-            bundle.putString("sDateTime", sDateTime[position]);
-            intent.putExtras(bundle);
-            startActivity(intent);
+    private void handleRollNameIndex() {
 
+
+        final List<RollNameIndexModel>rollNameIndexModelList=new ArrayList<>();
+        final List<String> stringAttFor = new ArrayList<>();
+        final List<String> stringDate = new ArrayList<>();
+        if (Network.isNetworkAvailable(this)) {
+
+            databaseReferenceForRollNameIndex.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+
+
+
+
+                    for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+
+
+
+                        RollNameIndexModel rollNameIndexModel = dataSnapshot1.getValue(RollNameIndexModel.class);
+                       rollNameIndexModelList.add(rollNameIndexModel);
+
+
+
+                    }
+                    for (RollNameIndexModel rollNameIndexModel:rollNameIndexModelList){
+                        stringAttFor.add(rollNameIndexModel.getAttendanceFor());
+                        stringDate.add(rollNameIndexModel.getDateTime());
+
+                    }
+
+
+                    final String[] sAtt = stringAttFor.toArray(new String[stringAttFor.size()]);
+                    final String[] sDateTime = stringDate.toArray(new String[stringDate.size()]);
+                    CustomAdupterForAttendanceTypes customAdupterForAttendanceTypes = new CustomAdupterForAttendanceTypes(ExistRollNames.this, sAtt, sDateTime);
+                    listViewExistAttTypes.setAdapter(customAdupterForAttendanceTypes);
+                    listViewExistAttTypes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                            Intent intent = new Intent(ExistRollNames.this, MainActivity.class);
+                            Bundle bundle = new Bundle();
+                            bundle.putString("sAtt", sAtt[position]);
+                            bundle.putString("sDateTime", sDateTime[position]);
+                            intent.putExtras(bundle);
+                            startActivity(intent);
+
+
+                        }
+                    });
+
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
+
+        } else {
+
+
+            Cursor cursor = dataBaseHelper.getAllDataFromRollNameIndex();
+            while (cursor.moveToNext()) {
+                stringAttFor.add(cursor.getString(0));
+                stringDate.add(cursor.getString(1));
+            }
+
+            final String[] sAtt = stringAttFor.toArray(new String[stringAttFor.size()]);
+            final String[] sDateTime = stringDate.toArray(new String[stringDate.size()]);
+            CustomAdupterForAttendanceTypes customAdupterForAttendanceTypes = new CustomAdupterForAttendanceTypes(ExistRollNames.this, sAtt, sDateTime);
+            listViewExistAttTypes.setAdapter(customAdupterForAttendanceTypes);
+            listViewExistAttTypes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Intent intent = new Intent(ExistRollNames.this, MainActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("sAtt", sAtt[position]);
+                    bundle.putString("sDateTime", sDateTime[position]);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+
+
+                }
+            });
 
         }
-    });
-
-
 
     }
 
@@ -81,10 +159,40 @@ public class ExistRollNames extends AppCompatActivity {
 
     }
 
-    private void initOthers() {
-  dataBaseHelper=new DataBaseHelper(this);
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(myBroadcastReceiver);
+    }
 
-myBroadcastReceiver=new MyBroadcastReceiver();
+    private void initOthers() {
+
+
+
+       databaseReferenceForRollNameIndex = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL + emailMobilePassRollnameIndex);
+        myBroadcastReceiver = new MyBroadcastReceiver();
+    }
+
+    private void getWholeInformation() {
+        dataBaseHelper = new DataBaseHelper(this);
+        sqLiteDatabase = dataBaseHelper.getWritableDatabase();
+
+        Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM " + WHOLE_INFORMATION_TABLE, null);
+
+        if (cursor.getCount() != 0) {
+
+
+            while (cursor.moveToNext()) {
+
+                emailMobilePassRollnameIndex = cursor.getString(0);
+                emailMobilePassRollname = cursor.getString(1);
+                emailMobilePassAttIndex = cursor.getString(2);
+                emailMobilePassAtt = cursor.getString(3);
+                emailMobilePassTest = cursor.getString(4);
+                emailMobilePass = cursor.getString(5);
+
+            }
+        }
     }
 
     private void initView() {
@@ -139,13 +247,8 @@ myBroadcastReceiver=new MyBroadcastReceiver();
         }
 
 
-
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        unregisterReceiver(myBroadcastReceiver);
-    }
+
 }
