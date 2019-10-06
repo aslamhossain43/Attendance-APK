@@ -16,7 +16,7 @@
         android:textStyle="bold"
         android:gravity="center"
         android:background="#673AB7"
-        android:text=" Final Calculation"
+        android:text=" Percentage"
         android:padding="10sp"
         android:textColor="#ffff"
         android:textSize="20sp"

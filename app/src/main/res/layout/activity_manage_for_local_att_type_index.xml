@@ -12,7 +12,7 @@
         android:textStyle="bold"
         android:gravity="center"
         android:background="#673AB7"
-        android:text=" Manage Attendance Type Index"
+        android:text=" Create another attendance type from existence"
         android:padding="10sp"
         android:textSize="20sp"
         />

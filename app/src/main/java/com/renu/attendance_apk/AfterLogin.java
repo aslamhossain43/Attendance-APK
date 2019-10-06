@@ -18,7 +18,7 @@ import android.widget.Button;
 public class AfterLogin extends AppCompatActivity {
     private int currentApiVersion;
     //-----------------
-    private Button createNewBtn, exist;
+    private Button createNewBtn,createfromAnotherBtn, exist;
     private MyBroadcastReceiver myBroadcastReceiver;
     private DataBaseHelper dataBaseHelper;
 
@@ -61,6 +61,13 @@ public class AfterLogin extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        createfromAnotherBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(AfterLogin.this, ManageForLocalAttTypeIndex.class);
+                startActivity(intent);
+            }
+        });
         exist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -100,6 +107,7 @@ public class AfterLogin extends AppCompatActivity {
 
     private void initView() {
         createNewBtn = findViewById(R.id.createNewBtnId);
+        createfromAnotherBtn=findViewById(R.id.createfromAnotherBtnId);
         exist = findViewById(R.id.existBtnId);
 
     }

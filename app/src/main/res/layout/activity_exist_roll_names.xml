@@ -17,7 +17,7 @@
         android:textStyle="bold"
         android:gravity="center"
         android:background="#673AB7"
-        android:text=" Your Created Attendance Types"
+        android:text=" Exist attendance types"
         android:padding="10sp"
         android:textColor="#ffff"
         android:textSize="20sp"

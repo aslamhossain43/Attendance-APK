@@ -12,7 +12,7 @@
         android:textStyle="bold"
         android:gravity="center"
         android:background="#673AB7"
-        android:text=" Manage Person's Information"
+        android:text=" Manage person's information"
         android:padding="10sp"
         android:textSize="20sp"
         />

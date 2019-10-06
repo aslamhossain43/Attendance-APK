@@ -75,7 +75,7 @@ public class UpdateForManageAttIndex extends AppCompatActivity {
                 databaseReferenceForattendancesIndex.child(dateTime).child("attendanceFor").getRef().setValue(index);
                 Intent intent = new Intent(UpdateForManageAttIndex.this, ManageForAttIndex.class);
                 startActivity(intent);
-                Toast.makeText(UpdateForManageAttIndex.this, "Update Success !", Toast.LENGTH_SHORT).show();
+                Toast.makeText(UpdateForManageAttIndex.this, "Update success !", Toast.LENGTH_SHORT).show();
             }
         });
 

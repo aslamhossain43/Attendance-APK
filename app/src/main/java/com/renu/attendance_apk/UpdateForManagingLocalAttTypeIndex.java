@@ -135,7 +135,7 @@ public class UpdateForManagingLocalAttTypeIndex extends AppCompatActivity {
 
                     Intent intent = new Intent(UpdateForManagingLocalAttTypeIndex.this, ManageForLocalAttTypeIndex.class);
                     startActivity(intent);
-                    Toast.makeText(UpdateForManagingLocalAttTypeIndex.this, "Update Success !", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(UpdateForManagingLocalAttTypeIndex.this, "Update success !", Toast.LENGTH_SHORT).show();
                 } catch (Exception e) {
                     Toast.makeText(UpdateForManagingLocalAttTypeIndex.this, " Processing....", Toast.LENGTH_SHORT).show();
 

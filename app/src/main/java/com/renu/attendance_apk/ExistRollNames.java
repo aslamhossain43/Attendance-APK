@@ -30,7 +30,7 @@ public class ExistRollNames extends AppCompatActivity {
 
     DataBaseHelper dataBaseHelper;
     SQLiteDatabase sqLiteDatabase;
-    DatabaseReference databaseReferenceForRollNameIndex;
+    DatabaseReference databaseReferenceForRollNameIndex,databaseReferenceForRollName;
     private ListView listViewExistAttTypes;
     private MyBroadcastReceiver myBroadcastReceiver;
 
@@ -111,18 +111,39 @@ public class ExistRollNames extends AppCompatActivity {
                         listViewExistAttTypes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                             @Override
                             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                Intent intent = new Intent(ExistRollNames.this, MainActivity.class);
-                                Bundle bundle = new Bundle();
-                                bundle.putString("sAtt", sAtt[position]);
-                                bundle.putString("sDateTime", sDateTime[position]);
-                                intent.putExtras(bundle);
-                                startActivity(intent);
+
+                                final String sAttFor=sAtt[position];
+                                final String sdate=sDateTime[position];
+
+                                databaseReferenceForRollName.addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                                        if (dataSnapshot.exists()){
+                                            Intent intent = new Intent(ExistRollNames.this, MainActivity.class);
+                                            Bundle bundle = new Bundle();
+                                            bundle.putString("sAtt", sAttFor);
+                                            bundle.putString("sDateTime", sdate);
+                                            intent.putExtras(bundle);
+
+                                            startActivity(intent);
+
+                                        }else {
+                                            Toast.makeText(ExistRollNames.this, "Persons not available !", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                    }
+                                });
 
 
                             }
                         });
                     } catch (Exception e) {
-                        Toast.makeText(ExistRollNames.this, "Persons not available !", Toast.LENGTH_SHORT).show();
+
                     }
 
                 }
@@ -170,6 +191,7 @@ public class ExistRollNames extends AppCompatActivity {
 
 
         databaseReferenceForRollNameIndex = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL + emailMobilePassRollnameIndex);
+        databaseReferenceForRollName = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL + emailMobilePassRollname);
         myBroadcastReceiver = new MyBroadcastReceiver();
     }
 

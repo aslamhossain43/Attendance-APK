@@ -33,7 +33,7 @@
             android:textColor="#2196F3"
             android:textStyle="italic"
             android:textSize="20sp"
-            android:text="Please Manage All Values Carefully !!!"
+            android:text="Please manage all values carefully !!!"
             android:gravity="center"/>
 
 
@@ -53,7 +53,7 @@
         android:layout_height="wrap_content"
         android:textStyle="italic"
         android:layout_marginBottom="5dp"
-        android:text="Manage Person's Information Index"
+        android:text="Create another attendance type from existence"
         android:textSize="20dp"
         android:textColor="#ffff"
         android:gravity="center"
@@ -115,7 +115,7 @@
 
             android:textColor="#ffff"
             android:layout_marginBottom="5dp"
-            android:text="Manage Attendance Index"
+            android:text="Manage your daily attendance"
             android:textSize="20dp"
             android:gravity="center"
             />
@@ -180,7 +180,7 @@
 
             android:textColor="#ffff"
             android:layout_marginBottom="5dp"
-            android:text="Delete All Person's Informations"
+            android:text="Reset your application"
             android:textSize="20dp"
             android:gravity="center"
             />

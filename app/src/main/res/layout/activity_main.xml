@@ -28,7 +28,7 @@
                 android:textColor="#ffff"
                 android:padding="5sp"
                 android:gravity="center"
-                android:text="Start Attendance !" />
+                android:text="Count attendance !" />
 
 
 

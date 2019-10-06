@@ -168,7 +168,6 @@ public class ShowPercentage extends AppCompatActivity {
 
                     } catch (Exception e) {
 
-                        Toast.makeText(ShowPercentage.this, "Persons insufficient !", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(ShowPercentage.this, Percentage.class);
                         startActivity(intent);
 

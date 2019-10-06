@@ -108,74 +108,7 @@ public class SpecificAttendancesFromFirebase extends AppCompatActivity {
                         alertDialogBuilder.setMessage("ID : " + specificFinalRoll[position] + "\n" + "Name : "
                                 + specificFinalName[position] + "\n" + "P/A/Off : " + specificFinalAttendances[position]);
 
-                        /*alertDialogBuilder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
 
-
-                                Query qForAtt = databaseReferenceForattendances;
-                                qForAtt.addListenerForSingleValueEvent(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                        dataBaseHelper.updatePercentageWhenDeleteOne(rollList.get(position), attFromFirebaseIndex,
-                                                dataSnapshot.child("attendanceList").child("" + position).getValue().toString());
-                                        new BackgroundUpdate().handlePercentage(SpecificAttendancesFromFirebase.this);
-
-
-                                        rollList.remove(position);
-                                        nameList.remove(position);
-                                        attList.remove(position);
-                                        dtList.remove(position);
-                                        if (rollList.size() < 1) {
-                                            Query qForAttIndex = databaseReferenceForattendancesIndex;
-                                            qForAttIndex.addListenerForSingleValueEvent(new ValueEventListener() {
-                                                @Override
-                                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                                    dataSnapshot.getRef().removeValue();
-                                                }
-
-                                                @Override
-                                                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                                }
-                                            });
-                                            Toast.makeText(SpecificAttendancesFromFirebase.this, "You Have Deleted Successfully !", Toast.LENGTH_SHORT).show();
-
-                                        }
-                                        if (rollList.size() > 0) {
-
-                                            dataSnapshot.child("rollList").getRef().removeValue();
-                                            dataSnapshot.child("nameList").getRef().removeValue();
-                                            dataSnapshot.child("dateTimeList").getRef().removeValue();
-                                            dataSnapshot.child("attendanceList").getRef().removeValue();
-
-                                            AttendanceModel attendanceModel = new AttendanceModel(rollList, nameList, attList, dtList);
-
-                                            databaseReferenceForattendances.setValue(attendanceModel);
-                                            Toast.makeText(SpecificAttendancesFromFirebase.this, "You Have Deleted Successfully !", Toast.LENGTH_SHORT).show();
-                                        } else {
-
-                                            dataSnapshot.getRef().removeValue();
-
-                                            Intent intent = new Intent(SpecificAttendancesFromFirebase.this, AttendancesIndex.class);
-                                            startActivity(intent);
-                                            Toast.makeText(SpecificAttendancesFromFirebase.this, "You Have Deleted Successfully !", Toast.LENGTH_SHORT).show();
-
-                                        }
-
-
-                                    }
-
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                                        databaseError.toException();
-                                    }
-                                });
-
-                            }
-                        });
-
-                        */
                         alertDialogBuilder.setNegativeButton("Edit", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -276,7 +209,6 @@ public class SpecificAttendancesFromFirebase extends AppCompatActivity {
         myBroadcastReceiver = new MyBroadcastReceiver();
 
     }
-
 
 
     private void initView() {

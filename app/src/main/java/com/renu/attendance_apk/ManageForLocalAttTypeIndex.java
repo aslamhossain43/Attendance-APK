@@ -98,7 +98,7 @@ listViewHandleForLocalAttIndex();
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
 
-                        alertDialogBuilder.setMessage("Index Name : " + sAtt[position] + "\nDate : " + sDateTime[position]);
+                        alertDialogBuilder.setMessage("Index name : " + sAtt[position] + "\nDate : " + sDateTime[position]);
                         alertDialogBuilder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -110,7 +110,7 @@ listViewHandleForLocalAttIndex();
 
                                 finish();
                                 startActivity(getIntent());
-                                Toast.makeText(ManageForLocalAttTypeIndex.this, "You Have Deleted Successfully !", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(ManageForLocalAttTypeIndex.this, "You have deleted successfully !", Toast.LENGTH_SHORT).show();
 
 
                             }

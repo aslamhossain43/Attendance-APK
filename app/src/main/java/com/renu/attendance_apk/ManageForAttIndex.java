@@ -134,7 +134,7 @@ public class ManageForAttIndex extends AppCompatActivity {
                         //Load activity
                         finish();
                         startActivity(getIntent());
-                        Toast.makeText(ManageForAttIndex.this, "You Have Deleted Successfully !", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ManageForAttIndex.this, "You have deleted successfully !", Toast.LENGTH_SHORT).show();
                     }
                 });
 

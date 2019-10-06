@@ -128,6 +128,7 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
 
     private void handleAttAndAttIndex(Context context) {
 
+
         DataBaseHelper dataBaseHelper = new DataBaseHelper(context);
         SQLiteDatabase sqLiteDatabase = dataBaseHelper.getWritableDatabase();
 
@@ -140,7 +141,7 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
                 String attendanceFor = cursor.getString(1);
 
                 AttendanceIndexModel attendanceIndexModel = new AttendanceIndexModel(dateTime, attendanceFor);
-                databaseReferenceForattendancesIndex.child(dateTime).setValue(attendanceIndexModel);
+                databaseReferenceForattendancesIndex.child(dateTime).getRef().setValue(attendanceIndexModel);
                 //--------------------------
                 String q = "SELECT * FROM " + ATTENDANCES_TABLE + " WHERE " + ATTENDANCES_TIMES + " = '" + dateTime + "'";
 
@@ -152,8 +153,8 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
                     dateTimeList.add(cursor1.getString(3));
 
                 }
-                AttendanceModel attendanceModel = new AttendanceModel(rollListForRoll, nameListForRoll, attendancesListForRoll, dateTimeListForRoll);
-                databaseReferenceForattendances.child(dateTime).setValue(attendanceModel);
+                AttendanceModel attendanceModel = new AttendanceModel(rollList, nameList, attendancesList, dateTimeList);
+                databaseReferenceForattendances.child(dateTime).getRef().setValue(attendanceModel);
                 rollList.clear();
                 nameList.clear();
                 attendancesList.clear();
@@ -170,11 +171,10 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
                 cursor.close();
             sqLiteDatabase.close();
         }
-
     }
 
     private void initAll(Context context) {
-
+        Log.d("rr", "initAll: "+emailMobilePassAtt);
 
         databaseReferenceForattendancesIndex = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL + emailMobilePassAttIndex);
         databaseReferenceForattendances = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL + emailMobilePassAtt);

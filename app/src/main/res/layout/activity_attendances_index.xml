@@ -15,7 +15,7 @@
     android:textStyle="bold"
     android:gravity="center"
     android:background="#673AB7"
-    android:text="All Attendances From Server"
+    android:text="Daily counted attendances "
     android:padding="10sp"
     android:textColor="#ffff"
     android:textSize="20sp"

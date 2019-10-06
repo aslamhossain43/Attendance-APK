@@ -107,6 +107,10 @@ public class CreateNew2 extends AppCompatActivity {
                     databaseReferenceForRollNameIndex.child(dateTime).setValue(rollNameIndexModel);
                     RollNameModel rollNameModel = new RollNameModel(rollList, nameList, attForList, dateTimeList);
                     databaseReferenceForRollName.child(dateTime).setValue(rollNameModel);
+                    //go to local book
+                    Toast.makeText(CreateNew2.this, "Operation Success !", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(CreateNew2.this, ExistRollNames.class);
+                    startActivity(intent);
 
 
                 } else {
@@ -115,14 +119,14 @@ public class CreateNew2 extends AppCompatActivity {
 
                     dataBaseHelper.insertDataInToRollNameIndexTableFirebase(dateTime, attFor);
                     dataBaseHelper.insertRollNameIntoLocalStorageFirebase(rollList, nameList, attForList, dateTimeList);
+                    //go to local book
+                    Toast.makeText(CreateNew2.this, "Operation Success !", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(CreateNew2.this, ExistRollNames.class);
+                    startActivity(intent);
 
 
                 }
 
-                //go to local book
-                Intent intent = new Intent(CreateNew2.this, ExistRollNames.class);
-                startActivity(intent);
-                Toast.makeText(CreateNew2.this, "Operation Success !", Toast.LENGTH_SHORT).show();
 
             }
         });

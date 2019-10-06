@@ -7,8 +7,8 @@
     <string name="confirm_password">Confirm Password</string>
     <string name="register">Register</string>
     <string name="alreadyregistered">Already Registered ?</string>
-    <string name="exist">Exist</string>
-    <string name="create_new">Create New</string>
+    <string name="exist">Already exist</string>
+    <string name="create_new">Create new</string>
     <string name="info_text">
 
         This Attendance APK is usable for any attendance purpose like school

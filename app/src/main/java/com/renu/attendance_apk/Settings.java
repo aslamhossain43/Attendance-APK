@@ -74,7 +74,7 @@ public class Settings extends AppCompatActivity {
         btnAllPersonInfoIndex.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                alertDialogBuilder.setMessage("Do You Want To Delete All Information From Your App ?");
+                alertDialogBuilder.setMessage("Do you want to delete all information from your application ?");
                 alertDialogBuilder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -91,7 +91,7 @@ public class Settings extends AppCompatActivity {
                             dataBaseHelper.deleteAllValuesFromAllTables();
                             Intent intent = new Intent(Settings.this, RegisterActivity.class);
                             startActivity(intent);
-                            Toast.makeText(Settings.this, "You Have Deleted All Information From Your App !", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(Settings.this, "You have deleted all information from your application !", Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(Settings.this, "Connect internet !", Toast.LENGTH_SHORT).show();
                         }
@@ -115,7 +115,7 @@ public class Settings extends AppCompatActivity {
             public void onClick(View v) {
 
 
-                alertDialogBuilder.setMessage("Do You Want To Delete All Attendances From Your App ?");
+                alertDialogBuilder.setMessage("Do you want to delete all attendances from your application ?");
                 alertDialogBuilder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -130,7 +130,7 @@ public class Settings extends AppCompatActivity {
                             dataBaseHelper.deleteAllFromPercentage();
                             Intent intent = new Intent(Settings.this, ExistRollNames.class);
                             startActivity(intent);
-                            Toast.makeText(Settings.this, "You Have Deleted All Attendances From Your App !", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(Settings.this, "You have deleted all attendances from your app !", Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(Settings.this, "Connect network !", Toast.LENGTH_SHORT).show();
                         }
