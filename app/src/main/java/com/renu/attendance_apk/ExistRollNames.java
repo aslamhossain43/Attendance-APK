@@ -1,20 +1,20 @@
 package com.renu.attendance_apk;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -56,20 +56,30 @@ public class ExistRollNames extends AppCompatActivity {
         handleRollNameIndex();
 
     }
+
+    //----------------------------
     @Override
     protected void onResume() {
         super.onResume();
         IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
-
         registerReceiver(myBroadcastReceiver, intentFilter);
-        unregisterReceiver(myBroadcastReceiver);
 
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(myBroadcastReceiver);
+
+
+    }
+
+    //----------------------------
 
     private void handleRollNameIndex() {
 
 
-        final List<RollNameIndexModel>rollNameIndexModelList=new ArrayList<>();
+        final List<RollNameIndexModel> rollNameIndexModelList = new ArrayList<>();
         final List<String> stringAttFor = new ArrayList<>();
         final List<String> stringDate = new ArrayList<>();
         if (Network.isNetworkAvailable(this)) {
@@ -78,45 +88,42 @@ public class ExistRollNames extends AppCompatActivity {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
+                    try {
+                        for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
 
 
-
-
-                    for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-
-
-
-                        RollNameIndexModel rollNameIndexModel = dataSnapshot1.getValue(RollNameIndexModel.class);
-                       rollNameIndexModelList.add(rollNameIndexModel);
-
-
-
-                    }
-                    for (RollNameIndexModel rollNameIndexModel:rollNameIndexModelList){
-                        stringAttFor.add(rollNameIndexModel.getAttendanceFor());
-                        stringDate.add(rollNameIndexModel.getDateTime());
-
-                    }
-
-
-                    final String[] sAtt = stringAttFor.toArray(new String[stringAttFor.size()]);
-                    final String[] sDateTime = stringDate.toArray(new String[stringDate.size()]);
-                    CustomAdupterForAttendanceTypes customAdupterForAttendanceTypes = new CustomAdupterForAttendanceTypes(ExistRollNames.this, sAtt, sDateTime);
-                    listViewExistAttTypes.setAdapter(customAdupterForAttendanceTypes);
-                    listViewExistAttTypes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                            Intent intent = new Intent(ExistRollNames.this, MainActivity.class);
-                            Bundle bundle = new Bundle();
-                            bundle.putString("sAtt", sAtt[position]);
-                            bundle.putString("sDateTime", sDateTime[position]);
-                            intent.putExtras(bundle);
-                            startActivity(intent);
+                            RollNameIndexModel rollNameIndexModel = dataSnapshot1.getValue(RollNameIndexModel.class);
+                            rollNameIndexModelList.add(rollNameIndexModel);
 
 
                         }
-                    });
+                        for (RollNameIndexModel rollNameIndexModel : rollNameIndexModelList) {
+                            stringAttFor.add(rollNameIndexModel.getAttendanceFor());
+                            stringDate.add(rollNameIndexModel.getDateTime());
 
+                        }
+
+
+                        final String[] sAtt = stringAttFor.toArray(new String[stringAttFor.size()]);
+                        final String[] sDateTime = stringDate.toArray(new String[stringDate.size()]);
+                        CustomAdupterForAttendanceTypes customAdupterForAttendanceTypes = new CustomAdupterForAttendanceTypes(ExistRollNames.this, sAtt, sDateTime);
+                        listViewExistAttTypes.setAdapter(customAdupterForAttendanceTypes);
+                        listViewExistAttTypes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                Intent intent = new Intent(ExistRollNames.this, MainActivity.class);
+                                Bundle bundle = new Bundle();
+                                bundle.putString("sAtt", sAtt[position]);
+                                bundle.putString("sDateTime", sDateTime[position]);
+                                intent.putExtras(bundle);
+                                startActivity(intent);
+
+
+                            }
+                        });
+                    } catch (Exception e) {
+                        Toast.makeText(ExistRollNames.this, "Persons not available !", Toast.LENGTH_SHORT).show();
+                    }
 
                 }
 
@@ -159,12 +166,10 @@ public class ExistRollNames extends AppCompatActivity {
     }
 
 
-
     private void initOthers() {
 
 
-
-       databaseReferenceForRollNameIndex = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL + emailMobilePassRollnameIndex);
+        databaseReferenceForRollNameIndex = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL + emailMobilePassRollnameIndex);
         myBroadcastReceiver = new MyBroadcastReceiver();
     }
 

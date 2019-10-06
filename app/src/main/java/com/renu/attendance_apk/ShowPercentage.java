@@ -5,7 +5,6 @@ import android.content.IntentFilter;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -72,26 +71,33 @@ public class ShowPercentage extends AppCompatActivity {
 
 
     }
-
+//-----------------------------------------------------
 
     @Override
     protected void onResume() {
         super.onResume();
         IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
-
         registerReceiver(myBroadcastReceiver, intentFilter);
-        unregisterReceiver(myBroadcastReceiver);
 
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        this.unregisterReceiver(myBroadcastReceiver);
+
+
+    }
+
+
+    //------------------------------------------------------------
     private void getValuesFromPercentageTable() {
         if (Network.isNetworkAvailable(ShowPercentage.this)) {
 
 
-
             databaseReferenceForPercentage.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
 
                     try {
@@ -170,13 +176,13 @@ public class ShowPercentage extends AppCompatActivity {
                     }
 
 
-            }
+                }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            }
-        });
+                }
+            });
 
         } else {
             Toast.makeText(ShowPercentage.this, "Connect internet !", Toast.LENGTH_SHORT).show();
@@ -203,12 +209,13 @@ public class ShowPercentage extends AppCompatActivity {
 
 
     private void getWholeInformation() {
-        dataBaseHelper = new DataBaseHelper(this);
-        sqLiteDatabase = dataBaseHelper.getWritableDatabase();
+
+
+        DataBaseHelper dataBaseHelper = new DataBaseHelper(this);
+        SQLiteDatabase sqLiteDatabase = dataBaseHelper.getWritableDatabase();
         Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM " + WHOLE_INFORMATION_TABLE, null);
 
-        if (cursor.getCount() != 0) {
-
+        try {
 
             while (cursor.moveToNext()) {
 
@@ -220,6 +227,13 @@ public class ShowPercentage extends AppCompatActivity {
                 emailMobilePass = cursor.getString(5);
 
             }
+            sqLiteDatabase.close();
+        } catch (Exception e) {
+
+        } finally {
+            if (cursor != null && !cursor.isClosed())
+                cursor.close();
+            sqLiteDatabase.close();
         }
     }
 
@@ -247,33 +261,50 @@ public class ShowPercentage extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.homeId) {
             Intent intent = new Intent(this, AfterLogin.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+
             startActivity(intent);
 
         }
         if (item.getItemId() == R.id.infoId) {
             Intent intent = new Intent(this, Informations.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+
             startActivity(intent);
 
         }
 
         if (item.getItemId() == R.id.listId) {
             Intent intent = new Intent(this, AttendancesIndex.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+
             startActivity(intent);
 
         }
         if (item.getItemId() == R.id.openId) {
             Intent intent = new Intent(this, CreateNew1.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+
             startActivity(intent);
 
         }
         if (item.getItemId() == R.id.localAttendances) {
             Intent intent = new Intent(this, ExistRollNames.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+
+            startActivity(intent);
+
+        }
+        if (item.getItemId() == R.id.summary) {
+            Intent intent = new Intent(this, Percentage.class);
             startActivity(intent);
 
         }
 
         if (item.getItemId() == R.id.settings) {
             Intent intent = new Intent(this, Settings.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+
             startActivity(intent);
 
         }

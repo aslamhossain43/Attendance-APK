@@ -8,8 +8,9 @@
         android:label=""
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:configChanges="orientation|screenSize"
         android:theme="@style/AppTheme">
-        <activity android:name=".ShowPercentage"></activity>
+        <activity android:name=".ShowPercentage"/>
         <activity android:name=".Percentage" />
         <activity android:name=".Informations" />
         <activity android:name=".UpdateForAttPerson" />

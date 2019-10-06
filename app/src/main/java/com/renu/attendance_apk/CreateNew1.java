@@ -70,17 +70,23 @@ public class CreateNew1 extends AppCompatActivity {
     private void initOthers() {
         myBroadcastReceiver = new MyBroadcastReceiver();
     }
+//---------------------------
+@Override
+protected void onResume() {
+    super.onResume();
+    IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
+    registerReceiver(myBroadcastReceiver, intentFilter);
+
+}
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
-
-        registerReceiver(myBroadcastReceiver, intentFilter);
+    protected void onPause() {
+        super.onPause();
         unregisterReceiver(myBroadcastReceiver);
 
-    }
 
+    }
+//--------------------
     private void initView() {
 
         editTextAttFor = findViewById(R.id.editTextAttForId);

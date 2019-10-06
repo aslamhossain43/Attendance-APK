@@ -409,9 +409,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     }
 
 
-    public boolean deleteSpecificPersonByRoll(String roll) {
+    public boolean deleteSpecificPersonByRoll(String roll,String attFor) {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
-        return sqLiteDatabase.delete(ROLL_NAME_TABLE, ROLL_FOR_ROLLNAME + "=?", new String[]{roll}) > 0;
+        return sqLiteDatabase.delete(ROLL_NAME_TABLE, ROLL_FOR_ROLLNAME + "=? AND "+ATT_FOR_ROLLNAME+"=?", new String[]{roll,attFor}) > 0;
     }
 
 
@@ -487,8 +487,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             sqLiteDatabase.execSQL(DROP_TEST_TABLE);
             sqLiteDatabase.execSQL(CREATE_TEST_TABLE);
 
-            sqLiteDatabase.execSQL(DROP_REGISTER_TABLE);
-            sqLiteDatabase.execSQL(CREATE_REGISTER_TABLE);
+
 
 
         } catch (Exception e) {
@@ -682,7 +681,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         contentValues.put(PERCENTAGE_PERCENT, finalPercent);
 
         sqLiteDatabase.update(TEST_TABLE, contentValues, PERCENTAGE_ATT_FOR + "='" + attFor + "' AND " + PERCENTAGE_ROLL + "='" + oldRoll + "'", null);
-
         return true;
 
 

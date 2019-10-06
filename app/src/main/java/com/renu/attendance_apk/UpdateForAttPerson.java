@@ -19,13 +19,36 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class UpdateForAttPerson extends AppCompatActivity {
+
+
+
+
+    private static final String FIREBASE_URL = "https://attendance-apk.firebaseio.com/";
+
+    DatabaseReference databaseReferenceForRollnameIndex, databaseReferenceForRollName, databaseReferenceForPercentage;
+
+
+    private static final String WHOLE_INFORMATION_TABLE = "wholeinformations";
+    private String emailMobilePassRollnameIndex = null;
+    private String emailMobilePassRollname = null;
+    private String emailMobilePassAttIndex = null;
+    private String emailMobilePassAtt = null;
+    private String emailMobilePassTest = null;
+    private String emailMobilePass = null;
+
+
+
+
     private LinearLayout updateParentLinearLayoutForManageAttId;
     private EditText editUpdateForManagePersonNameId, editUpdateForManagePersonRollId;
-    private String roll, name, dateTime, index;
+    private String roll, name, dateTime, index,position;
     private Button updateButton;
     private DataBaseHelper dataBaseHelper;
     SQLiteDatabase sqLiteDatabase;
@@ -46,6 +69,7 @@ public class UpdateForAttPerson extends AppCompatActivity {
 
         getIntentValues();
         initView();
+        getWholeInformation();
         initOthers();
 
 
@@ -64,7 +88,14 @@ public class UpdateForAttPerson extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String rol = editUpdateForManagePersonRollId.getText().toString().trim();
-                String name = editUpdateForManagePersonNameId.getText().toString().trim();
+                String nam = editUpdateForManagePersonNameId.getText().toString().trim();
+
+
+databaseReferenceForRollName.child(dateTime).child("rollNo").child(position).getRef().setValue(rol);
+databaseReferenceForRollName.child(dateTime).child("name").child(position).getRef().setValue(nam);
+
+
+
 
                 //--------------------------
 
@@ -119,10 +150,43 @@ public class UpdateForAttPerson extends AppCompatActivity {
 
     }
 
+    private void getWholeInformation() {
+
+
+        DataBaseHelper dataBaseHelper = new DataBaseHelper(this);
+        SQLiteDatabase sqLiteDatabase = dataBaseHelper.getWritableDatabase();
+        Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM " + WHOLE_INFORMATION_TABLE, null);
+
+        try {
+
+            while (cursor.moveToNext()) {
+
+                emailMobilePassRollnameIndex = cursor.getString(0);
+                emailMobilePassRollname = cursor.getString(1);
+                emailMobilePassAttIndex = cursor.getString(2);
+                emailMobilePassAtt = cursor.getString(3);
+                emailMobilePassTest = cursor.getString(4);
+                emailMobilePass = cursor.getString(5);
+
+            }
+            sqLiteDatabase.close();
+        } catch (Exception e) {
+
+        } finally {
+            if (cursor != null && !cursor.isClosed())
+                cursor.close();
+            sqLiteDatabase.close();
+        }
+    }
     private void initOthers() {
         dataBaseHelper = new DataBaseHelper(this);
         sqLiteDatabase = dataBaseHelper.getWritableDatabase();
         myBroadcastReceiver = new MyBroadcastReceiver();
+        databaseReferenceForPercentage = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL + emailMobilePassTest);
+
+        databaseReferenceForRollnameIndex = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL + emailMobilePassRollnameIndex);
+        databaseReferenceForRollName = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL + emailMobilePassRollname);
+
 
     }
 
@@ -130,9 +194,15 @@ public class UpdateForAttPerson extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
-
         registerReceiver(myBroadcastReceiver, intentFilter);
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
         unregisterReceiver(myBroadcastReceiver);
+
 
     }
 
@@ -150,10 +220,7 @@ public class UpdateForAttPerson extends AppCompatActivity {
         name = bundle.getString("name");
         dateTime = bundle.getString("dateTime");
         index = bundle.getString("attFor");
-        Log.d("dt", "getIntentValues: Update DATE :" + dateTime);
-        Log.d("index", "getIntentValues: Update INDEX :" + index);
-
-
+        position=bundle.getString("position");
     }
 
     @Override
@@ -193,6 +260,11 @@ public class UpdateForAttPerson extends AppCompatActivity {
         }
         if (item.getItemId() == R.id.localAttendances) {
             Intent intent = new Intent(this, ExistRollNames.class);
+            startActivity(intent);
+
+        }
+        if (item.getItemId() == R.id.summary) {
+            Intent intent = new Intent(this, Percentage.class);
             startActivity(intent);
 
         }

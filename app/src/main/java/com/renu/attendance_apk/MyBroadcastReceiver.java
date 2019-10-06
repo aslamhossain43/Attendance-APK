@@ -56,74 +56,33 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        initAll(context);
-        getWholeInformation();
 
-        databaseReferenceForattendancesIndex = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL + emailMobilePassAttIndex);
-        databaseReferenceForattendances = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL + emailMobilePassAtt);
-
-        databaseReferenceForRollNameIndex = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL + emailMobilePassRollnameIndex);
-        databaseReferenceForRollName = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL + emailMobilePassRollname);
+        if (intent.getAction().equals("android.net.conn.CONNECTIVITY_CHANGE")) {
 
 
-        databaseReferenceForPercentage = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL + emailMobilePassTest);
+            if (Network.isNetworkAvailable(context)) {
 
 
-        if (Network.isNetworkAvailable(context)) {
-
-            handleAttAndAttIndex(context);
-            handleRollnameAndRollnameIndex(context);
-            handlePercentage(context);
-
-        }
-    }
-
-    private void handlePercentage(Context context) {
-        databaseReferenceForPercentage.getRef().removeValue();
-
-
-        Cursor cursor = dataBaseHelper.getAllDataFromRollNameIndex();
-        Log.d("rr", "handlePercentage: =============percentage handle");
-        if (cursor.getCount() != 0) {
-
-
-            while (cursor.moveToNext()) {
-                String attendanceFor = cursor.getString(0);
-                String dateTime = cursor.getString(1);
-
-                String q = "SELECT * FROM " + TEST_TABLE + " WHERE " + PERCENTAGE_ATT_FOR + " = '" + attendanceFor + "'";
-
-                Cursor cursor1 = sqLiteDatabase.rawQuery(q, null);
-                while (cursor1.moveToNext()) {
-                    attListForTest.add(cursor1.getString(0));
-                    rollListForTest.add(cursor1.getString(1));
-                    dayList.add(cursor1.getInt(2));
-                    pList.add(cursor1.getInt(3));
-                    aList.add(cursor1.getInt(4));
-                    percentList.add(cursor1.getInt(5));
-
-                }
-
-                PercentageModel percentageModel = new PercentageModel(attListForTest, rollListForTest, dayList, pList, aList, percentList);
-                databaseReferenceForPercentage.child(attendanceFor).getRef().setValue(percentageModel);
-
-                attListForTest.clear();
-                rollListForTest.clear();
-                dayList.clear();
-                pList.clear();
-                percentList.clear();
+                getWholeInformation(context);
+                initAll(context);
+                handleAttAndAttIndex(context);
+                handleRollnameAndRollnameIndex(context);
 
 
             }
-        }
 
+
+        }
     }
 
     private void handleRollnameAndRollnameIndex(Context context) {
 
 
+        DataBaseHelper dataBaseHelper = new DataBaseHelper(context);
+        SQLiteDatabase sqLiteDatabase = dataBaseHelper.getWritableDatabase();
+
         Cursor cursor = dataBaseHelper.getAllDataFromRollNameIndexFirebase();
-        if (cursor.getCount() != 0) {
+        try {
 
 
             while (cursor.moveToNext()) {
@@ -156,15 +115,24 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
             }
 
             dataBaseHelper.delete_rollname_And_IndexFirebase();
+        } catch (Exception e) {
+
+        } finally {
+            if (cursor != null && !cursor.isClosed())
+                cursor.close();
+            sqLiteDatabase.close();
         }
+
 
     }
 
     private void handleAttAndAttIndex(Context context) {
 
+        DataBaseHelper dataBaseHelper = new DataBaseHelper(context);
+        SQLiteDatabase sqLiteDatabase = dataBaseHelper.getWritableDatabase();
 
         Cursor cursor = dataBaseHelper.getAllDataFromAttendancesIndex();
-        if (cursor.getCount() != 0) {
+        try {
 
 
             while (cursor.moveToNext()) {
@@ -195,15 +163,25 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
             }
 
             dataBaseHelper.delete_Att_And_Index();
+        } catch (Exception e) {
+
+        } finally {
+            if (cursor != null && !cursor.isClosed())
+                cursor.close();
+            sqLiteDatabase.close();
         }
 
     }
 
     private void initAll(Context context) {
 
-        dataBaseHelper = new DataBaseHelper(context);
 
-        sqLiteDatabase = dataBaseHelper.getWritableDatabase();
+        databaseReferenceForattendancesIndex = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL + emailMobilePassAttIndex);
+        databaseReferenceForattendances = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL + emailMobilePassAtt);
+
+        databaseReferenceForRollNameIndex = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL + emailMobilePassRollnameIndex);
+        databaseReferenceForRollName = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL + emailMobilePassRollname);
+
 
         rollList = new ArrayList<>();
         nameList = new ArrayList<>();
@@ -226,10 +204,14 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
 
     }
 
-    private void getWholeInformation() {
+    private void getWholeInformation(Context context) {
+
+
+        DataBaseHelper dataBaseHelper = new DataBaseHelper(context);
+        SQLiteDatabase sqLiteDatabase = dataBaseHelper.getWritableDatabase();
         Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM " + WHOLE_INFORMATION_TABLE, null);
 
-        if (cursor.getCount() != 0) {
+        try {
 
 
             while (cursor.moveToNext()) {
@@ -242,7 +224,16 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
                 emailMobilePass = cursor.getString(5);
 
             }
+        } catch (Exception e) {
+
+        } finally {
+            if (cursor != null && !cursor.isClosed())
+                cursor.close();
+            sqLiteDatabase.close();
+
         }
+
+
     }
 
 

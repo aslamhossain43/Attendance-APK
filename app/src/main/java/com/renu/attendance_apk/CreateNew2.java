@@ -143,14 +143,13 @@ public class CreateNew2 extends AppCompatActivity {
     }
 
     private void getWholeInformation() {
-        dataBaseHelper = new DataBaseHelper(this);
 
-        sqLiteDatabase = dataBaseHelper.getWritableDatabase();
 
+        DataBaseHelper dataBaseHelper = new DataBaseHelper(this);
+        SQLiteDatabase sqLiteDatabase = dataBaseHelper.getWritableDatabase();
         Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM " + WHOLE_INFORMATION_TABLE, null);
 
-        if (cursor.getCount() != 0) {
-
+        try {
 
             while (cursor.moveToNext()) {
 
@@ -162,6 +161,13 @@ public class CreateNew2 extends AppCompatActivity {
                 emailMobilePass = cursor.getString(5);
 
             }
+            sqLiteDatabase.close();
+        } catch (Exception e) {
+
+        } finally {
+            if (cursor != null && !cursor.isClosed())
+                cursor.close();
+            sqLiteDatabase.close();
         }
     }
 
@@ -211,16 +217,24 @@ public class CreateNew2 extends AppCompatActivity {
 
     }
 
+    //------------------------
     @Override
     protected void onResume() {
         super.onResume();
         IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
-
         registerReceiver(myBroadcastReceiver, intentFilter);
-        unregisterReceiver(myBroadcastReceiver);
 
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(myBroadcastReceiver);
+
+
+    }
+
+    //-----------------------------
     private void initView() {
         textViewAttFor = findViewById(R.id.textAttendancesForId);
         textViewPersonNo = findViewById(R.id.textPersonNoId);

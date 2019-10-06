@@ -108,7 +108,7 @@ public class SpecificAttendancesFromFirebase extends AppCompatActivity {
                         alertDialogBuilder.setMessage("ID : " + specificFinalRoll[position] + "\n" + "Name : "
                                 + specificFinalName[position] + "\n" + "P/A/Off : " + specificFinalAttendances[position]);
 
-                        alertDialogBuilder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                        /*alertDialogBuilder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
 
@@ -119,6 +119,7 @@ public class SpecificAttendancesFromFirebase extends AppCompatActivity {
                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                         dataBaseHelper.updatePercentageWhenDeleteOne(rollList.get(position), attFromFirebaseIndex,
                                                 dataSnapshot.child("attendanceList").child("" + position).getValue().toString());
+                                        new BackgroundUpdate().handlePercentage(SpecificAttendancesFromFirebase.this);
 
 
                                         rollList.remove(position);
@@ -173,6 +174,8 @@ public class SpecificAttendancesFromFirebase extends AppCompatActivity {
 
                             }
                         });
+
+                        */
                         alertDialogBuilder.setNegativeButton("Edit", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -216,9 +219,15 @@ public class SpecificAttendancesFromFirebase extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
-
         registerReceiver(myBroadcastReceiver, intentFilter);
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
         unregisterReceiver(myBroadcastReceiver);
+
 
     }
 

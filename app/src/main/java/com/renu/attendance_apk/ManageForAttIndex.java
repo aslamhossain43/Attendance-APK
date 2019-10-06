@@ -245,7 +245,11 @@ public class ManageForAttIndex extends AppCompatActivity {
             startActivity(intent);
 
         }
+        if (item.getItemId() == R.id.summary) {
+            Intent intent = new Intent(this, Percentage.class);
+            startActivity(intent);
 
+        }
         if (item.getItemId() == R.id.settings) {
             Intent intent = new Intent(this, Settings.class);
             startActivity(intent);

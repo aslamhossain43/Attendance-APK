@@ -78,16 +78,23 @@ public class Informations extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
+//------------------------------
     @Override
     protected void onResume() {
         super.onResume();
         IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
-
         registerReceiver(myBroadcastReceiver, intentFilter);
-        unregisterReceiver(myBroadcastReceiver);
 
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(myBroadcastReceiver);
+
+
+    }
+//-------------------------
 
 
 }

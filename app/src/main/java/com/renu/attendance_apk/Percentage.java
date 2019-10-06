@@ -29,7 +29,7 @@ public class Percentage extends AppCompatActivity {
 
     private static final String FIREBASE_URL = "https://attendance-apk.firebaseio.com/";
 
-    DatabaseReference databaseReferenceForRollnameIndex;
+    DatabaseReference databaseReferenceForRollnameIndex,databaseReferenceForPercentage;
 
     DataBaseHelper dataBaseHelper;
     SQLiteDatabase sqLiteDatabase;
@@ -60,25 +60,32 @@ public class Percentage extends AppCompatActivity {
 
 
     }
+
     @Override
     protected void onResume() {
         super.onResume();
         IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
-
         registerReceiver(myBroadcastReceiver, intentFilter);
-        unregisterReceiver(myBroadcastReceiver);
 
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(myBroadcastReceiver);
+
+
+    }
+
 
     private void getWholeInformation() {
 
 
-        dataBaseHelper = new DataBaseHelper(this);
-        sqLiteDatabase = dataBaseHelper.getWritableDatabase();
+        DataBaseHelper dataBaseHelper = new DataBaseHelper(this);
+        SQLiteDatabase sqLiteDatabase = dataBaseHelper.getWritableDatabase();
         Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM " + WHOLE_INFORMATION_TABLE, null);
 
-        if (cursor.getCount() != 0) {
-
+        try {
 
             while (cursor.moveToNext()) {
 
@@ -90,6 +97,13 @@ public class Percentage extends AppCompatActivity {
                 emailMobilePass = cursor.getString(5);
 
             }
+            sqLiteDatabase.close();
+        } catch (Exception e) {
+
+        } finally {
+            if (cursor != null && !cursor.isClosed())
+                cursor.close();
+            sqLiteDatabase.close();
         }
     }
 
@@ -102,6 +116,78 @@ public class Percentage extends AppCompatActivity {
 
 
         if (Network.isNetworkAvailable(this)) {
+
+
+            databaseReferenceForPercentage.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                    if (dataSnapshot.exists()){
+                        //----------------------------
+
+
+                        databaseReferenceForRollnameIndex.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+
+                                    RollNameIndexModel rollNameIndexModel = dataSnapshot1.getValue(RollNameIndexModel.class);
+                                    rollNameIndexModelList.add(rollNameIndexModel);
+
+                                }
+
+                                for (RollNameIndexModel rollNameIndexModel : rollNameIndexModelList) {
+                                    stringAttFor.add(rollNameIndexModel.getAttendanceFor());
+                                    stringDate.add(rollNameIndexModel.getDateTime());
+
+
+                                }
+
+
+                                final String[] sAtt = stringAttFor.toArray(new String[stringAttFor.size()]);
+                                final String[] sDateTime = stringDate.toArray(new String[stringDate.size()]);
+
+
+                                CustomAdupterForShowPercentage customAdupterForShowPercentage = new CustomAdupterForShowPercentage(Percentage.this, sAtt, sDateTime);
+                                listViewExistAttTypes.setAdapter(customAdupterForShowPercentage);
+                                listViewExistAttTypes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                    @Override
+                                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                        Intent intent = new Intent(Percentage.this, ShowPercentage.class);
+                                        Bundle bundle = new Bundle();
+                                        bundle.putString("sAtt", sAtt[position]);
+                                        bundle.putString("sDateTime", sDateTime[position]);
+                                        intent.putExtras(bundle);
+                                        startActivity(intent);
+
+
+                                    }
+                                });
+
+
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+
+                        //--------------------
+
+
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
+
+/*
             databaseReferenceForRollnameIndex.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -148,16 +234,27 @@ public class Percentage extends AppCompatActivity {
                 public void onCancelled(@NonNull DatabaseError databaseError) {
 
                 }
-            });
+            });*/
 
 
-        } else {
+        } /*else {
 
 
             Cursor cursor = dataBaseHelper.getAllDataFromRollNameIndex();
-            while (cursor.moveToNext()) {
-                stringAttFor.add(cursor.getString(0));
-                stringDate.add(cursor.getString(1));
+
+
+            try {
+
+
+                while (cursor.moveToNext()) {
+                    stringAttFor.add(cursor.getString(0));
+                    stringDate.add(cursor.getString(1));
+                }
+            } catch (Exception e) {
+
+            } finally {
+                if (cursor != null && !cursor.isClosed())
+                    cursor.close();
             }
 
             final String[] sAtt = stringAttFor.toArray(new String[stringAttFor.size()]);
@@ -182,15 +279,15 @@ public class Percentage extends AppCompatActivity {
 
 
         }
-
+*/
 
     }
-
 
 
     private void initOthers() {
         dataBaseHelper = new DataBaseHelper(this);
         sqLiteDatabase = dataBaseHelper.getWritableDatabase();
+        databaseReferenceForPercentage = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL + emailMobilePassTest);
 
         databaseReferenceForRollnameIndex = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL + emailMobilePassRollnameIndex);
 
@@ -218,33 +315,45 @@ public class Percentage extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.homeId) {
             Intent intent = new Intent(this, AfterLogin.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+
             startActivity(intent);
 
         }
         if (item.getItemId() == R.id.infoId) {
             Intent intent = new Intent(this, Informations.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+
             startActivity(intent);
 
         }
 
         if (item.getItemId() == R.id.listId) {
             Intent intent = new Intent(this, AttendancesIndex.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+
             startActivity(intent);
 
         }
         if (item.getItemId() == R.id.openId) {
             Intent intent = new Intent(this, CreateNew1.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+
             startActivity(intent);
 
         }
         if (item.getItemId() == R.id.localAttendances) {
             Intent intent = new Intent(this, ExistRollNames.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+
             startActivity(intent);
 
         }
 
         if (item.getItemId() == R.id.settings) {
             Intent intent = new Intent(this, Settings.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+
             startActivity(intent);
 
         }

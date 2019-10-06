@@ -6,6 +6,7 @@ import android.content.IntentFilter;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -15,13 +16,35 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ManageForAttPerson extends AppCompatActivity {
+
+
+    private static final String FIREBASE_URL = "https://attendance-apk.firebaseio.com/";
+
+    DatabaseReference databaseReferenceForRollnameIndex, databaseReferenceForRollName, databaseReferenceForPercentage;
+
+
+    private static final String WHOLE_INFORMATION_TABLE = "wholeinformations";
+    private String emailMobilePassRollnameIndex = null;
+    private String emailMobilePassRollname = null;
+    private String emailMobilePassAttIndex = null;
+    private String emailMobilePassAtt = null;
+    private String emailMobilePassTest = null;
+    private String emailMobilePass = null;
+
 
     private AlertDialog.Builder alertBuilder;
     private DataBaseHelper dataBaseHelper;
@@ -35,7 +58,7 @@ public class ManageForAttPerson extends AppCompatActivity {
     final String ATT_FOR_ROLLNAME = "attfor";
     final String DATETIME_FOR_ROLLNAME = "time";
     private MyBroadcastReceiver myBroadcastReceiver;
-
+    String[] stringsRoll, stringsNames, stringsAtt, stringsDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +67,7 @@ public class ManageForAttPerson extends AppCompatActivity {
 
         getIntentValues();
         initView();
+        getWholeInformation();
         initOthers();
         setVariousText();
         handleCustomAdapture();
@@ -59,12 +83,149 @@ public class ManageForAttPerson extends AppCompatActivity {
     private void handleCustomAdapture() {
 
 
+        databaseReferenceForRollName.child(dateTime).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                List<String> rollList = new ArrayList<>();
+                List<String> nameList = new ArrayList<>();
+                List<String> attendancesList = new ArrayList<>();
+                List<String> dateTimeList = new ArrayList<>();
+
+
+                try {
+                    RollNameModel rollNameModel = new RollNameModel();
+                    rollNameModel = dataSnapshot.getValue(RollNameModel.class);
+
+                    Log.d("rr", "onDataChange: " + rollNameModel.getRollNo());
+                    rollList.addAll(rollNameModel.getRollNo());
+                    nameList.addAll(rollNameModel.getName());
+                    attendancesList.addAll(rollNameModel.getAttFor());
+                    dateTimeList.addAll(rollNameModel.getDateTime());
+                } catch (Exception e) {
+                    Toast.makeText(ManageForAttPerson.this, "Processing....", Toast.LENGTH_SHORT).show();
+                }
+                stringsRoll = rollList.toArray(new String[rollList.size()]);
+                stringsNames = nameList.toArray(new String[nameList.size()]);
+                stringsAtt = attendancesList.toArray(new String[attendancesList.size()]);
+                stringsDate = dateTimeList.toArray(new String[dateTimeList.size()]);
+
+                CustomAdaptureForManagingAttPerson customAdaptureForManagingAttPerson = new CustomAdaptureForManagingAttPerson(ManageForAttPerson.this, stringsRoll, stringsNames);
+                managePersonListViewId.setAdapter(customAdaptureForManagingAttPerson);
+                managePersonListViewId.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+
+
+                        alertBuilder.setMessage("Roll No : " + stringsRoll[position] + "\nName : " + stringsNames[position]);
+                        alertBuilder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                                dataBaseHelper.deleteSpecificPersonByRoll(stringsRoll[position],stringsAtt[position]);
+
+                                databaseReferenceForRollName.child(dateTime).addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+
+                                        RollNameModel rollNameModel = new RollNameModel();
+                                        List<String> roll = new ArrayList<>();
+                                        List<String> name = new ArrayList<>();
+                                        List<String> attFor = new ArrayList<>();
+                                        List<String> date = new ArrayList<>();
+                                        rollNameModel = dataSnapshot.getValue(RollNameModel.class);
+
+                                   try {
+
+
+                                       roll.addAll(rollNameModel.getRollNo());
+                                       name.addAll(rollNameModel.getName());
+                                       attFor.addAll(rollNameModel.getAttFor());
+                                       date.addAll(rollNameModel.getDateTime());
+
+                                        roll.remove(position);
+                                        name.remove(position);
+                                        attFor.remove(position);
+                                        date.remove(position);
+                                        databaseReferenceForRollName.child(dateTime).getRef().removeValue();
+                                        databaseReferenceForRollName.child(dateTime).getRef().setValue(new RollNameModel(roll, name, attFor, date));
+                                   }catch (Exception e){
+                                       Toast.makeText(ManageForAttPerson.this, "Processing....", Toast.LENGTH_SHORT).show();
+                                   }
+
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                    }
+                                });
+
+
+                                finish();
+                                startActivity(getIntent());
+                                Toast.makeText(ManageForAttPerson.this, "You Have Deleted Successfully !", Toast.LENGTH_SHORT).show();
+
+                            }
+                        });
+
+                        alertBuilder.setNegativeButton("Edit", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Intent intent = new Intent(ManageForAttPerson.this, UpdateForAttPerson.class);
+                                Bundle bundle = new Bundle();
+                                bundle.putString("roll", stringsRoll[position]);
+                                bundle.putString("name", stringsNames[position]);
+                                bundle.putString("attFor", stringsAtt[position]);
+                                bundle.putString("dateTime", stringsDate[position]);
+                                bundle.putString("position", "" + position);
+                                intent.putExtras(bundle);
+                                startActivity(intent);
+
+
+                            }
+                        });
+                        alertBuilder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        });
+
+
+                        AlertDialog alertDialog = alertBuilder.create();
+                        alertDialog.show();
+
+
+                    }
+                });
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+
+
+
+
+
+
+
+
+       /*
+
         List<String> rollList = new ArrayList<>();
         List<String> nameList = new ArrayList<>();
         List<String> attendancesList = new ArrayList<>();
         List<String> dateTimeList = new ArrayList<>();
-
-
+*/
+/*
         sqLiteDatabase = dataBaseHelper.getWritableDatabase();
 
         String q = "SELECT * FROM " + ROLL_NAME_TABLE + " WHERE " + DATETIME_FOR_ROLLNAME + " = '" + dateTime + "'";
@@ -76,9 +237,9 @@ public class ManageForAttPerson extends AppCompatActivity {
             attendancesList.add(cursor1.getString(2));
             dateTimeList.add(cursor1.getString(3));
 
-        }
+        }*/
 
-        final String[] stringsRoll = rollList.toArray(new String[rollList.size()]);
+       /* final String[] stringsRoll = rollList.toArray(new String[rollList.size()]);
         final String[] stringsNames = nameList.toArray(new String[nameList.size()]);
         final String[] stringsAtt = attendancesList.toArray(new String[attendancesList.size()]);
         final String[] stringsDate = dateTimeList.toArray(new String[dateTimeList.size()]);
@@ -96,6 +257,44 @@ public class ManageForAttPerson extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
 
                         dataBaseHelper.deleteSpecificPersonByRoll(stringsRoll[position]);
+
+databaseReferenceForRollName.child(dateTime).addValueEventListener(new ValueEventListener() {
+    @Override
+    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+
+        RollNameModel rollNameModel = new RollNameModel();
+        List<String> roll = new ArrayList<>();
+        List<String> name = new ArrayList<>();
+        List<String> attFor = new ArrayList<>();
+        List<String> date = new ArrayList<>();
+        rollNameModel = dataSnapshot.getValue(RollNameModel.class);
+        roll.addAll(rollNameModel.getRollNo());
+        name.addAll(rollNameModel.getName());
+        attFor.addAll(rollNameModel.getAttFor());
+        date.addAll(rollNameModel.getDateTime());
+        roll.remove(position);
+        name.remove(position);
+        attFor.remove(position);
+        date.remove(position);
+      databaseReferenceForRollName.child(dateTime).getRef().removeValue();
+      databaseReferenceForRollName.child(dateTime).getRef().setValue(new RollNameModel(roll,name,attFor,date));
+
+
+    }
+
+    @Override
+    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+    }
+});
+
+
+
+
+
+
+
                         finish();
                         startActivity(getIntent());
                         Toast.makeText(ManageForAttPerson.this, "You Have Deleted Successfully !", Toast.LENGTH_SHORT).show();
@@ -132,14 +331,48 @@ public class ManageForAttPerson extends AppCompatActivity {
 
             }
         });
-
+*/
 
     }
 
+    private void getWholeInformation() {
+
+
+        DataBaseHelper dataBaseHelper = new DataBaseHelper(this);
+        SQLiteDatabase sqLiteDatabase = dataBaseHelper.getWritableDatabase();
+        Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM " + WHOLE_INFORMATION_TABLE, null);
+
+        try {
+
+            while (cursor.moveToNext()) {
+
+                emailMobilePassRollnameIndex = cursor.getString(0);
+                emailMobilePassRollname = cursor.getString(1);
+                emailMobilePassAttIndex = cursor.getString(2);
+                emailMobilePassAtt = cursor.getString(3);
+                emailMobilePassTest = cursor.getString(4);
+                emailMobilePass = cursor.getString(5);
+
+            }
+            sqLiteDatabase.close();
+        } catch (Exception e) {
+
+        } finally {
+            if (cursor != null && !cursor.isClosed())
+                cursor.close();
+            sqLiteDatabase.close();
+        }
+    }
+
     private void initOthers() {
+        databaseReferenceForPercentage = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL + emailMobilePassTest);
+        databaseReferenceForRollnameIndex = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL + emailMobilePassRollnameIndex);
+        databaseReferenceForRollName = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL + emailMobilePassRollname);
+
         dataBaseHelper = new DataBaseHelper(this);
         alertBuilder = new AlertDialog.Builder(this);
         myBroadcastReceiver = new MyBroadcastReceiver();
+        Log.d("rr", "initOthers: " + emailMobilePassRollname);
 
 
     }
@@ -208,6 +441,11 @@ public class ManageForAttPerson extends AppCompatActivity {
         }
         if (item.getItemId() == R.id.localAttendances) {
             Intent intent = new Intent(this, ExistRollNames.class);
+            startActivity(intent);
+
+        }
+        if (item.getItemId() == R.id.summary) {
+            Intent intent = new Intent(this, Percentage.class);
             startActivity(intent);
 
         }

@@ -19,7 +19,7 @@
             android:layout_weight="26"
             android:text="Roll No :"
             android:textStyle="bold"
-            android:textSize="10dp"
+            android:textSize="12dp"
             android:gravity="center"
             />
         <TextView
@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="16"
             android:text="Names :"
-            android:textSize="10dp"
+            android:textSize="12dp"
             android:textStyle="bold"
             android:gravity="center"
             />
@@ -39,7 +39,7 @@
             android:layout_height="match_parent"
             android:layout_weight="16"
             android:text="Present"
-            android:textSize="10dp"
+            android:textSize="12dp"
             android:textStyle="bold"
             android:gravity="center"
             />
@@ -50,7 +50,7 @@
             android:layout_height="match_parent"
             android:layout_weight="16"
             android:text="Present"
-            android:textSize="10dp"
+            android:textSize="12dp"
             android:textStyle="bold"
             android:gravity="center"
             />
@@ -60,7 +60,7 @@
             android:layout_height="match_parent"
             android:layout_weight="26"
             android:text="Present"
-            android:textSize="10dp"
+            android:textSize="12dp"
             android:textStyle="bold"
             android:gravity="center"
             />

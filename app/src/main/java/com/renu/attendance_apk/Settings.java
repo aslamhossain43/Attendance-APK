@@ -89,7 +89,7 @@ public class Settings extends AppCompatActivity {
 
 
                             dataBaseHelper.deleteAllValuesFromAllTables();
-                            Intent intent = new Intent(Settings.this, Authentication.class);
+                            Intent intent = new Intent(Settings.this, RegisterActivity.class);
                             startActivity(intent);
                             Toast.makeText(Settings.this, "You Have Deleted All Information From Your App !", Toast.LENGTH_SHORT).show();
                         } else {
@@ -125,7 +125,7 @@ public class Settings extends AppCompatActivity {
 
                             databaseReferenceForattendancesIndex.getRef().removeValue();
                             databaseReferenceForattendances.getRef().removeValue();
-                            databaseReferenceForPercentage.getRef().removeValue();
+                            //databaseReferenceForPercentage.getRef().removeValue();
 
                             dataBaseHelper.deleteAllFromPercentage();
                             Intent intent = new Intent(Settings.this, ExistRollNames.class);

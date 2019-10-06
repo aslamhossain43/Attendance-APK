@@ -266,6 +266,7 @@ public class Update extends AppCompatActivity {
 
 
         dataBaseHelper.updatePercentage(oldRoll, attFor, gettingRoll, gettingDaySum, gettingPSum, gettingASum, gettingPercentSum);
+        new BackgroundUpdate().handlePercentage(Update.this);
 
 
     }
@@ -316,12 +317,17 @@ public class Update extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
-
         registerReceiver(myBroadcastReceiver, intentFilter);
-        unregisterReceiver(myBroadcastReceiver);
+
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(myBroadcastReceiver);
 
+
+    }
 
     private void initView() {
         updateParentLinearLayout = findViewById(R.id.updateParentLinearLayoutId);
@@ -369,6 +375,11 @@ public class Update extends AppCompatActivity {
         }
         if (item.getItemId() == R.id.localAttendances) {
             Intent intent = new Intent(this, ExistRollNames.class);
+            startActivity(intent);
+
+        }
+        if (item.getItemId() == R.id.summary) {
+            Intent intent = new Intent(this, Percentage.class);
             startActivity(intent);
 
         }

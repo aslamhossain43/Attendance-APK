@@ -84,6 +84,8 @@ public class UpdateForManageAttIndex extends AppCompatActivity {
 
 
     private void getWholeInformation() {
+        dataBaseHelper = new DataBaseHelper(this);
+        sqLiteDatabase = dataBaseHelper.getWritableDatabase();
         Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM " + WHOLE_INFORMATION_TABLE, null);
 
         if (cursor.getCount() != 0) {
@@ -112,12 +114,17 @@ public class UpdateForManageAttIndex extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
-
         registerReceiver(myBroadcastReceiver, intentFilter);
-        unregisterReceiver(myBroadcastReceiver);
 
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(myBroadcastReceiver);
+
+
+    }
 
     private void initView() {
 
@@ -174,7 +181,11 @@ public class UpdateForManageAttIndex extends AppCompatActivity {
             startActivity(intent);
 
         }
+        if (item.getItemId() == R.id.summary) {
+            Intent intent = new Intent(this, Percentage.class);
+            startActivity(intent);
 
+        }
         if (item.getItemId() == R.id.settings) {
             Intent intent = new Intent(this, Settings.class);
             startActivity(intent);

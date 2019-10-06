@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
     private String emailMobilePass = null;
 
     List<String> roll, name, attFor, date;
-
+    BackgroundUpdate backgroundUpdate;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -121,6 +121,27 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
+    //-------------------------------
+    @Override
+    protected void onResume() {
+        super.onResume();
+        IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
+        registerReceiver(myBroadcastReceiver, intentFilter);
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(myBroadcastReceiver);
+
+
+    }
+
+
+    //-----------------------------------
+
     private void handleRollNames() {
 
 
@@ -129,33 +150,37 @@ public class MainActivity extends AppCompatActivity {
             databaseReferenceForRollName.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                    RollNameModel rollNameModel = dataSnapshot.getValue(RollNameModel.class);
-                    roll.addAll(rollNameModel.getRollNo());
-                    name.addAll(rollNameModel.getName());
-                    attFor.addAll(rollNameModel.getAttFor());
-                    date.addAll(rollNameModel.getDateTime());
+try {
 
 
-                    String[] stringsForRoll = roll.toArray(new String[roll.size()]);
-                    String[] stringsForNames = name.toArray(new String[name.size()]);
-                    for (int i = 0; i < roll.size(); i++) {
+    RollNameModel rollNameModel = dataSnapshot.getValue(RollNameModel.class);
+    roll.addAll(rollNameModel.getRollNo());
+    name.addAll(rollNameModel.getName());
+    attFor.addAll(rollNameModel.getAttFor());
+    date.addAll(rollNameModel.getDateTime());
 
 
-                        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                        View rowView = inflater.inflate(R.layout.field, null);
-                        // Add the new row before the add field button.
-
-                        parentLinearLayout.addView(rowView, parentLinearLayout.getChildCount() - 1);
-                        editTextForField = rowView.findViewById(R.id.rollForFieldId);
-                        editTextNameForField = rowView.findViewById(R.id.nameForFieldId);
-                        spinnerForField = rowView.findViewById(R.id.spinnerForFieldId);
-                        editTextForField.setText(stringsForRoll[i]);
-                        editTextNameForField.setText(stringsForNames[i]);
-
-                    }
+    String[] stringsForRoll = roll.toArray(new String[roll.size()]);
+    String[] stringsForNames = name.toArray(new String[name.size()]);
+    for (int i = 0; i < roll.size(); i++) {
 
 
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View rowView = inflater.inflate(R.layout.field, null);
+        // Add the new row before the add field button.
+
+        parentLinearLayout.addView(rowView, parentLinearLayout.getChildCount() - 1);
+        editTextForField = rowView.findViewById(R.id.rollForFieldId);
+        editTextNameForField = rowView.findViewById(R.id.nameForFieldId);
+        spinnerForField = rowView.findViewById(R.id.spinnerForFieldId);
+        editTextForField.setText(stringsForRoll[i]);
+        editTextNameForField.setText(stringsForNames[i]);
+
+    }
+
+}catch (Exception e){
+    Toast.makeText(MainActivity.this, "Persons insufficient !", Toast.LENGTH_SHORT).show();
+}
                 }
 
                 @Override
@@ -167,37 +192,41 @@ public class MainActivity extends AppCompatActivity {
 
         } else {
 
-
-            String q = "SELECT * FROM " + ROLL_NAME_TABLE + " WHERE " + DATETIME_FOR_ROLLNAME + " = '" + rollNameDateTime + "'";
-
-            Cursor cursor1 = sqLiteDatabase.rawQuery(q, null);
-            while (cursor1.moveToNext()) {
-                roll.add(cursor1.getString(0));
-                name.add(cursor1.getString(1));
-                attFor.add(cursor1.getString(2));
-                date.add(cursor1.getString(3));
-
-            }
-
-            String[] stringsForRoll = roll.toArray(new String[roll.size()]);
-            String[] stringsForNames = name.toArray(new String[name.size()]);
-            for (int i = 0; i < roll.size(); i++) {
+try {
 
 
-                LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                View rowView = inflater.inflate(R.layout.field, null);
-                // Add the new row before the add field button.
+    String q = "SELECT * FROM " + ROLL_NAME_TABLE + " WHERE " + DATETIME_FOR_ROLLNAME + " = '" + rollNameDateTime + "'";
 
-                parentLinearLayout.addView(rowView, parentLinearLayout.getChildCount() - 1);
-                editTextForField = rowView.findViewById(R.id.rollForFieldId);
-                editTextNameForField = rowView.findViewById(R.id.nameForFieldId);
-                spinnerForField = rowView.findViewById(R.id.spinnerForFieldId);
-                editTextForField.setText(stringsForRoll[i]);
-                editTextNameForField.setText(stringsForNames[i]);
+    Cursor cursor1 = sqLiteDatabase.rawQuery(q, null);
+    while (cursor1.moveToNext()) {
+        roll.add(cursor1.getString(0));
+        name.add(cursor1.getString(1));
+        attFor.add(cursor1.getString(2));
+        date.add(cursor1.getString(3));
 
-            }
+    }
+
+    String[] stringsForRoll = roll.toArray(new String[roll.size()]);
+    String[] stringsForNames = name.toArray(new String[name.size()]);
+    for (int i = 0; i < roll.size(); i++) {
 
 
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View rowView = inflater.inflate(R.layout.field, null);
+        // Add the new row before the add field button.
+
+        parentLinearLayout.addView(rowView, parentLinearLayout.getChildCount() - 1);
+        editTextForField = rowView.findViewById(R.id.rollForFieldId);
+        editTextNameForField = rowView.findViewById(R.id.nameForFieldId);
+        spinnerForField = rowView.findViewById(R.id.spinnerForFieldId);
+        editTextForField.setText(stringsForRoll[i]);
+        editTextNameForField.setText(stringsForNames[i]);
+
+    }
+
+}catch (Exception e){
+    Toast.makeText(this, "Persons insufficient !", Toast.LENGTH_SHORT).show();
+}
         }
 
 
@@ -458,7 +487,7 @@ public class MainActivity extends AppCompatActivity {
             }
             dataBaseHelper.deleteSpecificFromPercentage(rollNameAttFor);
             dataBaseHelper.insertIntoPercentage(attListForPercentage, roolList, dayListForPer, pListForPer, aListForPer, percentListForPer);
-
+backgroundUpdate.handlePercentage(MainActivity.this);
 
         } else {
 
@@ -534,6 +563,7 @@ public class MainActivity extends AppCompatActivity {
 
             dataBaseHelper.deleteSpecificFromPercentage(rollNameAttFor);
             dataBaseHelper.insertIntoPercentage(attListForPercentage, roolList, dayListForPer, pListForPer, aListForPer, percentListForPer);
+            backgroundUpdate.handlePercentage(MainActivity.this);
 
 
         }
@@ -542,7 +572,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initOthers() {
-
+             backgroundUpdate=new BackgroundUpdate();
         databaseReferenceForattendances = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL + emailMobilePassAtt);
         databaseReferenceForattendancesIndex = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL + emailMobilePassAttIndex);
         databaseReferenceForRollName = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL + emailMobilePassRollname + "/" + rollNameDateTime);
@@ -563,19 +593,7 @@ public class MainActivity extends AppCompatActivity {
         myBroadcastReceiver = new MyBroadcastReceiver();
     }
 
-    //-------------------------------------
-    @Override
-    protected void onResume() {
-        super.onResume();
-        IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
 
-        registerReceiver(myBroadcastReceiver, intentFilter);
-        unregisterReceiver(myBroadcastReceiver);
-
-    }
-
-
-    //----------------------------
     private void initView() {
 
         parentLinearLayout = (LinearLayout) findViewById(R.id.parent_linear_layout);

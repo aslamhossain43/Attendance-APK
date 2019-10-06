@@ -3,7 +3,10 @@ package com.renu.attendance_apk;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -14,9 +17,37 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 public class UpdateForManagingLocalAttTypeIndex extends AppCompatActivity {
+
+
+    private static final String FIREBASE_URL = "https://attendance-apk.firebaseio.com/";
+
+    DatabaseReference databaseReferenceForRollnameIndex, databaseReferenceForRollName, databaseReferenceForPercentage;
+
+
+    private static final String WHOLE_INFORMATION_TABLE = "wholeinformations";
+    private String emailMobilePassRollnameIndex = null;
+    private String emailMobilePassRollname = null;
+    private String emailMobilePassAttIndex = null;
+    private String emailMobilePassAtt = null;
+    private String emailMobilePassTest = null;
+    private String emailMobilePass = null;
+
+
     DataBaseHelper dataBaseHelper;
     private LinearLayout updateParentLinearLayout;
     private EditText editTextForIndex;
@@ -32,6 +63,7 @@ public class UpdateForManagingLocalAttTypeIndex extends AppCompatActivity {
 
         getIntentValues();
         initView();
+        getWholeInformation();
         initOthers();
 
         LayoutInflater layoutInflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -45,34 +77,131 @@ public class UpdateForManagingLocalAttTypeIndex extends AppCompatActivity {
         updateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String index = editTextForIndex.getText().toString().trim();
-                dataBaseHelper.updateForAttIndex(dateTime, index);
-                Intent intent = new Intent(UpdateForManagingLocalAttTypeIndex.this, ManageForLocalAttTypeIndex.class);
-                startActivity(intent);
-                Toast.makeText(UpdateForManagingLocalAttTypeIndex.this, "Update Success !", Toast.LENGTH_SHORT).show();
 
+                try {
+                    final String index = editTextForIndex.getText().toString().trim();
+                    // dataBaseHelper.updateForAttIndex(dateTime, index);
+                    //--------------------------------
+
+
+                    databaseReferenceForRollName.child(dateTime).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd ',' hh:mm:ss a");
+                            Log.d("dt", "onClick: " + sim.format(new Date()));
+                            String date = sim.format(new Date());
+
+//------------------------------------
+
+
+                            RollNameModel rollNameModel = new RollNameModel();
+                            List<String> roll = new ArrayList<>();
+                            List<String> name = new ArrayList<>();
+                            List<String> attFor = new ArrayList<>();
+                            List<String> dateTime = new ArrayList<>();
+                            rollNameModel = dataSnapshot.getValue(RollNameModel.class);
+                            roll.addAll(rollNameModel.getRollNo());
+                            name.addAll(rollNameModel.getName());
+
+                            for (int i = 0; i < roll.size(); i++) {
+                                attFor.add(index);
+                                dateTime.add(date);
+                            }
+                            if (Network.isNetworkAvailable(UpdateForManagingLocalAttTypeIndex.this)) {
+
+
+                                dataBaseHelper.insertDataInToRollNameIndexTable(date, index);
+                                dataBaseHelper.insertRollNameIntoLocalStorage(roll, name, attFor, dateTime);
+                                databaseReferenceForRollnameIndex.child(date).getRef().setValue(new RollNameIndexModel(date, index));
+                                databaseReferenceForRollName.child(date).getRef().setValue(new RollNameModel(roll, name, attFor, dateTime));
+                            } else {
+
+                                dataBaseHelper.insertDataInToRollNameIndexTable(date, index);
+                                dataBaseHelper.insertRollNameIntoLocalStorage(roll, name, attFor, dateTime);
+
+                                dataBaseHelper.insertDataInToRollNameIndexTableFirebase(date, index);
+                                dataBaseHelper.insertRollNameIntoLocalStorageFirebase(roll, name, attFor, dateTime);
+                            }
+                        }
+//-------------
+
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+
+
+                    Intent intent = new Intent(UpdateForManagingLocalAttTypeIndex.this, ManageForLocalAttTypeIndex.class);
+                    startActivity(intent);
+                    Toast.makeText(UpdateForManagingLocalAttTypeIndex.this, "Update Success !", Toast.LENGTH_SHORT).show();
+                } catch (Exception e) {
+                    Toast.makeText(UpdateForManagingLocalAttTypeIndex.this, " Processing....", Toast.LENGTH_SHORT).show();
+
+                }
             }
+
         });
 
 
+    }
+
+    private void getWholeInformation() {
+
+
+        DataBaseHelper dataBaseHelper = new DataBaseHelper(this);
+        SQLiteDatabase sqLiteDatabase = dataBaseHelper.getWritableDatabase();
+        Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM " + WHOLE_INFORMATION_TABLE, null);
+
+        try {
+
+            while (cursor.moveToNext()) {
+
+                emailMobilePassRollnameIndex = cursor.getString(0);
+                emailMobilePassRollname = cursor.getString(1);
+                emailMobilePassAttIndex = cursor.getString(2);
+                emailMobilePassAtt = cursor.getString(3);
+                emailMobilePassTest = cursor.getString(4);
+                emailMobilePass = cursor.getString(5);
+
+            }
+            sqLiteDatabase.close();
+        } catch (Exception e) {
+
+        } finally {
+            if (cursor != null && !cursor.isClosed())
+                cursor.close();
+            sqLiteDatabase.close();
+        }
     }
 
     private void initOthers() {
 
         dataBaseHelper = new DataBaseHelper(this);
         myBroadcastReceiver = new MyBroadcastReceiver();
+        databaseReferenceForPercentage = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL + emailMobilePassTest);
+
+        databaseReferenceForRollnameIndex = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL + emailMobilePassRollnameIndex);
+        databaseReferenceForRollName = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL + emailMobilePassRollname);
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
-
         registerReceiver(myBroadcastReceiver, intentFilter);
-        unregisterReceiver(myBroadcastReceiver);
 
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(myBroadcastReceiver);
+
+
+    }
 
     private void initView() {
         updateParentLinearLayout = findViewById(R.id.updateParentLinearLayoutForManageLocalAttIndexId);
@@ -129,7 +258,11 @@ public class UpdateForManagingLocalAttTypeIndex extends AppCompatActivity {
             startActivity(intent);
 
         }
+        if (item.getItemId() == R.id.summary) {
+            Intent intent = new Intent(this, Percentage.class);
+            startActivity(intent);
 
+        }
         if (item.getItemId() == R.id.settings) {
             Intent intent = new Intent(this, Settings.class);
             startActivity(intent);

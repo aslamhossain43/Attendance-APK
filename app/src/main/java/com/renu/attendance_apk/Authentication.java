@@ -53,7 +53,6 @@ public class Authentication extends AppCompatActivity {
         }
 
 
-        //--------------------------------
 
         initView();
         initOther();
@@ -89,7 +88,25 @@ public class Authentication extends AppCompatActivity {
 
     }
 
+//--------------------------------
 
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
+        registerReceiver(myBroadcastReceiver, intentFilter);
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(myBroadcastReceiver);
+
+
+    }
+    //-------------------------------
     private void initOther() {
         dataBaseHelper = new DataBaseHelper(this);
         myBroadcastReceiver=new MyBroadcastReceiver();
