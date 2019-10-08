@@ -115,7 +115,7 @@
 
             android:textColor="#ffff"
             android:layout_marginBottom="5dp"
-            android:text="Manage your daily attendance"
+            android:text="Delete specific attendance"
             android:textSize="20dp"
             android:gravity="center"
             />

@@ -370,11 +370,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         ContentValues contentValues = new ContentValues();
         contentValues.put(ROLL_FOR_ROLLNAME, newRoll);
         contentValues.put(NAME_FOR_ROLLNAME, name);
-        contentValues.put(ATT_FOR_ROLLNAME, attFor);
         contentValues.put(DATETIME_FOR_ROLLNAME, date);
-        sqLiteDatabase.update(ROLL_NAME_TABLE, contentValues, ROLL_FOR_ROLLNAME + "=" + oldRoll, null);
+        return sqLiteDatabase.update(ROLL_NAME_TABLE, contentValues, ROLL_FOR_ROLLNAME + "=? AND "+ATT_FOR_ROLLNAME+"=?", new String[]{oldRoll,attFor})>0;
 
-        return true;
 
 
     }
@@ -455,7 +453,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
 
 
-        for (int i = 0; i < attList.size(); i++) {
+        for (int i = 0; i < rollList.size(); i++) {
             Log.d("rr", "insertIntoPercentage: " + i);
 
 
@@ -612,7 +610,24 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     }
 
+    public boolean updatePercentageOneTitle(String attFor,int gettingDaySum, int gettingPSum, int gettingASum, int gettingPercentSum) {
 
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(PERCENTAGE_DAY, gettingDaySum);
+        contentValues.put(PERCENTAGE_P, gettingPSum);
+        contentValues.put(PERCENTAGE_A, gettingASum);
+        contentValues.put(PERCENTAGE_PERCENT, gettingPercentSum);
+        sqLiteDatabase.update(TEST_TABLE, contentValues, PERCENTAGE_ATT_FOR + "='" + attFor + "'", null);
+
+        return true;
+
+
+    }
+
+
+
+/*
     public boolean updatePercentageWhenDeleteOne(String oldRoll, String attFor, String paoff) {
 
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
@@ -685,6 +700,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
 
     }
+*/
 
 
 }

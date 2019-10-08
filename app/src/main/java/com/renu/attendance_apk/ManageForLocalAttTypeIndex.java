@@ -32,7 +32,7 @@ public class ManageForLocalAttTypeIndex extends AppCompatActivity {
 
     private static final String FIREBASE_URL = "https://attendance-apk.firebaseio.com/";
 
-    DatabaseReference databaseReferenceForRollnameIndex,databaseReferenceForRollName, databaseReferenceForPercentage;
+    DatabaseReference databaseReferenceForRollnameIndex, databaseReferenceForRollName, databaseReferenceForPercentage;
 
 
     private static final String WHOLE_INFORMATION_TABLE = "wholeinformations";
@@ -59,8 +59,7 @@ public class ManageForLocalAttTypeIndex extends AppCompatActivity {
 
         getWholeInformation();
         initOthers();
-listViewHandleForLocalAttIndex();
-
+        listViewHandleForLocalAttIndex();
 
 
     }
@@ -71,7 +70,7 @@ listViewHandleForLocalAttIndex();
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                List<RollNameIndexModel>rollNameIndexModelList=new ArrayList<>();
+                List<RollNameIndexModel> rollNameIndexModelList = new ArrayList<>();
                 for (DataSnapshot dnapshot : dataSnapshot.getChildren()) {
                     RollNameIndexModel rollNameIndexModel = dnapshot.getValue(RollNameIndexModel.class);
                     rollNameIndexModelList.add(rollNameIndexModel);
@@ -81,7 +80,7 @@ listViewHandleForLocalAttIndex();
 
                 List<String> stringAttFor = new ArrayList<>();
                 List<String> stringDate = new ArrayList<>();
-                for (RollNameIndexModel rollNameIndexModel:rollNameIndexModelList) {
+                for (RollNameIndexModel rollNameIndexModel : rollNameIndexModelList) {
                     stringAttFor.add(rollNameIndexModel.getAttendanceFor());
                     stringDate.add(rollNameIndexModel.getDateTime());
 
@@ -99,22 +98,7 @@ listViewHandleForLocalAttIndex();
                     public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
 
                         alertDialogBuilder.setMessage("Index name : " + sAtt[position] + "\nDate : " + sDateTime[position]);
-                        alertDialogBuilder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dataBaseHelper.deleteRollNameIndex(sDateTime[position]);
-                                dataBaseHelper.deleteRollNameByDate(sDateTime[position]);
 
-                                databaseReferenceForRollnameIndex.child(sDateTime[position]).getRef().removeValue();
-                                databaseReferenceForRollName.child(sDateTime[position]).getRef().removeValue();
-
-                                finish();
-                                startActivity(getIntent());
-                                Toast.makeText(ManageForLocalAttTypeIndex.this, "You have deleted successfully !", Toast.LENGTH_SHORT).show();
-
-
-                            }
-                        });
                         alertDialogBuilder.setNegativeButton("Edit", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {

@@ -65,7 +65,12 @@ public class UpdateForManagingLocalAttTypeIndex extends AppCompatActivity {
         initView();
         getWholeInformation();
         initOthers();
+        handleUpdate();
 
+
+    }
+
+    private void handleUpdate() {
         LayoutInflater layoutInflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View liv = layoutInflater.inflate(R.layout.upadte_for_manage_local_att_index_layout, null);
         updateParentLinearLayout.addView(liv, updateParentLinearLayout.getChildCount());
@@ -78,68 +83,66 @@ public class UpdateForManagingLocalAttTypeIndex extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                try {
-                    final String index = editTextForIndex.getText().toString().trim();
-                    // dataBaseHelper.updateForAttIndex(dateTime, index);
-                    //--------------------------------
+                final String attFromEditTerxt = editTextForIndex.getText().toString().trim();
 
 
-                    databaseReferenceForRollName.child(dateTime).addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd ',' hh:mm:ss a");
-                            Log.d("dt", "onClick: " + sim.format(new Date()));
-                            String date = sim.format(new Date());
-
-//------------------------------------
+                databaseReferenceForRollName.child(dateTime).getRef().addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd ',' hh:mm:ss a");
+                        Log.d("dt", "onClick: " + sim.format(new Date()));
+                        String date = sim.format(new Date());
 
 
-                            RollNameModel rollNameModel = new RollNameModel();
-                            List<String> roll = new ArrayList<>();
-                            List<String> name = new ArrayList<>();
-                            List<String> attFor = new ArrayList<>();
-                            List<String> dateTime = new ArrayList<>();
+                        RollNameModel rollNameModel = new RollNameModel();
+                        List<String> roll = new ArrayList<>();
+                        List<String> name = new ArrayList<>();
+                        List<String> attFor = new ArrayList<>();
+                        List<String> dateTimeList = new ArrayList<>();
+                        try {
+
                             rollNameModel = dataSnapshot.getValue(RollNameModel.class);
                             roll.addAll(rollNameModel.getRollNo());
                             name.addAll(rollNameModel.getName());
 
+
                             for (int i = 0; i < roll.size(); i++) {
-                                attFor.add(index);
-                                dateTime.add(date);
+                                attFor.add(attFromEditTerxt);
+                                dateTimeList.add(date);
                             }
-                            if (Network.isNetworkAvailable(UpdateForManagingLocalAttTypeIndex.this)) {
-
-
-                                dataBaseHelper.insertDataInToRollNameIndexTable(date, index);
-                                dataBaseHelper.insertRollNameIntoLocalStorage(roll, name, attFor, dateTime);
-                                databaseReferenceForRollnameIndex.child(date).getRef().setValue(new RollNameIndexModel(date, index));
-                                databaseReferenceForRollName.child(date).getRef().setValue(new RollNameModel(roll, name, attFor, dateTime));
-                            } else {
-
-                                dataBaseHelper.insertDataInToRollNameIndexTable(date, index);
-                                dataBaseHelper.insertRollNameIntoLocalStorage(roll, name, attFor, dateTime);
-
-                                dataBaseHelper.insertDataInToRollNameIndexTableFirebase(date, index);
-                                dataBaseHelper.insertRollNameIntoLocalStorageFirebase(roll, name, attFor, dateTime);
-                            }
-                        }
-//-------------
-
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                        } catch (Exception e) {
+                            Toast.makeText(UpdateForManagingLocalAttTypeIndex.this, " Processing....", Toast.LENGTH_SHORT).show();
 
                         }
-                    });
+                        if (Network.isNetworkAvailable(UpdateForManagingLocalAttTypeIndex.this)) {
 
 
-                    Intent intent = new Intent(UpdateForManagingLocalAttTypeIndex.this, ManageForLocalAttTypeIndex.class);
-                    startActivity(intent);
-                    Toast.makeText(UpdateForManagingLocalAttTypeIndex.this, "Update success !", Toast.LENGTH_SHORT).show();
-                } catch (Exception e) {
-                    Toast.makeText(UpdateForManagingLocalAttTypeIndex.this, " Processing....", Toast.LENGTH_SHORT).show();
+                            dataBaseHelper.insertDataInToRollNameIndexTable(date, attFromEditTerxt);
+                            dataBaseHelper.insertRollNameIntoLocalStorage(roll, name, attFor, dateTimeList);
+                            databaseReferenceForRollnameIndex.child(date).getRef().setValue(new RollNameIndexModel(date, attFromEditTerxt));
+                            databaseReferenceForRollName.child(date).getRef().setValue(new RollNameModel(roll, name, attFor, dateTimeList));
+                        } else {
 
-                }
+                            dataBaseHelper.insertDataInToRollNameIndexTable(date, attFromEditTerxt);
+                            dataBaseHelper.insertRollNameIntoLocalStorage(roll, name, attFor, dateTimeList);
+
+                            dataBaseHelper.insertDataInToRollNameIndexTableFirebase(date, attFromEditTerxt);
+                            dataBaseHelper.insertRollNameIntoLocalStorageFirebase(roll, name, attFor, dateTimeList);
+                        }
+                        Intent intent = new Intent(UpdateForManagingLocalAttTypeIndex.this, ExistRollNames.class);
+                        startActivity(intent);
+                        Toast.makeText(UpdateForManagingLocalAttTypeIndex.this, "Update success !", Toast.LENGTH_SHORT).show();
+
+                    }
+
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
+
             }
 
         });

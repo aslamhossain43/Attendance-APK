@@ -126,8 +126,6 @@ public class Settings extends AppCompatActivity {
                             databaseReferenceForattendancesIndex.getRef().removeValue();
                             databaseReferenceForattendances.getRef().removeValue();
                             //databaseReferenceForPercentage.getRef().removeValue();
-
-                            dataBaseHelper.deleteAllFromPercentage();
                             Intent intent = new Intent(Settings.this, ExistRollNames.class);
                             startActivity(intent);
                             Toast.makeText(Settings.this, "You have deleted all attendances from your app !", Toast.LENGTH_SHORT).show();

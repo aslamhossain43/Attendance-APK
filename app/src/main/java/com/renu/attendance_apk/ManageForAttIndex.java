@@ -6,6 +6,7 @@ import android.content.IntentFilter;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -29,7 +30,7 @@ import java.util.List;
 
 public class ManageForAttIndex extends AppCompatActivity {
     private static final String FIREBASE_URL = "https://attendance-apk.firebaseio.com/";
-    DatabaseReference databaseReferenceForattendancesIndex, databaseReferenceForattendances;
+    DatabaseReference databaseReferenceForattendancesIndex, databaseReferenceForattendances, databaseReferenceForPercentage;
     ValueEventListener myValueEventListner;
     List<AttendanceIndexModel> attendanceIndexModelList;
     private ListView attendancesIndexListView;
@@ -37,6 +38,7 @@ public class ManageForAttIndex extends AppCompatActivity {
     List<String> dateTimeList;
     private AlertDialog.Builder alertDialogBuilder;
     String[] dateTimeForAttendanceIndexArray, attendanceForArray;
+
     private MyBroadcastReceiver myBroadcastReceiver;
     String uuidForAtt, uuidForAttIndex;
     private DataBaseHelper dataBaseHelper;
@@ -62,6 +64,12 @@ public class ManageForAttIndex extends AppCompatActivity {
 
         getWholeInformation();
         initOthers();
+        handleAttendanceIndex();
+
+
+    }
+
+    private void handleAttendanceIndex() {
 
 
         databaseReferenceForattendancesIndex.addValueEventListener(new ValueEventListener() {
@@ -110,8 +118,13 @@ public class ManageForAttIndex extends AppCompatActivity {
         IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
 
         registerReceiver(myBroadcastReceiver, intentFilter);
-        unregisterReceiver(myBroadcastReceiver);
 
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(myBroadcastReceiver);
     }
 
     private void listViewHandleForAttendancesIndex(final String[] dateTimeForAttendanceIndexArray, final String[] attendanceForArray) {
@@ -123,22 +136,65 @@ public class ManageForAttIndex extends AppCompatActivity {
         attendancesIndexListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+
+
                 alertDialogBuilder.setMessage("Index Name : " + attendanceForArray[position] + "\nDate : " + dateTimeForAttendanceIndexArray[position]);
 
                 alertDialogBuilder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
-                        databaseReferenceForattendancesIndex.child(dateTimeForAttendanceIndexArray[position]).getRef().removeValue();
-                        databaseReferenceForattendances.child(dateTimeForAttendanceIndexArray[position]).getRef().removeValue();
-                        //Load activity
-                        finish();
-                        startActivity(getIntent());
-                        Toast.makeText(ManageForAttIndex.this, "You have deleted successfully !", Toast.LENGTH_SHORT).show();
+
+                        final List<String> rollList = new ArrayList<>();
+                        final List<String> nameList = new ArrayList<>();
+                        final List<String> attList = new ArrayList<>();
+                        final List<String> dtList = new ArrayList<>();
+
+
+                        Log.d("rr", "onDataChange: BEFORE========================" + dateTimeForAttendanceIndexArray[position]);
+
+                        //-----------------------------------------------------------
+                        databaseReferenceForattendances.child(dateTimeForAttendanceIndexArray[position]).getRef().addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                Log.d("rr", "onDataChange: AFTER====================" + dateTimeForAttendanceIndexArray[position]);
+
+
+                                try {
+
+
+                                    AttendanceModel attendanceModel = new AttendanceModel();
+                                    attendanceModel = dataSnapshot.getValue(AttendanceModel.class);
+                                    rollList.addAll(attendanceModel.getRollList());
+                                    nameList.addAll(attendanceModel.getNameList());
+                                    attList.addAll(attendanceModel.getAttendanceList());
+                                    dtList.addAll(attendanceModel.getDateTimeList());
+
+
+                                    Log.d("rr", "onDataChange: " + rollList + ", " + "" + nameList + ", " + attList + ", " + dtList);
+
+                                    handlePercentage(rollList, nameList, attList, dtList, position);
+
+                                } catch (Exception e) {
+
+                                }
+
+
+                            }
+
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+
+                        });
+
+
                     }
                 });
 
-                alertDialogBuilder.setNegativeButton("Edit", new DialogInterface.OnClickListener() {
+                /*alertDialogBuilder.setNegativeButton("Edit", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Intent intent = new Intent(ManageForAttIndex.this, UpdateForManageAttIndex.class);
@@ -150,7 +206,7 @@ public class ManageForAttIndex extends AppCompatActivity {
                         startActivity(intent);
 
                     }
-                });
+                });*/
                 alertDialogBuilder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -166,9 +222,146 @@ public class ManageForAttIndex extends AppCompatActivity {
 
     }
 
+    private void handlePercentage(final List<String> rollList, List<String> nameList, final List<String> attList, List<String> dtList, final int position) {
+
+
+        databaseReferenceForPercentage.child(attendanceForArray[position]).getRef().addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                Log.d("tt", "onDataChange:=========== " + rollList);
+                Log.d("tt", "onDataChange:=========== " + attendanceForArray[position]);
+
+                final List<String> rollListFORPer = new ArrayList<>();
+                final List<String> attListFORPer = new ArrayList<>();
+                final List<Integer> dayListFORPer = new ArrayList<>();
+                final List<Integer> pListFORPer = new ArrayList<>();
+                final List<Integer> aListFORPer = new ArrayList<>();
+                final List<Integer> percentageListFORPer = new ArrayList<>();
+
+
+                try {
+
+                    PercentageModel percentageModel = new PercentageModel();
+                    percentageModel = dataSnapshot.getValue(PercentageModel.class);
+                    attListFORPer.addAll(percentageModel.getAttList());
+                    rollListFORPer.addAll(percentageModel.getRollList());
+                    dayListFORPer.addAll(percentageModel.getDayList());
+                    pListFORPer.addAll(percentageModel.getpList());
+                    aListFORPer.addAll(percentageModel.getaList());
+                    percentageListFORPer.addAll(percentageModel.getPercentList());
+
+
+                    Log.d("rr", "onDataChange: " + attListFORPer + ", " + "" + rollListFORPer + ", " + dayListFORPer + ", " + pListFORPer + ", " + aListFORPer + ", " + percentageListFORPer);
+
+
+                    Log.d("rr", "onDataChange: =========================" + rollList.size());
+                    for (int i = 0; i < rollList.size(); i++) {
+                        int finalday = 0, finalP = 0, finalA = 0, finalPercent = 0;
+
+                        if (attList.get(i).equals("P")) {
+
+                            finalday = dayListFORPer.get(i) - 1;
+                            finalP = pListFORPer.get(i) - 1;
+                            finalA = aListFORPer.get(i);
+                            finalPercent = finalP * 100 / finalday;
+                                                    /*try {
+
+                                                        finalPercent = finalP * 100 / finalday;
+                                                    } catch (ArithmeticException ae) {
+                                                        finalPercent = 0;
+                                                    }*/
+                            Log.d("rr", "onDataChange: " + finalday + ", " + finalP + ", " + finalA + ", " + finalPercent);
+
+                        }
+                        if (attList.get(i).equals("A")) {
+                            finalday = dayListFORPer.get(i) - 1;
+                            finalP = pListFORPer.get(i);
+                            finalA = aListFORPer.get(i) - 1;
+                            finalPercent = finalP * 100 / finalday;
+                                                    /*try {
+
+                                                        finalPercent = finalP * 100 / finalday;
+                                                    } catch (ArithmeticException ae) {
+                                                        finalPercent = 0;
+                                                    }*/
+                            Log.d("rr", "onDataChange: " + finalday + ", " + finalP + ", " + finalA + ", " + finalPercent);
+
+                        }
+                        if (attList.get(i).equals("Off")) {
+
+                            finalday = dayListFORPer.get(i) - 1;
+                            finalP = pListFORPer.get(i);
+                            finalA = aListFORPer.get(i);
+                            finalPercent = finalP * 100 / finalday;
+                                                    /*try {
+
+                                                        finalPercent = finalP * 100 / finalday;
+                                                    } catch (ArithmeticException ae) {
+                                                        finalPercent = 0;
+                                                    }*/
+                            Log.d("rr", "onDataChange: " + finalday + ", " + finalP + ", " + finalA + ", " + finalPercent);
+
+
+                        }
+                        Log.d("rr", "onDataChange: " + finalday + ", " + finalP + ", " + finalA + ", " + finalPercent);
+
+                        databaseReferenceForPercentage.child(attendanceForArray[position]).child("dayList").child("" + i).getRef().removeValue();
+                        databaseReferenceForPercentage.child(attendanceForArray[position]).child("dayList").child("" + i).getRef().setValue(finalday);
+
+                        databaseReferenceForPercentage.child(attendanceForArray[position]).child("pList").child("" + i).getRef().removeValue();
+                        databaseReferenceForPercentage.child(attendanceForArray[position]).child("pList").child("" + i).getRef().setValue(finalP);
+
+                        databaseReferenceForPercentage.child(attendanceForArray[position]).child("aList").child("" + i).getRef().removeValue();
+                        databaseReferenceForPercentage.child(attendanceForArray[position]).child("aList").child("" + i).getRef().setValue(finalA);
+
+                        databaseReferenceForPercentage.child(attendanceForArray[position]).child("percentList").child("" + i).getRef().removeValue();
+                        databaseReferenceForPercentage.child(attendanceForArray[position]).child("percentList").child("" + i).getRef().setValue(finalPercent);
+
+                        dataBaseHelper.updatePercentageOneTitle(attendanceForArray[position], finalday, finalP, finalA, finalPercent);
+
+
+                    }
+                    databaseReferenceForattendancesIndex.child(dateTimeForAttendanceIndexArray[position]).getRef().removeValue();
+                    databaseReferenceForattendances.child(dateTimeForAttendanceIndexArray[position]).getRef().removeValue();
+
+
+                    Toast.makeText(ManageForAttIndex.this, "You have deleted successfully !", Toast.LENGTH_SHORT).show();
+                    finish();
+                    startActivity(getIntent());
+
+
+                } catch (Exception e) {
+
+                    Log.d("rr", "onDataChange: Exception============"+attendanceForArray[position]);
+                    dataBaseHelper.deleteSpecificFromPercentage(attendanceForArray[position]);
+                    databaseReferenceForPercentage.child(attendanceForArray[position]).getRef().removeValue();
+
+                    databaseReferenceForattendancesIndex.child(dateTimeForAttendanceIndexArray[position]).getRef().removeValue();
+                    databaseReferenceForattendances.child(dateTimeForAttendanceIndexArray[position]).getRef().removeValue();
+                    finish();
+                    startActivity(getIntent());
+                    Toast.makeText(ManageForAttIndex.this, "You have deleted successfully !", Toast.LENGTH_SHORT).show();
+
+
+                }
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+    }
+
     private void initOthers() {
         databaseReferenceForattendancesIndex = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL + emailMobilePassAttIndex);
         databaseReferenceForattendances = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL + emailMobilePassAtt);
+        databaseReferenceForPercentage = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL + emailMobilePassTest);
 
         attendanceIndexModelList = new ArrayList<>();
         attendancesList = new ArrayList<>();

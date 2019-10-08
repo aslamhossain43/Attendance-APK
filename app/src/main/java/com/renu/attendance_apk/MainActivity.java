@@ -150,37 +150,37 @@ public class MainActivity extends AppCompatActivity {
             databaseReferenceForRollName.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-try {
+                    try {
 
 
-    RollNameModel rollNameModel = dataSnapshot.getValue(RollNameModel.class);
-    roll.addAll(rollNameModel.getRollNo());
-    name.addAll(rollNameModel.getName());
-    attFor.addAll(rollNameModel.getAttFor());
-    date.addAll(rollNameModel.getDateTime());
+                        RollNameModel rollNameModel = dataSnapshot.getValue(RollNameModel.class);
+                        roll.addAll(rollNameModel.getRollNo());
+                        name.addAll(rollNameModel.getName());
+                        attFor.addAll(rollNameModel.getAttFor());
+                        date.addAll(rollNameModel.getDateTime());
 
 
-    String[] stringsForRoll = roll.toArray(new String[roll.size()]);
-    String[] stringsForNames = name.toArray(new String[name.size()]);
-    for (int i = 0; i < roll.size(); i++) {
+                        String[] stringsForRoll = roll.toArray(new String[roll.size()]);
+                        String[] stringsForNames = name.toArray(new String[name.size()]);
+                        for (int i = 0; i < roll.size(); i++) {
 
 
-        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View rowView = inflater.inflate(R.layout.field, null);
-        // Add the new row before the add field button.
+                            LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                            View rowView = inflater.inflate(R.layout.field, null);
+                            // Add the new row before the add field button.
 
-        parentLinearLayout.addView(rowView, parentLinearLayout.getChildCount() - 1);
-        editTextForField = rowView.findViewById(R.id.rollForFieldId);
-        editTextNameForField = rowView.findViewById(R.id.nameForFieldId);
-        spinnerForField = rowView.findViewById(R.id.spinnerForFieldId);
-        editTextForField.setText(stringsForRoll[i]);
-        editTextNameForField.setText(stringsForNames[i]);
+                            parentLinearLayout.addView(rowView, parentLinearLayout.getChildCount() - 1);
+                            editTextForField = rowView.findViewById(R.id.rollForFieldId);
+                            editTextNameForField = rowView.findViewById(R.id.nameForFieldId);
+                            spinnerForField = rowView.findViewById(R.id.spinnerForFieldId);
+                            editTextForField.setText(stringsForRoll[i]);
+                            editTextNameForField.setText(stringsForNames[i]);
 
-    }
+                        }
 
-}catch (Exception e){
-    Toast.makeText(MainActivity.this, "Persons insufficient !", Toast.LENGTH_SHORT).show();
-}
+                    } catch (Exception e) {
+                        Toast.makeText(MainActivity.this, "Persons insufficient !", Toast.LENGTH_SHORT).show();
+                    }
                 }
 
                 @Override
@@ -192,41 +192,41 @@ try {
 
         } else {
 
-try {
+            try {
 
 
-    String q = "SELECT * FROM " + ROLL_NAME_TABLE + " WHERE " + DATETIME_FOR_ROLLNAME + " = '" + rollNameDateTime + "'";
+                String q = "SELECT * FROM " + ROLL_NAME_TABLE + " WHERE " + DATETIME_FOR_ROLLNAME + " = '" + rollNameDateTime + "'";
 
-    Cursor cursor1 = sqLiteDatabase.rawQuery(q, null);
-    while (cursor1.moveToNext()) {
-        roll.add(cursor1.getString(0));
-        name.add(cursor1.getString(1));
-        attFor.add(cursor1.getString(2));
-        date.add(cursor1.getString(3));
+                Cursor cursor1 = sqLiteDatabase.rawQuery(q, null);
+                while (cursor1.moveToNext()) {
+                    roll.add(cursor1.getString(0));
+                    name.add(cursor1.getString(1));
+                    attFor.add(cursor1.getString(2));
+                    date.add(cursor1.getString(3));
 
-    }
+                }
 
-    String[] stringsForRoll = roll.toArray(new String[roll.size()]);
-    String[] stringsForNames = name.toArray(new String[name.size()]);
-    for (int i = 0; i < roll.size(); i++) {
+                String[] stringsForRoll = roll.toArray(new String[roll.size()]);
+                String[] stringsForNames = name.toArray(new String[name.size()]);
+                for (int i = 0; i < roll.size(); i++) {
 
 
-        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View rowView = inflater.inflate(R.layout.field, null);
-        // Add the new row before the add field button.
+                    LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                    View rowView = inflater.inflate(R.layout.field, null);
+                    // Add the new row before the add field button.
 
-        parentLinearLayout.addView(rowView, parentLinearLayout.getChildCount() - 1);
-        editTextForField = rowView.findViewById(R.id.rollForFieldId);
-        editTextNameForField = rowView.findViewById(R.id.nameForFieldId);
-        spinnerForField = rowView.findViewById(R.id.spinnerForFieldId);
-        editTextForField.setText(stringsForRoll[i]);
-        editTextNameForField.setText(stringsForNames[i]);
+                    parentLinearLayout.addView(rowView, parentLinearLayout.getChildCount() - 1);
+                    editTextForField = rowView.findViewById(R.id.rollForFieldId);
+                    editTextNameForField = rowView.findViewById(R.id.nameForFieldId);
+                    spinnerForField = rowView.findViewById(R.id.spinnerForFieldId);
+                    editTextForField.setText(stringsForRoll[i]);
+                    editTextNameForField.setText(stringsForNames[i]);
 
-    }
+                }
 
-}catch (Exception e){
-    Toast.makeText(this, "Persons insufficient !", Toast.LENGTH_SHORT).show();
-}
+            } catch (Exception e) {
+                Toast.makeText(this, "Persons insufficient !", Toast.LENGTH_SHORT).show();
+            }
         }
 
 
@@ -452,8 +452,10 @@ try {
                     aSum = a + 0;
                     aListForPer.add(aSum);
 
-                    percentSum = pSum * 100 / daySum;
-                    percentListForPer.add(percentSum);
+
+                        percentSum = pSum * 100 / daySum;
+                        percentListForPer.add(percentSum);
+
 
                 }
                 if (pFromMethod.equals("A")) {
@@ -465,8 +467,12 @@ try {
                     aSum = a + 1;
                     aListForPer.add(aSum);
 
-                    percentSum = pSum * 100 / daySum;
-                    percentListForPer.add(percentSum);
+
+
+                        percentSum = pSum * 100 / daySum;
+
+                        percentListForPer.add(percentSum);
+
 
                 }
                 if (pFromMethod.equalsIgnoreCase("Off")) {
@@ -478,8 +484,10 @@ try {
                     aSum = a + 0;
                     aListForPer.add(aSum);
 
-                    percentSum = pSum * 100 / daySum;
-                    percentListForPer.add(percentSum);
+                        percentSum = pSum * 100 / daySum;
+
+                        percentListForPer.add(percentSum);
+
 
                 }
                 attendanceCount++;
@@ -487,7 +495,7 @@ try {
             }
             dataBaseHelper.deleteSpecificFromPercentage(rollNameAttFor);
             dataBaseHelper.insertIntoPercentage(attListForPercentage, roolList, dayListForPer, pListForPer, aListForPer, percentListForPer);
-backgroundUpdate.handlePercentage(MainActivity.this);
+            backgroundUpdate.handlePercentage(MainActivity.this);
 
         } else {
 
@@ -525,8 +533,10 @@ backgroundUpdate.handlePercentage(MainActivity.this);
                     aSum = a + 0;
                     aListForPer.add(aSum);
 
-                    percentSum = pSum * 100 / daySum;
-                    percentListForPer.add(percentSum);
+                        percentSum = pSum * 100 / daySum;
+
+                        percentListForPer.add(percentSum);
+
 
                 }
                 if (pFromMethod.equals("A")) {
@@ -538,8 +548,10 @@ backgroundUpdate.handlePercentage(MainActivity.this);
                     aSum = a + 1;
                     aListForPer.add(aSum);
 
-                    percentSum = pSum * 100 / daySum;
-                    percentListForPer.add(percentSum);
+                        percentSum = pSum * 100 / daySum;
+
+                        percentListForPer.add(percentSum);
+
 
                 }
                 if (pFromMethod.equals("Off")) {
@@ -551,8 +563,10 @@ backgroundUpdate.handlePercentage(MainActivity.this);
                     aSum = a + 0;
                     aListForPer.add(aSum);
 
-                    percentSum = pSum * 100 / daySum;
-                    percentListForPer.add(percentSum);
+                        percentSum = pSum * 100 / daySum;
+
+                        percentListForPer.add(percentSum);
+
 
                 }
 
@@ -572,7 +586,7 @@ backgroundUpdate.handlePercentage(MainActivity.this);
     }
 
     private void initOthers() {
-             backgroundUpdate=new BackgroundUpdate();
+        backgroundUpdate = new BackgroundUpdate();
         databaseReferenceForattendances = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL + emailMobilePassAtt);
         databaseReferenceForattendancesIndex = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL + emailMobilePassAttIndex);
         databaseReferenceForRollName = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL + emailMobilePassRollname + "/" + rollNameDateTime);

@@ -5,6 +5,7 @@ import android.content.IntentFilter;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -29,7 +30,7 @@ public class Percentage extends AppCompatActivity {
 
     private static final String FIREBASE_URL = "https://attendance-apk.firebaseio.com/";
 
-    DatabaseReference databaseReferenceForRollnameIndex,databaseReferenceForPercentage;
+    DatabaseReference databaseReferenceForRollnameIndex, databaseReferenceForAttIndex, databaseReferenceForPercentage;
 
     DataBaseHelper dataBaseHelper;
     SQLiteDatabase sqLiteDatabase;
@@ -110,6 +111,7 @@ public class Percentage extends AppCompatActivity {
     private void handlePercentageIndex() {
 
         final List<RollNameIndexModel> rollNameIndexModelList = new ArrayList<>();
+        final List<AttendanceIndexModel> attendanceIndexModelList = new ArrayList<>();
 
         final List<String> stringAttFor = new ArrayList<>();
         final List<String> stringDate = new ArrayList<>();
@@ -122,24 +124,25 @@ public class Percentage extends AppCompatActivity {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                    if (dataSnapshot.exists()){
+                    if (dataSnapshot.exists()) {
+
                         //----------------------------
 
 
-                        databaseReferenceForRollnameIndex.addValueEventListener(new ValueEventListener() {
+                        databaseReferenceForAttIndex.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
 
-                                    RollNameIndexModel rollNameIndexModel = dataSnapshot1.getValue(RollNameIndexModel.class);
-                                    rollNameIndexModelList.add(rollNameIndexModel);
+                                    AttendanceIndexModel attendanceIndexModel = dataSnapshot1.getValue(AttendanceIndexModel.class);
+                                    attendanceIndexModelList.add(attendanceIndexModel);
 
                                 }
 
-                                for (RollNameIndexModel rollNameIndexModel : rollNameIndexModelList) {
-                                    stringAttFor.add(rollNameIndexModel.getAttendanceFor());
-                                    stringDate.add(rollNameIndexModel.getDateTime());
+                                for (AttendanceIndexModel attendanceIndexModel : attendanceIndexModelList) {
+                                    stringAttFor.add(attendanceIndexModel.getAttendanceFor());
+                                    stringDate.add(attendanceIndexModel.getDateTime());
 
 
                                 }
@@ -174,9 +177,9 @@ public class Percentage extends AppCompatActivity {
                             }
                         });
 
-                        //--------------------
 
-
+                    } else {
+                        percentageFromLocal();
                     }
                 }
 
@@ -187,8 +190,45 @@ public class Percentage extends AppCompatActivity {
             });
 
 
+        } else {
+
+
+            percentageFromLocal();
+
 
         }
+
+    }
+
+    private void percentageFromLocal() {
+        List<String> stringAttFor = new ArrayList<>();
+        List<String> stringDate = new ArrayList<>();
+        Cursor cursor = dataBaseHelper.getAllDataFromRollNameIndex();
+        while (cursor.moveToNext()) {
+            stringAttFor.add(cursor.getString(0));
+            stringDate.add(cursor.getString(1));
+        }
+
+        final String[] sAtt = stringAttFor.toArray(new String[stringAttFor.size()]);
+        final String[] sDateTime = stringDate.toArray(new String[stringDate.size()]);
+
+
+        CustomAdupterForShowPercentage customAdupterForShowPercentage = new CustomAdupterForShowPercentage(Percentage.this, sAtt, sDateTime);
+        listViewExistAttTypes.setAdapter(customAdupterForShowPercentage);
+        listViewExistAttTypes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(Percentage.this, ShowPercentage.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("sAtt", sAtt[position]);
+                bundle.putString("sDateTime", sDateTime[position]);
+                intent.putExtras(bundle);
+                startActivity(intent);
+
+
+            }
+        });
+
 
     }
 
@@ -199,6 +239,7 @@ public class Percentage extends AppCompatActivity {
         databaseReferenceForPercentage = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL + emailMobilePassTest);
 
         databaseReferenceForRollnameIndex = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL + emailMobilePassRollnameIndex);
+        databaseReferenceForAttIndex = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL + emailMobilePassAttIndex);
 
 
         myBroadcastReceiver = new MyBroadcastReceiver();

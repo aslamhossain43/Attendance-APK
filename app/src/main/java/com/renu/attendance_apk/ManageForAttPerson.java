@@ -81,230 +81,113 @@ public class ManageForAttPerson extends AppCompatActivity {
     }
 
     private void handleCustomAdapture() {
+if (Network.isNetworkAvailable(ManageForAttPerson.this)) {
 
 
-        databaseReferenceForRollName.child(dateTime).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                List<String> rollList = new ArrayList<>();
-                List<String> nameList = new ArrayList<>();
-                List<String> attendancesList = new ArrayList<>();
-                List<String> dateTimeList = new ArrayList<>();
+    databaseReferenceForRollName.child(dateTime).addValueEventListener(new ValueEventListener() {
+        @Override
+        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            List<String> rollList = new ArrayList<>();
+            List<String> nameList = new ArrayList<>();
+            List<String> attendancesList = new ArrayList<>();
+            List<String> dateTimeList = new ArrayList<>();
 
 
-                try {
-                    RollNameModel rollNameModel = new RollNameModel();
-                    rollNameModel = dataSnapshot.getValue(RollNameModel.class);
+            try {
+                RollNameModel rollNameModel = new RollNameModel();
+                rollNameModel = dataSnapshot.getValue(RollNameModel.class);
 
-                    rollList.addAll(rollNameModel.getRollNo());
-                    nameList.addAll(rollNameModel.getName());
-                    attendancesList.addAll(rollNameModel.getAttFor());
-                    dateTimeList.addAll(rollNameModel.getDateTime());
-                } catch (Exception e) {
-                    Toast.makeText(ManageForAttPerson.this, "Processing....", Toast.LENGTH_SHORT).show();
+                rollList.addAll(rollNameModel.getRollNo());
+                nameList.addAll(rollNameModel.getName());
+                attendancesList.addAll(rollNameModel.getAttFor());
+                dateTimeList.addAll(rollNameModel.getDateTime());
+            } catch (Exception e) {
+                Toast.makeText(ManageForAttPerson.this, "Processing....", Toast.LENGTH_SHORT).show();
+            }
+            stringsRoll = rollList.toArray(new String[rollList.size()]);
+            stringsNames = nameList.toArray(new String[nameList.size()]);
+            stringsAtt = attendancesList.toArray(new String[attendancesList.size()]);
+            stringsDate = dateTimeList.toArray(new String[dateTimeList.size()]);
+
+            CustomAdaptureForManagingAttPerson customAdaptureForManagingAttPerson = new CustomAdaptureForManagingAttPerson(ManageForAttPerson.this, stringsRoll, stringsNames);
+            managePersonListViewId.setAdapter(customAdaptureForManagingAttPerson);
+            managePersonListViewId.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+
+
+                    alertBuilder.setMessage("Roll No : " + stringsRoll[position] + "\nName : " + stringsNames[position]);
+                    alertBuilder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                            dataBaseHelper.deleteSpecificPersonByRoll(stringsRoll[position], stringsAtt[position]);
+                            databaseReferenceForPercentage.child(attFor).child("aList").child("" + position).getRef().removeValue();
+                            databaseReferenceForPercentage.child(attFor).child("attList").child("" + position).getRef().removeValue();
+                            databaseReferenceForPercentage.child(attFor).child("pList").child("" + position).getRef().removeValue();
+                            databaseReferenceForPercentage.child(attFor).child("dayList").child("" + position).getRef().removeValue();
+                            databaseReferenceForPercentage.child(attFor).child("percentList").child("" + position).getRef().removeValue();
+                            databaseReferenceForPercentage.child(attFor).child("rollList").child("" + position).getRef().removeValue();
+
+
+                            databaseReferenceForRollName.child(dateTime).child("attFor").child("" + position).getRef().removeValue();
+                            databaseReferenceForRollName.child(dateTime).child("dateTime").child("" + position).getRef().removeValue();
+                            databaseReferenceForRollName.child(dateTime).child("name").child("" + position).getRef().removeValue();
+                            databaseReferenceForRollName.child(dateTime).child("rollNo").child("" + position).getRef().removeValue();
+
+
+                            finish();
+                            startActivity(getIntent());
+                            Toast.makeText(ManageForAttPerson.this, "You have deleted successfully !", Toast.LENGTH_SHORT).show();
+
+                        }
+                    });
+
+                    alertBuilder.setNegativeButton("Edit", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent intent = new Intent(ManageForAttPerson.this, UpdateForAttPerson.class);
+                            Bundle bundle = new Bundle();
+                            bundle.putString("roll", stringsRoll[position]);
+                            bundle.putString("name", stringsNames[position]);
+                            bundle.putString("attFor", stringsAtt[position]);
+                            bundle.putString("dateTime", stringsDate[position]);
+                            bundle.putString("position", "" + position);
+                            intent.putExtras(bundle);
+                            startActivity(intent);
+
+
+                        }
+                    });
+                    alertBuilder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    });
+
+
+                    AlertDialog alertDialog = alertBuilder.create();
+                    alertDialog.show();
+
+
                 }
-                stringsRoll = rollList.toArray(new String[rollList.size()]);
-                stringsNames = nameList.toArray(new String[nameList.size()]);
-                stringsAtt = attendancesList.toArray(new String[attendancesList.size()]);
-                stringsDate = dateTimeList.toArray(new String[dateTimeList.size()]);
-
-                CustomAdaptureForManagingAttPerson customAdaptureForManagingAttPerson = new CustomAdaptureForManagingAttPerson(ManageForAttPerson.this, stringsRoll, stringsNames);
-                managePersonListViewId.setAdapter(customAdaptureForManagingAttPerson);
-                managePersonListViewId.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+            });
 
 
-                        alertBuilder.setMessage("Roll No : " + stringsRoll[position] + "\nName : " + stringsNames[position]);
-                        alertBuilder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
+        }
 
-                                dataBaseHelper.deleteSpecificPersonByRoll(stringsRoll[position],stringsAtt[position]);
-                                databaseReferenceForPercentage.child(attFor).child("aList").child(""+position).getRef().removeValue();
-                                databaseReferenceForPercentage.child(attFor).child("attList").child(""+position).getRef().removeValue();
-                                databaseReferenceForPercentage.child(attFor).child("pList").child(""+position).getRef().removeValue();
-                                databaseReferenceForPercentage.child(attFor).child("dayList").child(""+position).getRef().removeValue();
-                                databaseReferenceForPercentage.child(attFor).child("percentList").child(""+position).getRef().removeValue();
-                                databaseReferenceForPercentage.child(attFor).child("rollList").child(""+position).getRef().removeValue();
+        @Override
+        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+        }
+    });
 
 
-                                databaseReferenceForRollName.child(dateTime).child("attFor").child(""+position).getRef().removeValue();
-                                databaseReferenceForRollName.child(dateTime).child("dateTime").child(""+position).getRef().removeValue();
-                                databaseReferenceForRollName.child(dateTime).child("name").child(""+position).getRef().removeValue();
-                                databaseReferenceForRollName.child(dateTime).child("rollNo").child(""+position).getRef().removeValue();
+}else {
+    Toast.makeText(this, "Connect internet !", Toast.LENGTH_SHORT).show();
+}
 
-
-                                finish();
-                                startActivity(getIntent());
-                                Toast.makeText(ManageForAttPerson.this, "You have deleted successfully !", Toast.LENGTH_SHORT).show();
-
-                            }
-                        });
-
-                        alertBuilder.setNegativeButton("Edit", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                Intent intent = new Intent(ManageForAttPerson.this, UpdateForAttPerson.class);
-                                Bundle bundle = new Bundle();
-                                bundle.putString("roll", stringsRoll[position]);
-                                bundle.putString("name", stringsNames[position]);
-                                bundle.putString("attFor", stringsAtt[position]);
-                                bundle.putString("dateTime", stringsDate[position]);
-                                bundle.putString("position", "" + position);
-                                intent.putExtras(bundle);
-                                startActivity(intent);
-
-
-                            }
-                        });
-                        alertBuilder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-
-                            }
-                        });
-
-
-                        AlertDialog alertDialog = alertBuilder.create();
-                        alertDialog.show();
-
-
-                    }
-                });
-
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-
-
-
-
-
-
-
-
-
-       /*
-
-        List<String> rollList = new ArrayList<>();
-        List<String> nameList = new ArrayList<>();
-        List<String> attendancesList = new ArrayList<>();
-        List<String> dateTimeList = new ArrayList<>();
-*/
-/*
-        sqLiteDatabase = dataBaseHelper.getWritableDatabase();
-
-        String q = "SELECT * FROM " + ROLL_NAME_TABLE + " WHERE " + DATETIME_FOR_ROLLNAME + " = '" + dateTime + "'";
-
-        Cursor cursor1 = sqLiteDatabase.rawQuery(q, null);
-        while (cursor1.moveToNext()) {
-            rollList.add(cursor1.getString(0));
-            nameList.add(cursor1.getString(1));
-            attendancesList.add(cursor1.getString(2));
-            dateTimeList.add(cursor1.getString(3));
-
-        }*/
-
-       /* final String[] stringsRoll = rollList.toArray(new String[rollList.size()]);
-        final String[] stringsNames = nameList.toArray(new String[nameList.size()]);
-        final String[] stringsAtt = attendancesList.toArray(new String[attendancesList.size()]);
-        final String[] stringsDate = dateTimeList.toArray(new String[dateTimeList.size()]);
-
-        CustomAdaptureForManagingAttPerson customAdaptureForManagingAttPerson = new CustomAdaptureForManagingAttPerson(this, stringsRoll, stringsNames);
-        managePersonListViewId.setAdapter(customAdaptureForManagingAttPerson);
-        managePersonListViewId.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-
-
-                alertBuilder.setMessage("Roll No : " + stringsRoll[position] + "\nName : " + stringsNames[position]);
-                alertBuilder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                        dataBaseHelper.deleteSpecificPersonByRoll(stringsRoll[position]);
-
-databaseReferenceForRollName.child(dateTime).addValueEventListener(new ValueEventListener() {
-    @Override
-    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-
-        RollNameModel rollNameModel = new RollNameModel();
-        List<String> roll = new ArrayList<>();
-        List<String> name = new ArrayList<>();
-        List<String> attFor = new ArrayList<>();
-        List<String> date = new ArrayList<>();
-        rollNameModel = dataSnapshot.getValue(RollNameModel.class);
-        roll.addAll(rollNameModel.getRollNo());
-        name.addAll(rollNameModel.getName());
-        attFor.addAll(rollNameModel.getAttFor());
-        date.addAll(rollNameModel.getDateTime());
-        roll.remove(position);
-        name.remove(position);
-        attFor.remove(position);
-        date.remove(position);
-      databaseReferenceForRollName.child(dateTime).getRef().removeValue();
-      databaseReferenceForRollName.child(dateTime).getRef().setValue(new RollNameModel(roll,name,attFor,date));
-
-
-    }
-
-    @Override
-    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-    }
-});
-
-
-
-
-
-
-
-                        finish();
-                        startActivity(getIntent());
-                        Toast.makeText(ManageForAttPerson.this, "You Have Deleted Successfully !", Toast.LENGTH_SHORT).show();
-
-                    }
-                });
-
-                alertBuilder.setNegativeButton("Edit", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Intent intent = new Intent(ManageForAttPerson.this, UpdateForAttPerson.class);
-                        Bundle bundle = new Bundle();
-                        bundle.putString("roll", stringsRoll[position]);
-                        bundle.putString("name", stringsNames[position]);
-                        bundle.putString("attFor", stringsAtt[position]);
-                        bundle.putString("dateTime", stringsDate[position]);
-                        intent.putExtras(bundle);
-                        startActivity(intent);
-
-
-                    }
-                });
-                alertBuilder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                    }
-                });
-
-
-                AlertDialog alertDialog = alertBuilder.create();
-                alertDialog.show();
-
-
-            }
-        });
-*/
 
     }
 

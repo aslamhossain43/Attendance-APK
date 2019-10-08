@@ -96,6 +96,10 @@ databaseReferenceForRollName.child(dateTime).child("name").child(position).getRe
 
 
 
+databaseReferenceForPercentage.child(index).child("rollList").child(""+position).getRef().removeValue();
+databaseReferenceForPercentage.child(index).child("rollList").child(""+position).getRef().setValue(rol);
+
+
 
                 //--------------------------
 

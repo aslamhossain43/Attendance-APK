@@ -69,17 +69,6 @@ public class BackgroundUpdate {
     private static String emailMobilePass = null;
 
 
-    public BackgroundUpdate() {
-
-        //getWholeInformation();
-        //initAll(context);
-
-
-       // handlePercentage(context);
-
-
-    }
-
     public static void getWholeInformation(Context context) {
 
         dataBaseHelper = new DataBaseHelper(context);
@@ -88,7 +77,6 @@ public class BackgroundUpdate {
 
         Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM " + WHOLE_INFORMATION_TABLE, null);
 
-        //if (cursor.getCount() != 0) {
 try {
 
     while (cursor.moveToNext()) {
@@ -107,8 +95,6 @@ finally {
         cursor.close();
     sqLiteDatabase.close();
 }
-        //}
-        sqLiteDatabase.close();
     }
 
     public static void initAll(Context context) {
@@ -139,60 +125,65 @@ finally {
 
 
     public static void handlePercentage(Context context) {
-        getWholeInformation(context);
-        initAll(context);
 
 
-        dataBaseHelper = new DataBaseHelper(context);
-
-        sqLiteDatabase = dataBaseHelper.getWritableDatabase();
-
-        databaseReferenceForPercentage.getRef().removeValue();
+        if (Network.isNetworkAvailable(context)) {
 
 
-        Cursor cursor = dataBaseHelper.getAllDataFromRollNameIndex();
-        Log.d("rr", "handlePercentage: =============percentage handle");
-try {
-
-    while (cursor.moveToNext()) {
-        String attendanceFor = cursor.getString(0);
-        String dateTime = cursor.getString(1);
-
-        String q = "SELECT * FROM " + TEST_TABLE + " WHERE " + PERCENTAGE_ATT_FOR + " = '" + attendanceFor + "'";
-
-        Cursor cursor1 = sqLiteDatabase.rawQuery(q, null);
+            getWholeInformation(context);
+            initAll(context);
 
 
-        while (cursor1.moveToNext()) {
-            attListForTest.add(cursor1.getString(0));
-            rollListForTest.add(cursor1.getString(1));
-            dayList.add(cursor1.getInt(2));
-            pList.add(cursor1.getInt(3));
-            aList.add(cursor1.getInt(4));
-            percentList.add(cursor1.getInt(5));
+            dataBaseHelper = new DataBaseHelper(context);
+
+            sqLiteDatabase = dataBaseHelper.getWritableDatabase();
+
+            databaseReferenceForPercentage.getRef().removeValue();
 
 
+            Cursor cursor = dataBaseHelper.getAllDataFromRollNameIndex();
+            Log.d("rr", "handlePercentage: =============percentage handle");
+            try {
+
+                while (cursor.moveToNext()) {
+                    String attendanceFor = cursor.getString(0);
+                    String dateTime = cursor.getString(1);
+
+                    String q = "SELECT * FROM " + TEST_TABLE + " WHERE " + PERCENTAGE_ATT_FOR + " = '" + attendanceFor + "'";
+
+                    Cursor cursor1 = sqLiteDatabase.rawQuery(q, null);
 
 
+                    while (cursor1.moveToNext()) {
+                        attListForTest.add(cursor1.getString(0));
+                        rollListForTest.add(cursor1.getString(1));
+                        dayList.add(cursor1.getInt(2));
+                        pList.add(cursor1.getInt(3));
+                        aList.add(cursor1.getInt(4));
+                        percentList.add(cursor1.getInt(5));
+
+
+                    }
+                    PercentageModel percentageModel = new PercentageModel(attListForTest, rollListForTest, dayList, pList, aList, percentList);
+                    databaseReferenceForPercentage.child(attendanceFor).getRef().setValue(percentageModel);
+                    attListForTest.clear();
+                    rollListForTest.clear();
+                    dayList.clear();
+                    pList.clear();
+                    aList.clear();
+                    percentList.clear();
+
+                }
+
+
+            } finally {
+
+                if (cursor != null && !cursor.isClosed())
+                    cursor.close();
+
+                sqLiteDatabase.close();
+
+            }
         }
-        PercentageModel percentageModel = new PercentageModel(attListForTest, rollListForTest, dayList, pList, aList, percentList);
-        databaseReferenceForPercentage.child(attendanceFor).getRef().setValue(percentageModel);
-
-        attListForTest.clear();
-        rollListForTest.clear();
-        dayList.clear();
-        pList.clear();
-        percentList.clear();
-
-
     }
-}finally {
-
-    if (cursor != null && !cursor.isClosed())
-        cursor.close();
-    sqLiteDatabase.close();
-
-}
-    }
-
 }

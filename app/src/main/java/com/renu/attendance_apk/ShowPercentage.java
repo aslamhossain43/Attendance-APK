@@ -167,7 +167,7 @@ public class ShowPercentage extends AppCompatActivity {
 
 
                     } catch (Exception e) {
-
+                        Toast.makeText(ShowPercentage.this, "Percentage insufficient !", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(ShowPercentage.this, Percentage.class);
                         startActivity(intent);
 
@@ -184,7 +184,90 @@ public class ShowPercentage extends AppCompatActivity {
             });
 
         } else {
-            Toast.makeText(ShowPercentage.this, "Connect internet !", Toast.LENGTH_SHORT).show();
+
+            dataBaseHelper = new DataBaseHelper(ShowPercentage.this);
+            sqLiteDatabase = dataBaseHelper.getWritableDatabase();
+
+            List<String> attListForPer = new ArrayList<>();
+            List<String> rollListForPer = new ArrayList<>();
+
+            List<Integer> dayListForPer = new ArrayList<>();
+            List<Integer> pListForPer = new ArrayList<>();
+            List<Integer> aListForPer = new ArrayList<>();
+            List<Integer> percentListForPer = new ArrayList<>();
+
+
+            String q = "SELECT * FROM " + TEST_TABLE + " WHERE " + PERCENTAGE_ATT_FOR + " = '" + attFromFirebaseIndex + "'";
+
+            Cursor cursor1 = sqLiteDatabase.rawQuery(q, null);
+            try {
+
+
+                while (cursor1.moveToNext()) {
+                    attListForPer.add(cursor1.getString(0));
+                    rollListForPer.add(cursor1.getString(1));
+                    dayListForPer.add(cursor1.getInt(2));
+                    pListForPer.add(cursor1.getInt(3));
+                    aListForPer.add(cursor1.getInt(4));
+                    percentListForPer.add(cursor1.getInt(5));
+
+
+                }
+
+
+                percentageFinalRoll = rollListForPer.toArray(new String[rollListForPer.size()]);
+//convert List<Integer> into int[]
+                int daysize = dayListForPer.size();
+                int[] dayresult = new int[daysize];
+                Integer[] daytemp = dayListForPer.toArray(new Integer[daysize]);
+                for (int n = 0; n < daysize; ++n) {
+                    dayresult[n] = daytemp[n];
+                }
+                percentageFinalDay = dayresult;
+
+
+                //convert List<Integer> into int[]
+                int psize = pListForPer.size();
+                int[] presult = new int[psize];
+                Integer[] ptemp = pListForPer.toArray(new Integer[psize]);
+                for (int n = 0; n < psize; ++n) {
+                    presult[n] = ptemp[n];
+                }
+                percentageFinalP = presult;
+
+                //convert List<Integer> into int[]
+                int asize = aListForPer.size();
+                int[] aresult = new int[asize];
+                Integer[] atemp = aListForPer.toArray(new Integer[asize]);
+                for (int n = 0; n < asize; ++n) {
+                    aresult[n] = atemp[n];
+                }
+                percentageFinalA = aresult;
+
+                //convert List<Integer> into int[]
+                int percentsize = percentListForPer.size();
+                int[] percentresult = new int[percentsize];
+                Integer[] percenttemp = percentListForPer.toArray(new Integer[percentsize]);
+                for (int n = 0; n < percentsize; ++n) {
+                    percentresult[n] = percenttemp[n];
+                }
+
+                percentageFinalPercent = percentresult;
+
+
+                CustomAdupterForShowPercentageDetails customAdupterForShowPercentageDetails = new CustomAdupterForShowPercentageDetails(ShowPercentage.this, percentageFinalRoll, percentageFinalDay, percentageFinalP,
+                        percentageFinalA, percentageFinalPercent);
+                listViewShowPercentageId.setAdapter(customAdupterForShowPercentageDetails);
+
+
+            } finally {
+
+                if (cursor1 != null && !cursor1.isClosed())
+                    cursor1.close();
+
+                sqLiteDatabase.close();
+
+            }
         }
     }
 
@@ -194,6 +277,10 @@ public class ShowPercentage extends AppCompatActivity {
     }
 
     private void initOthers() {
+        dataBaseHelper=new DataBaseHelper(this);
+        sqLiteDatabase=dataBaseHelper.getWritableDatabase();
+
+
         myBroadcastReceiver = new MyBroadcastReceiver();
         databaseReferenceForPercentage = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL + emailMobilePassTest + "/" + attFromFirebaseIndex);
 
