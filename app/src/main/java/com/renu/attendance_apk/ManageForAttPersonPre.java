@@ -101,6 +101,9 @@ databaseReferenceForRollnameIndex.addValueEventListener(new ValueEventListener()
                 bundle.putString("dateTime", sDateTime[position]);
                 bundle.putString("attFor", sAtt[position]);
                 intent.putExtras(bundle);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
                 startActivity(intent);
 
 
@@ -119,37 +122,6 @@ databaseReferenceForRollnameIndex.addValueEventListener(new ValueEventListener()
 
 
 
-
-/*
-
-
-        Cursor cursor = dataBaseHelper.getAllDataFromRollNameIndex();
-        List<String> stringAttFor = new ArrayList<>();
-        List<String> stringDate = new ArrayList<>();
-        while (cursor.moveToNext()) {
-            stringAttFor.add(cursor.getString(0));
-            stringDate.add(cursor.getString(1));
-        }
-
-        final String[] sAtt = stringAttFor.toArray(new String[stringAttFor.size()]);
-        final String[] sDateTime = stringDate.toArray(new String[stringDate.size()]);
-
-        CustomAdupterForManagingLocalAttIndexPre customAdupterForLocalAttIndexPre = new CustomAdupterForManagingLocalAttIndexPre(this, sAtt, sDateTime);
-        listViewForPersonPre.setAdapter(customAdupterForLocalAttIndexPre);
-        listViewForPersonPre.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(ManageForAttPersonPre.this, ManageForAttPerson.class);
-                Bundle bundle = new Bundle();
-
-                bundle.putString("dateTime", sDateTime[position]);
-                bundle.putString("attFor", sAtt[position]);
-                intent.putExtras(bundle);
-                startActivity(intent);
-
-
-            }
-        });*/
 
     }
     private void getWholeInformation() {
@@ -222,42 +194,76 @@ databaseReferenceForRollnameIndex.addValueEventListener(new ValueEventListener()
 
         if (item.getItemId() == R.id.homeId) {
             Intent intent = new Intent(this, AfterLogin.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
             startActivity(intent);
 
         }
         if (item.getItemId() == R.id.infoId) {
             Intent intent = new Intent(this, Informations.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
             startActivity(intent);
 
         }
 
         if (item.getItemId() == R.id.listId) {
             Intent intent = new Intent(this, AttendancesIndex.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
             startActivity(intent);
 
         }
         if (item.getItemId() == R.id.openId) {
             Intent intent = new Intent(this, CreateNew1.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
             startActivity(intent);
 
         }
         if (item.getItemId() == R.id.localAttendances) {
             Intent intent = new Intent(this, ExistRollNames.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
             startActivity(intent);
 
         }
         if (item.getItemId() == R.id.summary) {
+
             Intent intent = new Intent(this, Percentage.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            BackgroundUpdate.handlePercentage(this);
+
             startActivity(intent);
 
         }
-
         if (item.getItemId() == R.id.settings) {
+
             Intent intent = new Intent(this, Settings.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            BackgroundUpdate.handlePercentage(this);
+
             startActivity(intent);
 
         }
+        if (item.getItemId() == R.id.logout) {
+            DataBaseHelper dataBaseHelper = new DataBaseHelper(this);
+            dataBaseHelper.delete_Login();
 
+            Intent intent = new Intent(this, Authentication.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+            startActivity(intent);
+
+        }
 
         return super.onOptionsItemSelected(item);
     }

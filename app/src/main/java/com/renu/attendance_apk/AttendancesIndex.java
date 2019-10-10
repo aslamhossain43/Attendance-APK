@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -38,7 +39,6 @@ public class AttendancesIndex extends AppCompatActivity {
     private DataBaseHelper dataBaseHelper;
     SQLiteDatabase sqLiteDatabase;
 
-
     private static final String WHOLE_INFORMATION_TABLE = "wholeinformations";
     private String emailMobilePassRollnameIndex = null;
     private String emailMobilePassRollname = null;
@@ -60,52 +60,68 @@ public class AttendancesIndex extends AppCompatActivity {
 
 
         intitOthers();
+handleAttendanceIndex();
 
 
-        databaseReferenceForattendancesIndex.addValueEventListener(new ValueEventListener() {
 
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                try {
+    }
+
+    private void handleAttendanceIndex() {
+
+        if (Network.isNetworkAvailable(this)) {
 
 
-                    for (DataSnapshot dnapshot : dataSnapshot.getChildren()) {
-                        AttendanceIndexModel attendanceIndexModel = dnapshot.getValue(AttendanceIndexModel.class);
-                        attendanceIndexModelList.add(attendanceIndexModel);
+            databaseReferenceForattendancesIndex.addValueEventListener(new ValueEventListener() {
 
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                    try {
+
+
+                        for (DataSnapshot dnapshot : dataSnapshot.getChildren()) {
+                            AttendanceIndexModel attendanceIndexModel = dnapshot.getValue(AttendanceIndexModel.class);
+                            attendanceIndexModelList.add(attendanceIndexModel);
+
+
+                        }
+
+
+                        List<String> dtForIndex = new ArrayList<>();
+                        List<String> attForIndex = new ArrayList<>();
+                        for (AttendanceIndexModel attendanceIndexModel : attendanceIndexModelList) {
+                            dtForIndex.add(attendanceIndexModel.getDateTime());
+                            attForIndex.add(attendanceIndexModel.getAttendanceFor());
+
+
+                        }
+
+                        String[] dateTimeForAttendanceIndexArray;
+                        String[] attendanceForArray;
+                        dateTimeForAttendanceIndexArray = dtForIndex.toArray(new String[dtForIndex.size()]);
+                        attendanceForArray = attForIndex.toArray(new String[attForIndex.size()]);
+
+
+                        listViewHandleForAttendancesIndex(dateTimeForAttendanceIndexArray, attendanceForArray);
+
+
+                    } catch (Exception e) {
+                        Toast.makeText(AttendancesIndex.this, "Attendances not available !", Toast.LENGTH_SHORT).show();
 
                     }
-
-
-                    List<String> dtForIndex = new ArrayList<>();
-                    List<String> attForIndex = new ArrayList<>();
-                    for (AttendanceIndexModel attendanceIndexModel : attendanceIndexModelList) {
-                        dtForIndex.add(attendanceIndexModel.getDateTime());
-                        attForIndex.add(attendanceIndexModel.getAttendanceFor());
-
-
-                    }
-
-                    String[] dateTimeForAttendanceIndexArray;
-                    String[] attendanceForArray;
-                    dateTimeForAttendanceIndexArray = dtForIndex.toArray(new String[dtForIndex.size()]);
-                    attendanceForArray = attForIndex.toArray(new String[attForIndex.size()]);
-
-
-                    listViewHandleForAttendancesIndex(dateTimeForAttendanceIndexArray, attendanceForArray);
-                } catch (Exception e) {
-                    Toast.makeText(AttendancesIndex.this, "Attendances not available !", Toast.LENGTH_SHORT).show();
 
                 }
 
-            }
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+                }
+            });
 
-            }
-        });
 
+        }else {
+            Toast.makeText(this, "Connect internet !", Toast.LENGTH_SHORT).show();
+        }
 
     }
 
@@ -155,6 +171,9 @@ public class AttendancesIndex extends AppCompatActivity {
                 bundle.putString("attFor", attFor);
                 bundle.putString("dt", dt);
                 intent.putExtras(bundle);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
                 startActivity(intent);
 
 
@@ -241,6 +260,14 @@ public class AttendancesIndex extends AppCompatActivity {
 
         if (item.getItemId() == R.id.localAttendances) {
             Intent intent = new Intent(this, ExistRollNames.class);
+            startActivity(intent);
+
+        }
+        if (item.getItemId() == R.id.logout) {
+            DataBaseHelper dataBaseHelper = new DataBaseHelper(this);
+            dataBaseHelper.delete_Login();
+
+            Intent intent = new Intent(this, Authentication.class);
             startActivity(intent);
 
         }

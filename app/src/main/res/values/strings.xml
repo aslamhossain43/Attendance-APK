@@ -7,23 +7,32 @@
     <string name="confirm_password">Confirm Password</string>
     <string name="register">Register</string>
     <string name="alreadyregistered">Already Registered ?</string>
-    <string name="exist">Already exist</string>
+    <string name="exist">Already exist ?</string>
     <string name="create_new">Create new</string>
     <string name="info_text">
 
-        This Attendance APK is usable for any attendance purpose like school
-        , college, university and any
-        institution where attendance need.
-
-Some direction is given below :
-        First you need to register then complete your login. If you have no existence roll, name for any
-        institution or class then create new. Next give the name for which you need the attendance and how many person
-        will be counted then click save button. If network is not connected then those exist in your local book. To keep the attendance click on local book.
-        After completing attendance save that. If network is not connected then these will be stored in your phone memory.
-        If network is connected then you see all these attendances. If you want to edit/delete then
-        go to setting and manage theme. To keep attendance you do not need network connection but to access them
-        you must need network connection.
-
+        This \'A Book\' application is developed only for attendance purpose.
+        The complete process of the application is described :
+        After installation you have to complete the registration by valid
+        email address,phone number and password.
+        An email is sent to your given email address which contains
+        your registration information. You should store these information to
+        get back your data next time. If email is deleted then you can
+        resend it from setting. After registration you must create the new
+        attendance type to count the attendance as a new user. Then you
+        can count attendance if you want. After counting attendance per day
+        you can see total list from menu icon three. By clicking icon four
+        you can see the percentage of your counted attendance. Total control of
+        your application is in setting. In setting, first button is for resending
+        your backup information. Second button is for creating another
+        existing attendance type. You create same attendance type without
+        time waste. Third button is for editing/deleting any person.
+        Four number button is for deleting specific attendance.
+        Five number button is for deleting specific attendance.
+        Six number button is for deleting all counted attendance.
+        from your application. Seven number button is to reset your application.
+        N.B : Without internet connection you can create and count attendance
+        but to complete other operation you have connect internet.
 
 
     </string>

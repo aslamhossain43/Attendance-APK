@@ -194,19 +194,7 @@ public class ManageForAttIndex extends AppCompatActivity {
                     }
                 });
 
-                /*alertDialogBuilder.setNegativeButton("Edit", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Intent intent = new Intent(ManageForAttIndex.this, UpdateForManageAttIndex.class);
 
-                        Bundle bundle = new Bundle();
-                        bundle.putString("index", attendanceForArray[position]);
-                        bundle.putString("dateTime", dateTimeForAttendanceIndexArray[position]);
-                        intent.putExtras(bundle);
-                        startActivity(intent);
-
-                    }
-                });*/
                 alertDialogBuilder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -265,12 +253,7 @@ public class ManageForAttIndex extends AppCompatActivity {
                             finalP = pListFORPer.get(i) - 1;
                             finalA = aListFORPer.get(i);
                             finalPercent = finalP * 100 / finalday;
-                                                    /*try {
 
-                                                        finalPercent = finalP * 100 / finalday;
-                                                    } catch (ArithmeticException ae) {
-                                                        finalPercent = 0;
-                                                    }*/
                             Log.d("rr", "onDataChange: " + finalday + ", " + finalP + ", " + finalA + ", " + finalPercent);
 
                         }
@@ -279,12 +262,7 @@ public class ManageForAttIndex extends AppCompatActivity {
                             finalP = pListFORPer.get(i);
                             finalA = aListFORPer.get(i) - 1;
                             finalPercent = finalP * 100 / finalday;
-                                                    /*try {
 
-                                                        finalPercent = finalP * 100 / finalday;
-                                                    } catch (ArithmeticException ae) {
-                                                        finalPercent = 0;
-                                                    }*/
                             Log.d("rr", "onDataChange: " + finalday + ", " + finalP + ", " + finalA + ", " + finalPercent);
 
                         }
@@ -294,12 +272,7 @@ public class ManageForAttIndex extends AppCompatActivity {
                             finalP = pListFORPer.get(i);
                             finalA = aListFORPer.get(i);
                             finalPercent = finalP * 100 / finalday;
-                                                    /*try {
 
-                                                        finalPercent = finalP * 100 / finalday;
-                                                    } catch (ArithmeticException ae) {
-                                                        finalPercent = 0;
-                                                    }*/
                             Log.d("rr", "onDataChange: " + finalday + ", " + finalP + ", " + finalA + ", " + finalPercent);
 
 
@@ -339,9 +312,9 @@ public class ManageForAttIndex extends AppCompatActivity {
 
                     databaseReferenceForattendancesIndex.child(dateTimeForAttendanceIndexArray[position]).getRef().removeValue();
                     databaseReferenceForattendances.child(dateTimeForAttendanceIndexArray[position]).getRef().removeValue();
+                    Toast.makeText(ManageForAttIndex.this, "You have deleted successfully !", Toast.LENGTH_SHORT).show();
                     finish();
                     startActivity(getIntent());
-                    Toast.makeText(ManageForAttIndex.this, "You have deleted successfully !", Toast.LENGTH_SHORT).show();
 
 
                 }
@@ -448,7 +421,14 @@ public class ManageForAttIndex extends AppCompatActivity {
             startActivity(intent);
 
         }
+        if (item.getItemId() == R.id.logout) {
+            DataBaseHelper dataBaseHelper = new DataBaseHelper(this);
+            dataBaseHelper.delete_Login();
 
+            Intent intent = new Intent(this, Authentication.class);
+            startActivity(intent);
+
+        }
 
         return super.onOptionsItemSelected(item);
     }

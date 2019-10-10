@@ -108,6 +108,9 @@ public class ManageForLocalAttTypeIndex extends AppCompatActivity {
                                 bundle.putString("index", sAtt[position]);
                                 bundle.putString("dateTime", sDateTime[position]);
                                 intent.putExtras(bundle);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
                                 startActivity(intent);
 
                             }
@@ -132,65 +135,7 @@ public class ManageForLocalAttTypeIndex extends AppCompatActivity {
             }
         });
 
-       /*
-        Cursor cursor = dataBaseHelper.getAllDataFromRollNameIndex();
-        List<String> stringAttFor = new ArrayList<>();
-        List<String> stringDate = new ArrayList<>();
-        while (cursor.moveToNext()) {
-            stringAttFor.add(cursor.getString(0));
-            stringDate.add(cursor.getString(1));
-        }
 
-        final String[] sAtt = stringAttFor.toArray(new String[stringAttFor.size()]);
-        final String[] sDateTime = stringDate.toArray(new String[stringDate.size()]);
-
-
-        CustomAdupterForManagingLocalAttIndex customAdupterForLocalAttIndex = new CustomAdupterForManagingLocalAttIndex(ManageForLocalAttTypeIndex.this, sAtt, sDateTime);
-        listViewExistAttTypes.setAdapter(customAdupterForLocalAttIndex);
-        listViewExistAttTypes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-
-                alertDialogBuilder.setMessage("Index Name : " + sAtt[position] + "\nDate : " + sDateTime[position]);
-                alertDialogBuilder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dataBaseHelper.deleteRollNameIndex(sDateTime[position]);
-                        dataBaseHelper.deleteRollNameByDate(sDateTime[position]);
-
-
-                        finish();
-                        startActivity(getIntent());
-                        Toast.makeText(ManageForLocalAttTypeIndex.this, "You Have Deleted Successfully !", Toast.LENGTH_SHORT).show();
-
-
-                    }
-                });
-                alertDialogBuilder.setNegativeButton("Edit", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                        Intent intent = new Intent(ManageForLocalAttTypeIndex.this, UpdateForManagingLocalAttTypeIndex.class);
-                        Bundle bundle = new Bundle();
-                        bundle.putString("index", sAtt[position]);
-                        bundle.putString("dateTime", sDateTime[position]);
-                        intent.putExtras(bundle);
-                        startActivity(intent);
-
-                    }
-                });
-                alertDialogBuilder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                    }
-                });
-                AlertDialog alertDialog = alertDialogBuilder.create();
-                alertDialog.show();
-
-            }
-        });
-*/
 
     }
 
@@ -301,7 +246,14 @@ public class ManageForLocalAttTypeIndex extends AppCompatActivity {
             startActivity(intent);
 
         }
+        if (item.getItemId() == R.id.logout) {
+            DataBaseHelper dataBaseHelper = new DataBaseHelper(this);
+            dataBaseHelper.delete_Login();
 
+            Intent intent = new Intent(this, Authentication.class);
+            startActivity(intent);
+
+        }
 
         return super.onOptionsItemSelected(item);
     }

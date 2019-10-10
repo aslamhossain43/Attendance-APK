@@ -4,11 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".ExistRollNames">
-
-
-
+android:orientation="vertical"
+    tools:context=".ManageSpecificPercentage">
 
 
     <TextView
@@ -17,7 +14,7 @@
         android:textStyle="italic|bold"
         android:gravity="center"
         android:background="#673AB7"
-        android:text=" Exist attendance types"
+        android:text=" Percentage"
         android:padding="10sp"
         android:textColor="#ffff"
         android:textSize="20sp"
@@ -27,11 +24,9 @@
         android:listSelector="#B3B6AE"
         android:divider="#ED282929"
         android:dividerHeight="1dp"
-        android:id="@+id/existanceAttendanceListViewId"
+        android:id="@+id/percentageListViewId"
         android:layout_width="match_parent"
         android:layout_height="match_parent"></ListView>
-
-
 
 
 </LinearLayout>

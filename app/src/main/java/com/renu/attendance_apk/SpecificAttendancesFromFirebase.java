@@ -66,84 +66,103 @@ public class SpecificAttendancesFromFirebase extends AppCompatActivity {
 
         initOthers();
         setValues();
+handleAttendance();
 
 
-        databaseReferenceForattendances.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                final List<String> rollList = new ArrayList<>();
-                final List<String> nameList = new ArrayList<>();
-                final List<String> attList = new ArrayList<>();
-                final List<String> dtList = new ArrayList<>();
+    }
+
+    private void handleAttendance() {
+
+        if (Network.isNetworkAvailable(this)){
+
+            databaseReferenceForattendances.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
 
-                try {
 
 
-                    AttendanceModel attendanceModel = new AttendanceModel();
-                    attendanceModel = dataSnapshot.getValue(AttendanceModel.class);
-                    rollList.addAll(attendanceModel.getRollList());
-                    nameList.addAll(attendanceModel.getNameList());
-                    attList.addAll(attendanceModel.getAttendanceList());
-                    dtList.addAll(attendanceModel.getDateTimeList());
+                    final List<String> rollList = new ArrayList<>();
+                    final List<String> nameList = new ArrayList<>();
+                    final List<String> attList = new ArrayList<>();
+                    final List<String> dtList = new ArrayList<>();
 
-                } catch (Exception e) {
 
+                    try {
+
+
+                        AttendanceModel attendanceModel = new AttendanceModel();
+                        attendanceModel = dataSnapshot.getValue(AttendanceModel.class);
+                        rollList.addAll(attendanceModel.getRollList());
+                        nameList.addAll(attendanceModel.getNameList());
+                        attList.addAll(attendanceModel.getAttendanceList());
+                        dtList.addAll(attendanceModel.getDateTimeList());
+
+                    } catch (Exception e) {
+
+
+                    }
+
+
+                    specificFinalRoll = rollList.toArray(new String[rollList.size()]);
+                    specificFinalName = nameList.toArray(new String[nameList.size()]);
+                    specificFinalAttendances = attList.toArray(new String[attList.size()]);
+                    specificFinalDateTime = dtList.toArray(new String[dtList.size()]);
+                    customAdupterForIndexFromFirebase = new CustomAdupterForIndexFromFirebase(SpecificAttendancesFromFirebase.this, specificFinalRoll, specificFinalName, specificFinalAttendances);
+                    listViewSpecificAttFromFirebase.setAdapter(customAdupterForIndexFromFirebase);
+
+
+                    listViewSpecificAttFromFirebase.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                            alertDialogBuilder.setMessage("ID : " + specificFinalRoll[position] + "\n" + "Name : "
+                                    + specificFinalName[position] + "\n" + "P/A/Off : " + specificFinalAttendances[position]);
+
+
+                            alertDialogBuilder.setNegativeButton("Edit", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Intent intent = new Intent(SpecificAttendancesFromFirebase.this, Update.class);
+                                    Bundle bundle = new Bundle();
+                                    bundle.putString("roll", specificFinalRoll[position]);
+                                    bundle.putString("name", specificFinalName[position]);
+                                    bundle.putString("paoff", specificFinalAttendances[position]);
+                                    bundle.putString("dateTime", specificFinalDateTime[position]);
+                                    bundle.putString("position", String.valueOf(position));
+                                    bundle.putString("attFor", attFromFirebaseIndex);
+                                    intent.putExtras(bundle);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                                    startActivity(intent);
+
+                                }
+                            });
+
+                            alertDialogBuilder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    return;
+                                }
+                            });
+                            AlertDialog alertDialog = alertDialogBuilder.create();
+                            alertDialog.show();
+                        }
+                    });
 
                 }
 
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                specificFinalRoll = rollList.toArray(new String[rollList.size()]);
-                specificFinalName = nameList.toArray(new String[nameList.size()]);
-                specificFinalAttendances = attList.toArray(new String[attList.size()]);
-                specificFinalDateTime = dtList.toArray(new String[dtList.size()]);
-                customAdupterForIndexFromFirebase = new CustomAdupterForIndexFromFirebase(SpecificAttendancesFromFirebase.this, specificFinalRoll, specificFinalName, specificFinalAttendances);
-                listViewSpecificAttFromFirebase.setAdapter(customAdupterForIndexFromFirebase);
+                }
+            });
 
+        }else {
 
-                listViewSpecificAttFromFirebase.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-                        alertDialogBuilder.setMessage("ID : " + specificFinalRoll[position] + "\n" + "Name : "
-                                + specificFinalName[position] + "\n" + "P/A/Off : " + specificFinalAttendances[position]);
-
-
-                        alertDialogBuilder.setNegativeButton("Edit", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                Intent intent = new Intent(SpecificAttendancesFromFirebase.this, Update.class);
-                                Bundle bundle = new Bundle();
-                                bundle.putString("roll", specificFinalRoll[position]);
-                                bundle.putString("name", specificFinalName[position]);
-                                bundle.putString("paoff", specificFinalAttendances[position]);
-                                bundle.putString("dateTime", specificFinalDateTime[position]);
-                                bundle.putString("position", String.valueOf(position));
-                                bundle.putString("attFor", attFromFirebaseIndex);
-                                intent.putExtras(bundle);
-                                startActivity(intent);
-
-                            }
-                        });
-
-                        alertDialogBuilder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                return;
-                            }
-                        });
-                        AlertDialog alertDialog = alertDialogBuilder.create();
-                        alertDialog.show();
-                    }
-                });
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
+            Toast.makeText(this, "Connect internet !", Toast.LENGTH_SHORT).show();
+        }
 
 
     }
@@ -234,41 +253,58 @@ public class SpecificAttendancesFromFirebase extends AppCompatActivity {
 
         if (item.getItemId() == R.id.homeId) {
             Intent intent = new Intent(this, AfterLogin.class);
+
             startActivity(intent);
 
         }
         if (item.getItemId() == R.id.infoId) {
             Intent intent = new Intent(this, Informations.class);
+
             startActivity(intent);
 
         }
 
         if (item.getItemId() == R.id.listId) {
             Intent intent = new Intent(this, AttendancesIndex.class);
+
             startActivity(intent);
 
         }
         if (item.getItemId() == R.id.openId) {
             Intent intent = new Intent(this, CreateNew1.class);
+
             startActivity(intent);
 
         }
         if (item.getItemId() == R.id.localAttendances) {
             Intent intent = new Intent(this, ExistRollNames.class);
+
             startActivity(intent);
 
         }
         if (item.getItemId() == R.id.summary) {
+
             Intent intent = new Intent(this, Percentage.class);
+
             startActivity(intent);
 
         }
         if (item.getItemId() == R.id.settings) {
+
             Intent intent = new Intent(this, Settings.class);
+
             startActivity(intent);
 
         }
+        if (item.getItemId() == R.id.logout) {
+            DataBaseHelper dataBaseHelper = new DataBaseHelper(this);
+            dataBaseHelper.delete_Login();
 
+            Intent intent = new Intent(this, Authentication.class);
+
+            startActivity(intent);
+
+        }
 
         return super.onOptionsItemSelected(item);
     }

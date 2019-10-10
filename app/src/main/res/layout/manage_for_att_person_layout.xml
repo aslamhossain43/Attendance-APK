@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="40"
             android:text="Roll No :"
-            android:textStyle="bold"
+            android:textStyle="italic|bold"
             android:textSize="14dp"
             android:gravity="center"
             />
@@ -28,7 +28,7 @@
             android:layout_weight="60"
             android:text="Person's Names :"
             android:textSize="14dp"
-            android:textStyle="bold"
+            android:textStyle="italic|bold"
             android:gravity="center"
             />
 

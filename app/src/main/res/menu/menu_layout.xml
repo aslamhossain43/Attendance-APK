@@ -12,13 +12,7 @@
 
         />
 
-    <item
 
-        android:id="@+id/infoId"
-        app:showAsAction="always"
-        android:icon="@drawable/ic_info_outline_black_24dp"
-
-        />
 
 
 
@@ -64,6 +58,17 @@
         android:icon="@drawable/ic_settings_black_24dp"
 
         />
+
+    <item
+
+        android:id="@+id/infoId"
+        app:showAsAction="never"
+        android:title="Help"
+        />
+    <item
+        android:id="@+id/logout"
+        app:showAsAction="never"
+        android:title="Logout" />
 
 
 

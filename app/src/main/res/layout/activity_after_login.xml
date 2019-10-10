@@ -10,49 +10,64 @@
     tools:context=".AfterLogin">
 
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-    android:gravity="center"
-        android:textColor="#ffff"
-        android:textSize="30dp"
-        android:textStyle="bold"
-        android:text="Welcome !"
+
+    <ImageView
+        android:layout_width="150dp"
+        android:layout_height="200dp"
         android:layout_marginBottom="40dp"
+        android:src="@drawable/att_book"
+
         />
 
-    <Button
+
+
+
+    <TextView
         android:id="@+id/createNewBtnId"
-        android:textStyle="bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:gravity="center"
+        android:textColor="#00BCD4"
         android:textSize="20dp"
-        android:text="@string/create_new"
-        android:textColor="#DDEBF1F1"
-        android:background="#3F51B5"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"/>
+        android:textStyle="italic|bold"
+        android:text="Create new ?"
+        android:onClick="onClick"
+        android:clickable="true"
 
-    <Button
+        />
+
+
+    <TextView
         android:id="@+id/createfromAnotherBtnId"
-        android:textStyle="bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:gravity="center"
+        android:textColor="#00BCD4"
         android:textSize="20dp"
-        android:text="Create from another"
-        android:layout_marginTop="20dp"
-        android:textColor="#DDEBF1F1"
-        android:background="#3F51B5"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"/>
+        android:textStyle="italic|bold"
+        android:text="Create from another ?"
+        android:onClick="onClick"
+        android:clickable="true"
+
+        />
 
 
-    <Button
+    <TextView
         android:id="@+id/existBtnId"
-        android:textStyle="bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:gravity="center"
+        android:textColor="#00BCD4"
         android:textSize="20dp"
+        android:textStyle="italic|bold"
         android:text="@string/exist"
-        android:layout_marginTop="20dp"
-        android:textColor="#DDEBF1F1"
-        android:background="#3F51B5"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"/>
+        android:onClick="onClick"
+        android:clickable="true"
+
+        />
 
 
 

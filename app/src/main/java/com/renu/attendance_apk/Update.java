@@ -95,14 +95,6 @@ public class Update extends AppCompatActivity {
                 updatePercentage(roll, attFor, paoff, rollFromEditText, paoffFromSpinner);
 
 
-                //go to attendancesindex
-                Intent intent = new Intent(Update.this, SpecificAttendancesFromFirebase.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("attFor", attFor);
-                bundle.putString("dt", dateTime);
-                intent.putExtras(bundle);
-                startActivity(intent);
-                Toast.makeText(Update.this, "Update Success !", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -269,6 +261,22 @@ public class Update extends AppCompatActivity {
         new BackgroundUpdate().handlePercentage(Update.this);
 
 
+
+
+
+        Toast.makeText(Update.this, "Update Success !", Toast.LENGTH_SHORT).show();
+        //go to attendancesindex
+        Intent intent = new Intent(Update.this, SpecificAttendancesFromFirebase.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("attFor", attFor);
+        bundle.putString("dt", dateTime);
+        intent.putExtras(bundle);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+        startActivity(intent);
+
+
     }
 
     private void getIntentValues() {
@@ -354,43 +362,60 @@ public class Update extends AppCompatActivity {
 
         if (item.getItemId() == R.id.homeId) {
             Intent intent = new Intent(this, AfterLogin.class);
+
             startActivity(intent);
 
         }
         if (item.getItemId() == R.id.infoId) {
             Intent intent = new Intent(this, Informations.class);
+
             startActivity(intent);
 
         }
 
         if (item.getItemId() == R.id.listId) {
             Intent intent = new Intent(this, AttendancesIndex.class);
+
             startActivity(intent);
 
         }
         if (item.getItemId() == R.id.openId) {
             Intent intent = new Intent(this, CreateNew1.class);
+
             startActivity(intent);
 
         }
         if (item.getItemId() == R.id.localAttendances) {
             Intent intent = new Intent(this, ExistRollNames.class);
+
             startActivity(intent);
 
         }
         if (item.getItemId() == R.id.summary) {
+
             Intent intent = new Intent(this, Percentage.class);
+
             startActivity(intent);
 
         }
 
         if (item.getItemId() == R.id.settings) {
+
             Intent intent = new Intent(this, Settings.class);
+
             startActivity(intent);
 
         }
 
+        if (item.getItemId() == R.id.logout) {
+            DataBaseHelper dataBaseHelper = new DataBaseHelper(this);
+            dataBaseHelper.delete_Login();
 
+            Intent intent = new Intent(this, Authentication.class);
+
+            startActivity(intent);
+
+        }
         return super.onOptionsItemSelected(item);
     }
 

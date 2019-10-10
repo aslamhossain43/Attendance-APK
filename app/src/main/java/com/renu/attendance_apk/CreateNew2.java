@@ -109,7 +109,7 @@ public class CreateNew2 extends AppCompatActivity {
                     databaseReferenceForRollName.child(dateTime).setValue(rollNameModel);
                     //go to local book
                     Toast.makeText(CreateNew2.this, "Operation Success !", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(CreateNew2.this, ExistRollNames.class);
+                    Intent intent = new Intent(CreateNew2.this, CreateNew1.class);
                     startActivity(intent);
 
 
@@ -121,7 +121,7 @@ public class CreateNew2 extends AppCompatActivity {
                     dataBaseHelper.insertRollNameIntoLocalStorageFirebase(rollList, nameList, attForList, dateTimeList);
                     //go to local book
                     Toast.makeText(CreateNew2.this, "Operation Success !", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(CreateNew2.this, ExistRollNames.class);
+                    Intent intent = new Intent(CreateNew2.this, CreateNew1.class);
                     startActivity(intent);
 
 
@@ -299,7 +299,14 @@ public class CreateNew2 extends AppCompatActivity {
             startActivity(intent);
 
         }
+        if (item.getItemId() == R.id.logout) {
+            DataBaseHelper dataBaseHelper = new DataBaseHelper(this);
+            dataBaseHelper.delete_Login();
 
+            Intent intent = new Intent(this, Authentication.class);
+            startActivity(intent);
+
+        }
 
         return super.onOptionsItemSelected(item);
     }

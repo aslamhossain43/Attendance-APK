@@ -9,7 +9,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:weightSum="100"
         android:orientation="vertical"
         android:background="#673AB7"
         android:layout_marginTop="1dp">
@@ -17,28 +16,16 @@
             android:id="@+id/textViewHeadingForClassId"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="60"
             android:textSize="20sp"
             android:textColor="#ffff"
-            android:textStyle="bold"
+            android:textStyle="italic|bold"
             android:text="Class 12"
             android:layout_marginTop="5sp"
-            android:gravity="center"
-            />
-
-
-        <TextView
-            android:id="@+id/textViewHeadingForDtaeId"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="40"
-            android:textSize="15sp"
-            android:textColor="#ffff"
-            android:textStyle="bold"
-            android:text="2019/10/10 10/10 AM"
             android:layout_marginBottom="5sp"
             android:gravity="center"
             />
+
+
 
 
     </LinearLayout>
@@ -59,7 +46,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="26"
             android:text="Roll No :"
-            android:textStyle="bold"
+            android:textStyle="italic|bold"
             android:textSize="12dp"
             android:textColor="#ffff"
             android:gravity="center"
@@ -70,7 +57,7 @@
             android:layout_weight="16"
             android:text="Day :"
             android:textColor="#ffff"
-            android:textStyle="bold"
+            android:textStyle="italic|bold"
             android:textSize="12dp"
             android:gravity="center"
             />
@@ -80,7 +67,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="16"
             android:text="P :"
-            android:textStyle="bold"
+            android:textStyle="italic|bold"
             android:textColor="#ffff"
 
             android:textSize="12dp"
@@ -91,7 +78,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="16"
             android:text="A :"
-            android:textStyle="bold"
+            android:textStyle="italic|bold"
             android:textColor="#ffff"
 
             android:textSize="12dp"
@@ -102,7 +89,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="26"
             android:text="Percentage :"
-            android:textStyle="bold"
+            android:textStyle="italic|bold"
             android:textColor="#ffff"
 
             android:textSize="12dp"

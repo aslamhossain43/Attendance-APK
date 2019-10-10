@@ -42,7 +42,7 @@ public class ShowPercentage extends AppCompatActivity {
 
 
     private ListView listViewShowPercentageId;
-    private String attFromFirebaseIndex, dtFromFirebaseIndex;
+    private String attFromFirebaseIndex/*, dtFromFirebaseIndex*/;
     private TextView textViewForClass, textViewForDate;
     String[] percentageFinalRoll;
     int[] percentageFinalDay, percentageFinalP, percentageFinalA;
@@ -167,11 +167,14 @@ public class ShowPercentage extends AppCompatActivity {
 
 
                     } catch (Exception e) {
-                        Toast.makeText(ShowPercentage.this, "Percentage insufficient !", Toast.LENGTH_SHORT).show();
+                       /* Toast.makeText(ShowPercentage.this, "Percentage not available !", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(ShowPercentage.this, Percentage.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
                         startActivity(intent);
 
-
+*/
                     }
 
 
@@ -260,12 +263,7 @@ public class ShowPercentage extends AppCompatActivity {
                 listViewShowPercentageId.setAdapter(customAdupterForShowPercentageDetails);
 
 
-            } finally {
-
-                if (cursor1 != null && !cursor1.isClosed())
-                    cursor1.close();
-
-                sqLiteDatabase.close();
+            } catch (Exception e){
 
             }
         }
@@ -273,7 +271,7 @@ public class ShowPercentage extends AppCompatActivity {
 
     private void setValues() {
         textViewForClass.setText(attFromFirebaseIndex);
-        textViewForDate.setText(dtFromFirebaseIndex);
+       // textViewForDate.setText(dtFromFirebaseIndex);
     }
 
     private void initOthers() {
@@ -328,7 +326,7 @@ public class ShowPercentage extends AppCompatActivity {
 
         Bundle bundle = getIntent().getExtras();
         attFromFirebaseIndex = bundle.getString("sAtt");
-        dtFromFirebaseIndex = bundle.getString("sDateTime");
+        //dtFromFirebaseIndex = bundle.getString("sDateTime");
 
     }
 
@@ -347,14 +345,12 @@ public class ShowPercentage extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.homeId) {
             Intent intent = new Intent(this, AfterLogin.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
 
             startActivity(intent);
 
         }
         if (item.getItemId() == R.id.infoId) {
             Intent intent = new Intent(this, Informations.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
 
             startActivity(intent);
 
@@ -362,40 +358,48 @@ public class ShowPercentage extends AppCompatActivity {
 
         if (item.getItemId() == R.id.listId) {
             Intent intent = new Intent(this, AttendancesIndex.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
 
             startActivity(intent);
 
         }
         if (item.getItemId() == R.id.openId) {
             Intent intent = new Intent(this, CreateNew1.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
 
             startActivity(intent);
 
         }
         if (item.getItemId() == R.id.localAttendances) {
             Intent intent = new Intent(this, ExistRollNames.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
 
             startActivity(intent);
 
         }
         if (item.getItemId() == R.id.summary) {
+
             Intent intent = new Intent(this, Percentage.class);
+
             startActivity(intent);
 
         }
 
         if (item.getItemId() == R.id.settings) {
+
             Intent intent = new Intent(this, Settings.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+
 
             startActivity(intent);
 
         }
 
+        if (item.getItemId() == R.id.logout) {
+            DataBaseHelper dataBaseHelper = new DataBaseHelper(this);
+            dataBaseHelper.delete_Login();
 
+            Intent intent = new Intent(this, Authentication.class);
+
+            startActivity(intent);
+
+        }
         return super.onOptionsItemSelected(item);
     }
 

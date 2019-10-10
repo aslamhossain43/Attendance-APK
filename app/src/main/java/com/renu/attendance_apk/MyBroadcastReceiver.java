@@ -68,7 +68,6 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
                 handleAttAndAttIndex(context);
                 handleRollnameAndRollnameIndex(context);
 
-
             }
 
 

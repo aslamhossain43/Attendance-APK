@@ -102,8 +102,7 @@ if (Network.isNetworkAvailable(ManageForAttPerson.this)) {
                 attendancesList.addAll(rollNameModel.getAttFor());
                 dateTimeList.addAll(rollNameModel.getDateTime());
             } catch (Exception e) {
-                Toast.makeText(ManageForAttPerson.this, "Processing....", Toast.LENGTH_SHORT).show();
-            }
+               }
             stringsRoll = rollList.toArray(new String[rollList.size()]);
             stringsNames = nameList.toArray(new String[nameList.size()]);
             stringsAtt = attendancesList.toArray(new String[attendancesList.size()]);
@@ -136,9 +135,8 @@ if (Network.isNetworkAvailable(ManageForAttPerson.this)) {
                             databaseReferenceForRollName.child(dateTime).child("rollNo").child("" + position).getRef().removeValue();
 
 
-                            finish();
-                            startActivity(getIntent());
                             Toast.makeText(ManageForAttPerson.this, "You have deleted successfully !", Toast.LENGTH_SHORT).show();
+                           intentHandle();
 
                         }
                     });
@@ -189,6 +187,12 @@ if (Network.isNetworkAvailable(ManageForAttPerson.this)) {
 }
 
 
+    }
+
+    private void intentHandle() {
+        Intent intent = new Intent(ManageForAttPerson.this, ManageForAttPersonPre.class);
+
+        startActivity(intent);
     }
 
     private void getWholeInformation() {
@@ -312,7 +316,14 @@ if (Network.isNetworkAvailable(ManageForAttPerson.this)) {
 
         }
 
+        if (item.getItemId() == R.id.logout) {
+            DataBaseHelper dataBaseHelper = new DataBaseHelper(this);
+            dataBaseHelper.delete_Login();
 
+            Intent intent = new Intent(this, Authentication.class);
+            startActivity(intent);
+
+        }
         return super.onOptionsItemSelected(item);
     }
 }

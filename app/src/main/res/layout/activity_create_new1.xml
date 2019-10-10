@@ -8,6 +8,16 @@
     android:gravity="center"
     tools:context=".CreateNew1">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="30dp"
+        android:text="Please enter valid values"
+        android:textStyle="italic"
+        android:textSize="25dp"
+
+        />
+
    <LinearLayout
        android:layout_width="match_parent"
        android:layout_height="wrap_content"
@@ -22,14 +32,14 @@
            android:layout_weight="1"
            android:text="Attendances For :"
            android:textSize="20sp"
-           android:textStyle="bold"/>
+           android:textStyle="italic"/>
        <EditText
            android:id="@+id/editTextAttForId"
            android:layout_width="0sp"
            android:layout_height="wrap_content"
            android:layout_weight="1"
            android:textSize="20sp"
-           android:textStyle="bold"/>
+           android:textStyle="italic"/>
 
 
 
@@ -53,14 +63,14 @@
             android:layout_weight="1"
             android:text="Person No :"
             android:textSize="20sp"
-            android:textStyle="bold"/>
+            android:textStyle="italic"/>
         <EditText
             android:id="@+id/editTextPersonNoId"
             android:layout_width="0sp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:textSize="20sp"
-            android:textStyle="bold"/>
+            android:textStyle="italic"/>
 
 
 
@@ -70,7 +80,7 @@
 
     <Button
         android:id="@+id/nextBtnId"
-        android:textStyle="bold"
+        android:textStyle="italic"
         android:textSize="20dp"
         android:text="Next"
         android:layout_marginTop="40dp"

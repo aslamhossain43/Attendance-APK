@@ -9,8 +9,9 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textStyle="bold"
+        android:textStyle="italic|bold"
         android:gravity="center"
+        android:textColor="#ffff"
         android:background="#673AB7"
         android:text=" Manage person's information"
         android:padding="10sp"

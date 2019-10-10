@@ -316,7 +316,14 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
 
         }
+        if (item.getItemId() == R.id.logout) {
+            DataBaseHelper dataBaseHelper = new DataBaseHelper(this);
+            dataBaseHelper.delete_Login();
 
+            Intent intent = new Intent(this, Authentication.class);
+            startActivity(intent);
+
+        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -360,9 +367,9 @@ public class MainActivity extends AppCompatActivity {
 
 
                 // go to attendance index
-                Intent intent = new Intent(MainActivity.this, AttendancesIndex.class);
-                startActivity(intent);
                 Toast.makeText(MainActivity.this, "Operation Success !", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(MainActivity.this, ExistRollNames.class);
+                startActivity(intent);
 
             } else {
 
@@ -374,9 +381,9 @@ public class MainActivity extends AppCompatActivity {
                 //handle percentage
                 handlePercentage(roolList, attendanceList);
                 // go to local book
+                Toast.makeText(MainActivity.this, "Operation Success !", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(MainActivity.this, ExistRollNames.class);
                 startActivity(intent);
-                Toast.makeText(MainActivity.this, "Operation Success !", Toast.LENGTH_SHORT).show();
 
             }
 

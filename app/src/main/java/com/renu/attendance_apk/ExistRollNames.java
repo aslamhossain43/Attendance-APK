@@ -267,7 +267,14 @@ public class ExistRollNames extends AppCompatActivity {
             startActivity(intent);
 
         }
+        if (item.getItemId() == R.id.logout) {
+            DataBaseHelper dataBaseHelper = new DataBaseHelper(this);
+            dataBaseHelper.delete_Login();
 
+            Intent intent = new Intent(this, Authentication.class);
+            startActivity(intent);
+
+        }
 
         return super.onOptionsItemSelected(item);
     }

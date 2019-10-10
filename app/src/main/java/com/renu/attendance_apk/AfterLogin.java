@@ -14,11 +14,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 public class AfterLogin extends AppCompatActivity {
     private int currentApiVersion;
     //-----------------
-    private Button createNewBtn,createfromAnotherBtn, exist;
+    private TextView createNewText,createfromAnotherText,existText;
     private MyBroadcastReceiver myBroadcastReceiver;
     private DataBaseHelper dataBaseHelper;
 
@@ -27,6 +28,7 @@ public class AfterLogin extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_after_login);
+        getSupportActionBar().hide();
           //for full screen
         currentApiVersion = Build.VERSION.SDK_INT;
         final int flags = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
@@ -54,24 +56,33 @@ public class AfterLogin extends AppCompatActivity {
         initView();
         initOthers();
 
-        createNewBtn.setOnClickListener(new View.OnClickListener() {
+        createNewText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(AfterLogin.this, CreateNew1.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
                 startActivity(intent);
             }
         });
-        createfromAnotherBtn.setOnClickListener(new View.OnClickListener() {
+        createfromAnotherText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(AfterLogin.this, ManageForLocalAttTypeIndex.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
                 startActivity(intent);
             }
         });
-        exist.setOnClickListener(new View.OnClickListener() {
+        existText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(AfterLogin.this, ExistRollNames.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
                 startActivity(intent);
             }
         });
@@ -106,9 +117,9 @@ public class AfterLogin extends AppCompatActivity {
 //--------------------------
 
     private void initView() {
-        createNewBtn = findViewById(R.id.createNewBtnId);
-        createfromAnotherBtn=findViewById(R.id.createfromAnotherBtnId);
-        exist = findViewById(R.id.existBtnId);
+        createNewText = findViewById(R.id.createNewBtnId);
+        createfromAnotherText=findViewById(R.id.createfromAnotherBtnId);
+        existText = findViewById(R.id.existBtnId);
 
     }
 

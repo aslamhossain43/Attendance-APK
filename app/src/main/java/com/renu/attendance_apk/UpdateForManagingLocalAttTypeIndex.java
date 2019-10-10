@@ -84,63 +84,72 @@ public class UpdateForManagingLocalAttTypeIndex extends AppCompatActivity {
             public void onClick(View v) {
 
                 final String attFromEditTerxt = editTextForIndex.getText().toString().trim();
+                if (dataBaseHelper.checkAttFor(attFromEditTerxt)) {
+
+                    databaseReferenceForRollName.child(dateTime).getRef().addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd ',' hh:mm:ss a");
+                            Log.d("dt", "onClick: " + sim.format(new Date()));
+                            String date = sim.format(new Date());
 
 
-                databaseReferenceForRollName.child(dateTime).getRef().addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd ',' hh:mm:ss a");
-                        Log.d("dt", "onClick: " + sim.format(new Date()));
-                        String date = sim.format(new Date());
+                            RollNameModel rollNameModel = new RollNameModel();
+                            List<String> roll = new ArrayList<>();
+                            List<String> name = new ArrayList<>();
+                            List<String> attFor = new ArrayList<>();
+                            List<String> dateTimeList = new ArrayList<>();
+                            try {
+
+                                rollNameModel = dataSnapshot.getValue(RollNameModel.class);
+                                roll.addAll(rollNameModel.getRollNo());
+                                name.addAll(rollNameModel.getName());
 
 
-                        RollNameModel rollNameModel = new RollNameModel();
-                        List<String> roll = new ArrayList<>();
-                        List<String> name = new ArrayList<>();
-                        List<String> attFor = new ArrayList<>();
-                        List<String> dateTimeList = new ArrayList<>();
-                        try {
+                                for (int i = 0; i < roll.size(); i++) {
+                                    attFor.add(attFromEditTerxt);
+                                    dateTimeList.add(date);
+                                }
+                            } catch (Exception e) {
 
-                            rollNameModel = dataSnapshot.getValue(RollNameModel.class);
-                            roll.addAll(rollNameModel.getRollNo());
-                            name.addAll(rollNameModel.getName());
-
-
-                            for (int i = 0; i < roll.size(); i++) {
-                                attFor.add(attFromEditTerxt);
-                                dateTimeList.add(date);
                             }
-                        } catch (Exception e) {
-                            Toast.makeText(UpdateForManagingLocalAttTypeIndex.this, " Processing....", Toast.LENGTH_SHORT).show();
+                            if (Network.isNetworkAvailable(UpdateForManagingLocalAttTypeIndex.this)) {
+
+
+                                dataBaseHelper.insertDataInToRollNameIndexTable(date, attFromEditTerxt);
+                                dataBaseHelper.insertRollNameIntoLocalStorage(roll, name, attFor, dateTimeList);
+                                databaseReferenceForRollnameIndex.child(date).getRef().setValue(new RollNameIndexModel(date, attFromEditTerxt));
+                                databaseReferenceForRollName.child(date).getRef().setValue(new RollNameModel(roll, name, attFor, dateTimeList));
+
+                                Toast.makeText(UpdateForManagingLocalAttTypeIndex.this, "Update success !", Toast.LENGTH_SHORT).show();
+                                intentHandle();
+                            } else {
+
+                                dataBaseHelper.insertDataInToRollNameIndexTable(date, attFromEditTerxt);
+                                dataBaseHelper.insertRollNameIntoLocalStorage(roll, name, attFor, dateTimeList);
+
+                                dataBaseHelper.insertDataInToRollNameIndexTableFirebase(date, attFromEditTerxt);
+                                dataBaseHelper.insertRollNameIntoLocalStorageFirebase(roll, name, attFor, dateTimeList);
+
+                                Toast.makeText(UpdateForManagingLocalAttTypeIndex.this, "Update success !", Toast.LENGTH_SHORT).show();
+                                intentHandle();
+                            }
+
 
                         }
-                        if (Network.isNetworkAvailable(UpdateForManagingLocalAttTypeIndex.this)) {
 
 
-                            dataBaseHelper.insertDataInToRollNameIndexTable(date, attFromEditTerxt);
-                            dataBaseHelper.insertRollNameIntoLocalStorage(roll, name, attFor, dateTimeList);
-                            databaseReferenceForRollnameIndex.child(date).getRef().setValue(new RollNameIndexModel(date, attFromEditTerxt));
-                            databaseReferenceForRollName.child(date).getRef().setValue(new RollNameModel(roll, name, attFor, dateTimeList));
-                        } else {
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                            dataBaseHelper.insertDataInToRollNameIndexTable(date, attFromEditTerxt);
-                            dataBaseHelper.insertRollNameIntoLocalStorage(roll, name, attFor, dateTimeList);
-
-                            dataBaseHelper.insertDataInToRollNameIndexTableFirebase(date, attFromEditTerxt);
-                            dataBaseHelper.insertRollNameIntoLocalStorageFirebase(roll, name, attFor, dateTimeList);
                         }
-                        Intent intent = new Intent(UpdateForManagingLocalAttTypeIndex.this, ExistRollNames.class);
-                        startActivity(intent);
-                        Toast.makeText(UpdateForManagingLocalAttTypeIndex.this, "Update success !", Toast.LENGTH_SHORT).show();
-
-                    }
+                    });
 
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                } else {
 
-                    }
-                });
+                    Toast.makeText(UpdateForManagingLocalAttTypeIndex.this, "Already exist ! Try another", Toast.LENGTH_SHORT).show();
+                }
 
 
             }
@@ -148,6 +157,11 @@ public class UpdateForManagingLocalAttTypeIndex extends AppCompatActivity {
         });
 
 
+    }
+
+    private void intentHandle() {
+        Intent intent = new Intent(UpdateForManagingLocalAttTypeIndex.this, ExistRollNames.class);
+        startActivity(intent);
     }
 
     private void getWholeInformation() {
@@ -237,41 +251,58 @@ public class UpdateForManagingLocalAttTypeIndex extends AppCompatActivity {
 
         if (item.getItemId() == R.id.homeId) {
             Intent intent = new Intent(this, AfterLogin.class);
+
             startActivity(intent);
 
         }
         if (item.getItemId() == R.id.infoId) {
             Intent intent = new Intent(this, Informations.class);
+
             startActivity(intent);
 
         }
 
         if (item.getItemId() == R.id.listId) {
             Intent intent = new Intent(this, AttendancesIndex.class);
+
             startActivity(intent);
 
         }
         if (item.getItemId() == R.id.openId) {
             Intent intent = new Intent(this, CreateNew1.class);
+
             startActivity(intent);
 
         }
         if (item.getItemId() == R.id.localAttendances) {
             Intent intent = new Intent(this, ExistRollNames.class);
+
             startActivity(intent);
 
         }
         if (item.getItemId() == R.id.summary) {
+
             Intent intent = new Intent(this, Percentage.class);
+
             startActivity(intent);
 
         }
         if (item.getItemId() == R.id.settings) {
+
             Intent intent = new Intent(this, Settings.class);
+
             startActivity(intent);
 
         }
+        if (item.getItemId() == R.id.logout) {
+            DataBaseHelper dataBaseHelper = new DataBaseHelper(this);
+            dataBaseHelper.delete_Login();
 
+            Intent intent = new Intent(this, Authentication.class);
+
+            startActivity(intent);
+
+        }
 
         return super.onOptionsItemSelected(item);
     }

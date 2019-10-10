@@ -1,12 +1,15 @@
 package com.renu.attendance_apk;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -14,10 +17,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -28,18 +27,18 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Percentage extends AppCompatActivity {
+public class ManageSpecificPercentage extends AppCompatActivity {
 
 
     private static final String FIREBASE_URL = "https://attendance-apk.firebaseio.com/";
 
-    DatabaseReference databaseReferenceForRollnameIndex, databaseReferenceForAttIndex, databaseReferenceForPercentage;
+    DatabaseReference databaseReferenceForAttIndex, databaseReferenceForPercentage;
 
     DataBaseHelper dataBaseHelper;
     SQLiteDatabase sqLiteDatabase;
     private ListView listViewExistAttTypes;
     private MyBroadcastReceiver myBroadcastReceiver;
-
+    AlertDialog.Builder alertDialogBuilder;
 
     private static final String WHOLE_INFORMATION_TABLE = "wholeinformations";
     private String emailMobilePassRollnameIndex = null;
@@ -53,7 +52,7 @@ public class Percentage extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_percentage);
+        setContentView(R.layout.activity_manage_specific_percentage);
 
 
         initView();
@@ -117,7 +116,6 @@ public class Percentage extends AppCompatActivity {
         if (Network.isNetworkAvailable(this)) {
 
 
-
             databaseReferenceForPercentage.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -126,6 +124,8 @@ public class Percentage extends AppCompatActivity {
 
                         getPercentageFromFirebase();
 
+                    } else {
+                        Toast.makeText(ManageSpecificPercentage.this, "Percentage not available !", Toast.LENGTH_SHORT).show();
                     }
                 }
 
@@ -147,17 +147,15 @@ public class Percentage extends AppCompatActivity {
     }
 
     private void getPercentageFromFirebase() {
-
-
-        final List<String> stringAttFor = new ArrayList<>();
-
+   final List<String> stringAttFor = new ArrayList<>();
 
 
         databaseReferenceForPercentage.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                     for (DataSnapshot dataSnapshot1:dataSnapshot.getChildren()){
+
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
 
                     stringAttFor.add(dataSnapshot1.getKey());
 
@@ -166,26 +164,47 @@ public class Percentage extends AppCompatActivity {
                 final String[] sAtt = stringAttFor.toArray(new String[stringAttFor.size()]);
 
 
+                CustomAdupterForShowingPercentageForManaging customAdupterForShowPercentage = new CustomAdupterForShowingPercentageForManaging(ManageSpecificPercentage.this, sAtt/*, sDateTime*/);
+                listViewExistAttTypes.setAdapter(customAdupterForShowPercentage);
+                listViewExistAttTypes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
 
-                        CustomAdupterForShowPercentage customAdupterForShowPercentage = new CustomAdupterForShowPercentage(Percentage.this, sAtt);
-                        listViewExistAttTypes.setAdapter(customAdupterForShowPercentage);
-                        listViewExistAttTypes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+                        alertDialogBuilder.setMessage("Do you want to delete percentage of " + sAtt[position] + " from your application ?");
+                        alertDialogBuilder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                             @Override
-                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                Intent intent = new Intent(Percentage.this, ShowPercentage.class);
-                                Bundle bundle = new Bundle();
-                                bundle.putString("sAtt", sAtt[position]);
-                                intent.putExtras(bundle);
+                            public void onClick(DialogInterface dialog, int which) {
 
-                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                startActivity(intent);
+                                if (Network.isNetworkAvailable(ManageSpecificPercentage.this)) {
 
+
+                                    dataBaseHelper = new DataBaseHelper(ManageSpecificPercentage.this);
+                                    dataBaseHelper.deleteSpecificFromPercentage(sAtt[position]);
+
+                                    databaseReferenceForPercentage.child(sAtt[position]).getRef().removeValue();
+                                    Toast.makeText(ManageSpecificPercentage.this, "You have deleted percentage of " + sAtt[position] + " from your app !", Toast.LENGTH_SHORT).show();
+
+
+                                    startActivity(getIntent());
+                                } else {
+                                    Toast.makeText(ManageSpecificPercentage.this, "Connect internet !", Toast.LENGTH_SHORT).show();
+                                }
 
                             }
                         });
+                        alertDialogBuilder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        });
+                        AlertDialog alertDialog = alertDialogBuilder.create();
+                        alertDialog.show();
 
 
+                    }
+                });
 
 
             }
@@ -197,23 +216,15 @@ public class Percentage extends AppCompatActivity {
         });
 
 
-
-
-
-
-
-
     }
 
     private void initOthers() {
-
         dataBaseHelper = new DataBaseHelper(this);
         sqLiteDatabase = dataBaseHelper.getWritableDatabase();
-        databaseReferenceForPercentage = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL + emailMobilePassTest);
-
-        databaseReferenceForRollnameIndex = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL + emailMobilePassRollnameIndex);
         databaseReferenceForAttIndex = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL + emailMobilePassAttIndex);
 
+        databaseReferenceForPercentage = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL + emailMobilePassTest);
+        alertDialogBuilder = new AlertDialog.Builder(this);
 
         myBroadcastReceiver = new MyBroadcastReceiver();
     }
@@ -269,13 +280,17 @@ public class Percentage extends AppCompatActivity {
         }
 
         if (item.getItemId() == R.id.settings) {
-
             Intent intent = new Intent(this, Settings.class);
 
             startActivity(intent);
 
         }
+        if (item.getItemId() == R.id.summary) {
+            Intent intent = new Intent(this, Percentage.class);
 
+            startActivity(intent);
+
+        }
         if (item.getItemId() == R.id.logout) {
             DataBaseHelper dataBaseHelper = new DataBaseHelper(this);
             dataBaseHelper.delete_Login();
@@ -287,6 +302,5 @@ public class Percentage extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
 
 }

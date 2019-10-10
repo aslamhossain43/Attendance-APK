@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -30,6 +31,7 @@ public class Authentication extends AppCompatActivity {
 
 
         setContentView(R.layout.activity_authentication);
+        getSupportActionBar().hide();
 //-------------------------------------------
         //for full screen
         currentApiVersion = Build.VERSION.SDK_INT;
@@ -53,9 +55,23 @@ public class Authentication extends AppCompatActivity {
         }
 
 
-
         initView();
         initOther();
+
+        handleLogin();
+
+
+    }
+
+    private void handleLogin() {
+
+        final Cursor cursor = dataBaseHelper.getLogin();
+        if (cursor.getCount() != 0) {
+            Intent intent = new Intent(Authentication.this, AfterLogin.class);
+            startActivity(intent);
+        }
+
+
         textViewForRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -67,13 +83,24 @@ public class Authentication extends AppCompatActivity {
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               // String user = editTextUaserName.getText().toString();
+                // String user = editTextUaserName.getText().toString();
                 String pass = editTextPassword.getText().toString();
 
                 Boolean b = dataBaseHelper.checkUser(pass);
                 if (b == true) {
+                    Cursor cursor1 = dataBaseHelper.getAllRegister();
+                    while (cursor1.moveToNext()) {
+                        String phone = cursor1.getString(2);
+                        String password = cursor1.getString(3);
+                        dataBaseHelper.addIntoLogin(phone, password);
+                    }
+
+
                     Toast.makeText(Authentication.this, "Successfully logged in", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(Authentication.this, AfterLogin.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
                     startActivity(intent);
 
 
@@ -106,10 +133,11 @@ public class Authentication extends AppCompatActivity {
 
 
     }
+
     //-------------------------------
     private void initOther() {
         dataBaseHelper = new DataBaseHelper(this);
-        myBroadcastReceiver=new MyBroadcastReceiver();
+        myBroadcastReceiver = new MyBroadcastReceiver();
     }
 
     private void initView() {

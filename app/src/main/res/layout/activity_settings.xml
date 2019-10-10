@@ -41,6 +41,35 @@
 
 
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="20dp"
+                android:gravity="center">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textStyle="italic"
+                    android:layout_marginBottom="5dp"
+                    android:text="Resend your backup information to your email"
+                    android:textSize="20dp"
+                    android:textColor="#ffff"
+                    android:gravity="center"
+                    />
+                <Button
+                    android:id="@+id/btnResendId"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textStyle="italic"
+                    android:layout_marginTop="5dp"
+                    android:text="Send"
+                    android:textColor="#2196F3"
+                    android:background="#3F51B5"
+                    android:gravity="center"/>
+
+            </LinearLayout>
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -64,7 +93,7 @@
             android:layout_height="wrap_content"
             android:textStyle="italic"
             android:layout_marginTop="5dp"
-            android:text="Manage"
+            android:text="Create"
             android:textColor="#2196F3"
             android:background="#3F51B5"
             android:gravity="center"/>
@@ -85,7 +114,7 @@
 
             android:textColor="#ffff"
             android:layout_marginBottom="5dp"
-            android:text="Manage Person's Information"
+            android:text="Manage person's information"
             android:textSize="20dp"
             android:gravity="center"
             />
@@ -101,6 +130,39 @@
             android:gravity="center"/>
 
     </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="20dp"
+                android:gravity="center">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textStyle="italic"
+
+                    android:textColor="#ffff"
+                    android:layout_marginBottom="5dp"
+                    android:text="Delete specific percentage"
+                    android:textSize="20dp"
+                    android:gravity="center"
+                    />
+                <Button
+                    android:id="@+id/btnPercentageIndexId"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textStyle="italic"
+                    android:layout_marginTop="5dp"
+                    android:text="Delete"
+                    android:textColor="#2196F3"
+                    android:background="#3F51B5"
+                    android:gravity="center"/>
+
+            </LinearLayout>
+
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -125,7 +187,7 @@
             android:layout_height="wrap_content"
             android:textStyle="italic"
             android:layout_marginTop="5dp"
-            android:text="Manage"
+            android:text="Delete"
             android:textColor="#2196F3"
             android:background="#3F51B5"
             android:gravity="center"/>
@@ -190,7 +252,7 @@
             android:layout_height="wrap_content"
             android:textStyle="italic"
             android:layout_marginTop="5dp"
-            android:text="Manage"
+            android:text="Reset"
             android:textColor="#2196F3"
             android:background="#3F51B5"
             android:gravity="center"

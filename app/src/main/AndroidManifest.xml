@@ -4,19 +4,19 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
-        android:label=""
-        android:roundIcon="@mipmap/ic_launcher_round"
-        android:supportsRtl="true"
         android:configChanges="orientation|screenSize"
+        android:icon="@drawable/attendance_book"
+        android:label="A Book"
+        android:roundIcon="@drawable/attendance_book"
+        android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ShowPercentage"/>
+        <activity android:name=".ManageSpecificPercentage"></activity>
+        <activity android:name=".ShowPercentage" />
         <activity android:name=".Percentage" />
         <activity android:name=".Informations" />
         <activity android:name=".UpdateForAttPerson" />
         <activity android:name=".ManageForAttPersonPre" />
         <activity android:name=".UpdateForManagingLocalAttTypeIndex" />
-        <activity android:name=".UpdateForManageAttIndex" />
         <activity android:name=".ManageForAttIndex" />
         <activity android:name=".ManageForAttPerson" />
         <activity android:name=".ManageForLocalAttTypeIndex" />

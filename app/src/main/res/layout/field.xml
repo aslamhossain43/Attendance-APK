@@ -13,13 +13,14 @@
         android:layout_width="wrap_content"
 
         android:layout_height="wrap_content"
+        android:textStyle="italic"
         android:layout_weight="1"
         android:gravity="center" />
 
     <EditText
         android:id="@+id/nameForFieldId"
         android:layout_width="wrap_content"
-
+android:textStyle="italic"
         android:layout_height="wrap_content"
         android:layout_weight="1.75"
         android:gravity="center" />
@@ -32,12 +33,5 @@
         android:entries="@array/types"
 
         />
-   <!-- <Button
-        android:id="@+id/delete_button"
-        android:layout_width="0dp"
-        android:layout_height="40dp"
-        android:layout_weight="0.25"
-        android:background="@android:drawable/ic_delete"
-        android:onClick="onDelete"/>-->
 
 </LinearLayout>

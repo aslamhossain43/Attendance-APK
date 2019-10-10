@@ -9,11 +9,12 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textStyle="bold"
+        android:textStyle="italic|bold"
         android:gravity="center"
         android:background="#673AB7"
         android:text=" Create another attendance type from existence"
         android:padding="10sp"
+        android:textColor="#ffff"
         android:textSize="20sp"
         />
 

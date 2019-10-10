@@ -16,12 +16,13 @@
         android:layout_width="wrap_content"
 
         android:layout_height="wrap_content"
+        android:textStyle="italic"
         android:layout_weight="0.90"
         android:gravity="center" />
     <EditText
         android:id="@+id/nameFieldId"
         android:layout_width="wrap_content"
-
+android:textStyle="italic"
         android:layout_height="wrap_content"
         android:layout_weight="0.90"
         android:gravity="center" />

@@ -23,7 +23,6 @@ public class CreateNew1 extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_new1);
 
-
         initView();
         initOthers();
 
@@ -38,23 +37,37 @@ public class CreateNew1 extends AppCompatActivity {
                     String personNo = editTextPersonNo.getText().toString().trim();
 
 
-                    try {
 
-                        Integer pNo = Integer.parseInt(personNo);
-                        if (pNo instanceof Integer) {
+                    if (new DataBaseHelper(CreateNew1.this).checkAttFor(attFor)) {
 
-                            Intent intent = new Intent(CreateNew1.this, CreateNew2.class);
 
-                            Bundle bundle = new Bundle();
-                            bundle.putString("attFor", attFor);
-                            bundle.putInt("pNo", pNo);
-                            intent.putExtras(bundle);
-                            startActivity(intent);
+                        try {
+
+                            Integer pNo = Integer.parseInt(personNo);
+                            if (pNo instanceof Integer) {
+
+                                Intent intent = new Intent(CreateNew1.this, CreateNew2.class);
+
+                                Bundle bundle = new Bundle();
+                                bundle.putString("attFor", attFor);
+                                bundle.putInt("pNo", pNo);
+                                intent.putExtras(bundle);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                                startActivity(intent);
+                            }
+                        } catch (NumberFormatException e) {
+                            Toast.makeText(CreateNew1.this, "Insert Integer Value !", Toast.LENGTH_LONG).show();
+
                         }
-                    } catch (NumberFormatException e) {
-                        Toast.makeText(CreateNew1.this, "Insert Integer Value !", Toast.LENGTH_LONG).show();
 
+
+                    }else {
+                        Toast.makeText(CreateNew1.this, "Already exist ! Try another", Toast.LENGTH_SHORT).show();
                     }
+
+
 
 
                 } else {
@@ -143,7 +156,14 @@ protected void onResume() {
             startActivity(intent);
 
         }
+        if (item.getItemId() == R.id.logout) {
+            DataBaseHelper dataBaseHelper = new DataBaseHelper(this);
+            dataBaseHelper.delete_Login();
 
+            Intent intent = new Intent(this, Authentication.class);
+            startActivity(intent);
+
+        }
 
         return super.onOptionsItemSelected(item);
     }

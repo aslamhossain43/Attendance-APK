@@ -12,7 +12,7 @@ public class Network {
         try {
             NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
-            return networkInfo != null && networkInfo.isConnectedOrConnecting();
+            return networkInfo != null&& networkInfo.isConnected();
         } catch (Exception e) {
             e.printStackTrace();
             return false;
