@@ -258,7 +258,7 @@ public class Update extends AppCompatActivity {
 
 
         dataBaseHelper.updatePercentage(oldRoll, attFor, gettingRoll, gettingDaySum, gettingPSum, gettingASum, gettingPercentSum);
-        new BackgroundUpdate().handlePercentage(Update.this);
+        BackgroundUpdate.getInstance().handlePercentage(Update.this);
 
 
 

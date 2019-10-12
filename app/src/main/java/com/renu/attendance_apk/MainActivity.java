@@ -593,7 +593,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initOthers() {
-        backgroundUpdate = new BackgroundUpdate();
+        backgroundUpdate = BackgroundUpdate.getInstance();
         databaseReferenceForattendances = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL + emailMobilePassAtt);
         databaseReferenceForattendancesIndex = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL + emailMobilePassAttIndex);
         databaseReferenceForRollName = FirebaseDatabase.getInstance().getReferenceFromUrl(FIREBASE_URL + emailMobilePassRollname + "/" + rollNameDateTime);

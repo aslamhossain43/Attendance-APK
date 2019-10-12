@@ -68,6 +68,14 @@ public class BackgroundUpdate {
     private static String emailMobilePassTest = null;
     private static String emailMobilePass = null;
 
+private static final BackgroundUpdate instance=new BackgroundUpdate();
+
+    private BackgroundUpdate() {
+    }
+
+    public static BackgroundUpdate getInstance() {
+        return instance;
+    }
 
     public static void getWholeInformation(Context context) {
 

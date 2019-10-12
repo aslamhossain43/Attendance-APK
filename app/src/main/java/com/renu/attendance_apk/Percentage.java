@@ -55,6 +55,7 @@ public class Percentage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_percentage);
 
+BackgroundUpdate.getInstance().handlePercentage(this);
 
         initView();
         getWholeInformation();
